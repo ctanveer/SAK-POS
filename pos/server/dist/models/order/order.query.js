@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteOrderById = exports.updateOrderById = exports.createOrder = exports.getOrderById = exports.getAllOrders = void 0;
 const order_model_1 = __importDefault(require("./order.model"));
+//import CounterOrderModel from "./counter.order.model";
 const getAllOrders = () => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield order_model_1.default.find();
     return orders;

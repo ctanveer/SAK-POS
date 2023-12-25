@@ -1,5 +1,6 @@
 import Order from "./order.model";
 import { IOrder } from "../../interfaces/order.interface";
+//import CounterOrderModel from "./counter.order.model";
 
 const getAllOrders = async () => {
     const orders = await Order.find();

@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const mongoose_1 = __importDefault(require("mongoose"));
+//import AutoIncrementFactory from 'mongoose-sequence';
+const AutoIncrementFactory = require('mongoose-sequence');
 const table_router_1 = __importDefault(require("./routers/table.router"));
 const order_router_1 = __importDefault(require("./routers/order.router"));
 const app = (0, express_1.default)();
@@ -26,8 +28,9 @@ app.use('/order', order_router_1.default);
 (function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         //await mongoose.connect(process.env.MONGO_URI as string);
-        yield mongoose_1.default.connect('mongodb://localhost:27017/pos-db');
+        const connection = yield mongoose_1.default.connect('mongodb://localhost:27017/pos-db');
         console.log('Connected to DB');
+        //const AutoIncrement = AutoIncrementFactory(connection);
         app.listen(PORT, () => {
             console.log(`Server is listening at http://127.0.0.1:${PORT}`);
         });

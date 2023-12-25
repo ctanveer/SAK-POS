@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
+//import AutoIncrementFactory from 'mongoose-sequence';
+const AutoIncrementFactory = require('mongoose-sequence');
 import tableRouter from './routers/table.router';
 import orderRouter from './routers/order.router'
 
@@ -14,11 +16,11 @@ app.use(cors());
 app.use('/table', tableRouter);
 app.use('/order', orderRouter);
 
-
 (async function bootstrap() {
     //await mongoose.connect(process.env.MONGO_URI as string);
-    await mongoose.connect('mongodb://localhost:27017/pos-db');
+    const connection = await mongoose.connect('mongodb://localhost:27017/pos-db');
     console.log('Connected to DB');
+    //const AutoIncrement = AutoIncrementFactory(connection);
     app.listen(PORT, () => {
       console.log(`Server is listening at http://127.0.0.1:${PORT}`);
     });
