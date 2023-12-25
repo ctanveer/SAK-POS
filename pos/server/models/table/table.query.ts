@@ -1,33 +1,43 @@
 import Table from './table.model';
+import { ITable } from '../../interfaces/table.interface';
 
 const getAllTables = async () => {
     const tables = await Table.find();
     return tables;
 };
 
-const getTableById = async (id: string) => {
-    const table = await Table.findById(id);
+const getTableById = async (id: number) => {
+    //const table = await Table.findById(id);
+    const table = await Table.findOne({tableId: id});
     return table;
 };
 
-type TableType = {
-    num: number;
-    capacity: number;
-    bill: number;
-    serverId: number;
-};
+// type TableType = {
+//     num: number;
+//     capacity: number;
+//     bill: number;
+//     serverId: number;
+// };
 
-const createTable = async (tableObject: TableType) => {
+// interface ITable {
+//     num: number;
+//     capacity: number;
+//     bill: number;
+//     serverId: number;
+// }
+
+
+const createTable = async (tableObject: ITable) => {
     const table = await Table.create({...tableObject});
     return table;
 }
 
 const updateTableById = async (
-    tableId: string,
-    tableObject: TableType,
+    tableId: number,
+    tableObject: ITable,
   ) => {
-    const table = await Table.findByIdAndUpdate(
-      { _id: tableId },
+    const table = await Table.findOneAndUpdate(
+      { tableId: tableId},
       {
         ...tableObject,
       },
@@ -36,8 +46,8 @@ const updateTableById = async (
     return table;
   };
 
-const deleteTableById = async (id: string) => {
-    const table = await Table.findByIdAndDelete(id);
+const deleteTableById = async (id: number) => {
+    const table = await Table.findOneAndDelete ({tableId: id});
     return table;
 };
 

@@ -20,22 +20,35 @@ const getAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getAllTables = getAllTables;
 const getTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const table = yield table_model_1.default.findById(id);
+    //const table = await Table.findById(id);
+    const table = yield table_model_1.default.findOne({ tableId: id });
     return table;
 });
 exports.getTableById = getTableById;
+// type TableType = {
+//     num: number;
+//     capacity: number;
+//     bill: number;
+//     serverId: number;
+// };
+// interface ITable {
+//     num: number;
+//     capacity: number;
+//     bill: number;
+//     serverId: number;
+// }
 const createTable = (tableObject) => __awaiter(void 0, void 0, void 0, function* () {
     const table = yield table_model_1.default.create(Object.assign({}, tableObject));
     return table;
 });
 exports.createTable = createTable;
 const updateTableById = (tableId, tableObject) => __awaiter(void 0, void 0, void 0, function* () {
-    const table = yield table_model_1.default.findByIdAndUpdate({ _id: tableId }, Object.assign({}, tableObject), { new: true });
+    const table = yield table_model_1.default.findOneAndUpdate({ tableId: tableId }, Object.assign({}, tableObject), { new: true });
     return table;
 });
 exports.updateTableById = updateTableById;
 const deleteTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const table = yield table_model_1.default.findByIdAndDelete(id);
+    const table = yield table_model_1.default.findOneAndDelete({ tableId: id });
     return table;
 });
 exports.deleteTableById = deleteTableById;

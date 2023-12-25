@@ -24,7 +24,7 @@ const getAllTablesController = (req, res) => __awaiter(void 0, void 0, void 0, f
 exports.getAllTablesController = getAllTablesController;
 const getTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
         const table = yield (0, table_query_1.getTableById)(id);
         res.json(table);
     }
@@ -36,7 +36,6 @@ const getTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, f
 exports.getTableByIdController = getTableByIdController;
 const createTableController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        //const { id } = req.user as { id: string }; // This is the user id / creator id
         const tableObject = Object.assign({}, req.body);
         const table = yield (0, table_query_1.createTable)(tableObject);
         res.status(201);
@@ -50,7 +49,7 @@ const createTableController = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.createTableController = createTableController;
 const updateTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tableId = req.params.id; // This is the category id
+        const tableId = parseInt(req.params.id);
         const tableObject = Object.assign({}, req.body);
         const table = yield (0, table_query_1.updateTableById)(tableId, tableObject);
         res.json(table);
@@ -63,7 +62,7 @@ const updateTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0
 exports.updateTableByIdController = updateTableByIdController;
 const deleteTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
         const response = yield (0, table_query_1.deleteTableById)(id);
         res.json(response);
     }
@@ -73,3 +72,4 @@ const deleteTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.deleteTableByIdController = deleteTableByIdController;
+//const { id } = req.user as { id: string }; // This is the user id / creator id

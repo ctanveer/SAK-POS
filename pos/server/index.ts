@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
-import tableTouter from './routers/table.router';
+import tableRouter from './routers/table.router';
+import orderRouter from './routers/order.router'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,7 +11,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-app.use('/table', tableTouter);
+app.use('/table', tableRouter);
+app.use('/order', orderRouter);
 
 
 (async function bootstrap() {

@@ -19,7 +19,7 @@ export const getAllTablesController = async (req: Request, res: Response) => {
 
 export const getTableByIdController = async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
+      const id = parseInt(req.params.id);
       const table = await getTableById(id);
       res.json(table);
     } catch (error: any) {
@@ -30,7 +30,6 @@ export const getTableByIdController = async (req: Request, res: Response) => {
 
 export const createTableController = async (req: Request, res: Response) => {
     try {
-      //const { id } = req.user as { id: string }; // This is the user id / creator id
       const tableObject = {...req.body };
       const table = await createTable(tableObject);
       res.status(201);
@@ -43,7 +42,7 @@ export const createTableController = async (req: Request, res: Response) => {
 
 export const updateTableByIdController = async (req: Request, res: Response) => {
     try {
-      const tableId = req.params.id; // This is the category id
+      const tableId = parseInt(req.params.id); 
       const tableObject = { ...req.body };
       const table = await updateTableById(tableId, tableObject);
       res.json(table);
@@ -55,7 +54,7 @@ export const updateTableByIdController = async (req: Request, res: Response) => 
 
 export const deleteTableByIdController = async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
+      const id = parseInt(req.params.id);
       const response = await deleteTableById(id);
       res.json(response);
     } catch (error: any) {
@@ -64,3 +63,6 @@ export const deleteTableByIdController = async (req: Request, res: Response) => 
     }
 };
 
+
+
+//const { id } = req.user as { id: string }; // This is the user id / creator id
