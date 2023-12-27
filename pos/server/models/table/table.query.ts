@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Table from './table.model';
 import { ITable } from '../../interfaces/table.interface';
 
@@ -16,7 +17,22 @@ const getAllTables = async () => {
 const getTableByIdWithAllOrders = async (id: number) => {
   //const table = await Table.findById(id);
   //const table = await Table.findOne({tableId: id}).populate('order').exec();
-  const table = await Table.findOne({tableId: id}).populate('orderList').exec();
+  //const table = await Table.findOne({tableId: id}).populate('orderList').exec();
+  const table = await Table.aggregate([
+    {
+      $match: {
+        tableId: id
+      },
+    },
+    {
+      $lookup: {
+        from: 'orders',
+        localField: 'tableId',
+        foreignField: 'tableId',
+        as: 'listOfOrders'
+      },
+    },
+  ])
 
   return table;
 };

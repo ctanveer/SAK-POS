@@ -27,7 +27,22 @@ exports.getAllTables = getAllTables;
 const getTableByIdWithAllOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
     //const table = await Table.findById(id);
     //const table = await Table.findOne({tableId: id}).populate('order').exec();
-    const table = yield table_model_1.default.findOne({ tableId: id }).populate('orderList').exec();
+    //const table = await Table.findOne({tableId: id}).populate('orderList').exec();
+    const table = yield table_model_1.default.aggregate([
+        {
+            $match: {
+                tableId: id
+            },
+        },
+        {
+            $lookup: {
+                from: 'orders',
+                localField: 'tableId',
+                foreignField: 'tableId',
+                as: 'listOfOrders'
+            },
+        },
+    ]);
     return table;
 });
 exports.getTableByIdWithAllOrders = getTableByIdWithAllOrders;
