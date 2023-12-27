@@ -1,7 +1,7 @@
 import {Request, Response } from 'express';
 import {
     getAllTables,
-    getTableById,
+    getTableByIdWithAllOrders,
     createTable,
     updateTableById,
     deleteTableById
@@ -20,7 +20,7 @@ export const getAllTablesController = async (req: Request, res: Response) => {
 export const getTableByIdController = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const table = await getTableById(id);
+      const table = await getTableByIdWithAllOrders(id);
       res.json(table);
     } catch (error: any) {
       res.status(500);

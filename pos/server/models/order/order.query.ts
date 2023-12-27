@@ -1,14 +1,18 @@
 import Order from "./order.model";
 import { IOrder } from "../../interfaces/order.interface";
-//import CounterOrderModel from "./counter.order.model";
 
 const getAllOrders = async () => {
     const orders = await Order.find();
     return orders;
 };
 
+// const getOrderById = async (id: number) => {
+//     const order = await Order.findOne({orderId: id});
+//     return order;
+// };
+
 const getOrderById = async (id: number) => {
-    const order = await Order.findOne({orderId: id});
+    const order = await Order.findOne({orderId: id}).populate('tableNumber').exec();
     return order;
 };
 

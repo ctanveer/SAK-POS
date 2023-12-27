@@ -1,4 +1,5 @@
-import { OrderItemInterface } from "./item.interface";
+import { OrderItemInterface} from "./item.interface";
+import { Schema, Types } from 'mongoose';
 
 export interface IOrder {
     orderId: number;
@@ -9,6 +10,7 @@ export interface IOrder {
     totalValue: number;
     orderStatus: string;
     tableId: number;
+    //table?: Types.ObjectId;
     paymentStatus: string;
     paymentMethod: string;
     items: string[];

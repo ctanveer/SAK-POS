@@ -25,7 +25,7 @@ exports.getAllTablesController = getAllTablesController;
 const getTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const table = yield (0, table_query_1.getTableById)(id);
+        const table = yield (0, table_query_1.getTableByIdWithAllOrders)(id);
         res.json(table);
     }
     catch (error) {

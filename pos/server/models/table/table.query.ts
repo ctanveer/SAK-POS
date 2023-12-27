@@ -6,30 +6,25 @@ const getAllTables = async () => {
     return tables;
 };
 
-const getTableById = async (id: number) => {
-    //const table = await Table.findById(id);
-    const table = await Table.findOne({tableId: id});
-    return table;
-};
-
-// type TableType = {
-//     num: number;
-//     capacity: number;
-//     bill: number;
-//     serverId: number;
+// const getTableById = async (id: number) => {
+//     //const table = await Table.findById(id);
+//     const table = await Table.findOne({tableId: id});
+//     return table;
 // };
 
-// interface ITable {
-//     num: number;
-//     capacity: number;
-//     bill: number;
-//     serverId: number;
-// }
+
+const getTableByIdWithAllOrders = async (id: number) => {
+  //const table = await Table.findById(id);
+  //const table = await Table.findOne({tableId: id}).populate('order').exec();
+  const table = await Table.findOne({tableId: id}).populate('orderList').exec();
+
+  return table;
+};
 
 
 const createTable = async (tableObject: ITable) => {
-    const table = await Table.create({...tableObject});
-    return table;
+  const table = await Table.create({...tableObject});
+  return table;
 }
 
 const updateTableById = async (
@@ -53,7 +48,7 @@ const deleteTableById = async (id: number) => {
 
 export {
     getAllTables,
-    getTableById,
+    getTableByIdWithAllOrders,
     createTable,
     updateTableById,
     deleteTableById

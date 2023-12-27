@@ -12,31 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTableById = exports.updateTableById = exports.createTable = exports.getTableById = exports.getAllTables = void 0;
+exports.deleteTableById = exports.updateTableById = exports.createTable = exports.getTableByIdWithAllOrders = exports.getAllTables = void 0;
 const table_model_1 = __importDefault(require("./table.model"));
 const getAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     const tables = yield table_model_1.default.find();
     return tables;
 });
 exports.getAllTables = getAllTables;
-const getTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+// const getTableById = async (id: number) => {
+//     //const table = await Table.findById(id);
+//     const table = await Table.findOne({tableId: id});
+//     return table;
+// };
+const getTableByIdWithAllOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
     //const table = await Table.findById(id);
-    const table = yield table_model_1.default.findOne({ tableId: id });
+    //const table = await Table.findOne({tableId: id}).populate('order').exec();
+    const table = yield table_model_1.default.findOne({ tableId: id }).populate('orderList').exec();
     return table;
 });
-exports.getTableById = getTableById;
-// type TableType = {
-//     num: number;
-//     capacity: number;
-//     bill: number;
-//     serverId: number;
-// };
-// interface ITable {
-//     num: number;
-//     capacity: number;
-//     bill: number;
-//     serverId: number;
-// }
+exports.getTableByIdWithAllOrders = getTableByIdWithAllOrders;
 const createTable = (tableObject) => __awaiter(void 0, void 0, void 0, function* () {
     const table = yield table_model_1.default.create(Object.assign({}, tableObject));
     return table;

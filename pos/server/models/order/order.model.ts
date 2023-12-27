@@ -1,7 +1,6 @@
-import {Schema, model} from 'mongoose'
+import {Schema, model, Types} from 'mongoose'
 import { IOrder } from '../../interfaces/order.interface'
-//import { getNextSequenceValue } from './order.query';
-import CounterOrderModel from './counter.order.model';
+import { getNextSequenceValue } from '../../utils/nextSequnece';
 
 const OrderSchema = new Schema<IOrder>({
     orderId: {type: Number},
@@ -11,20 +10,25 @@ const OrderSchema = new Schema<IOrder>({
     serverId: {type: Number},
     totalValue: {type: Number, default: 0},
     tableId: {type: Number, required: true},
+    //tableId: { type: Types.ObjectId, ref: 'Table', required: true },
+    //table: {type: mongoose.Types.ObjectId, ref: 'table', required: true},
     paymentStatus: {type: String},
     paymentMethod: {type: String},
     items: {type: [String]}
-}, {timestamps: true})
+}, 
+{
+    timestamps: true,
+    toObject: {virtuals: true},
+    toJSON: {virtuals: true}
+});
 
 
-export const getNextSequenceValue = async function (sequenceName: any) {
-    const sequenceDoc = await CounterOrderModel.findOneAndUpdate(
-      { _id: sequenceName },
-      { $inc: { sequence_value: 1 } },
-      { new: true, upsert: true }
-    );
-    return sequenceDoc.sequence_value;
-};
+OrderSchema.virtual('tableNumber', {
+    ref: 'table',
+    localField: 'orderId',
+    foreignField: 'currentOrderId',
+    justOne: true
+})
 
 // Middleware to auto-increment orderId
 OrderSchema.pre('save', async function (next) {
@@ -34,25 +38,6 @@ OrderSchema.pre('save', async function (next) {
     }
     next();
 });
-
-
-// OrderSchema.pre<IOrder>('save', async function (next) {
-//     try {
-//         const sequenceData = await SequenceModel.getNextAlphaNumSeq('orderId', {});
-        
-//         if (sequenceData) {
-//             this.orderId = sequenceData.seqId || '1'; // Assuming seqId is a string representation of a number
-//         } else {
-//             // If the sequence data is not found, you may handle this case accordingly
-//             console.error('Sequence data not found for orderId');
-//         }
-
-//         next();
-//     } catch (error) {
-//         console.error('Error generating orderId:', error);
-//         //next(error);
-//     }
-// });
 
 const Order = model<IOrder>('order', OrderSchema);
 

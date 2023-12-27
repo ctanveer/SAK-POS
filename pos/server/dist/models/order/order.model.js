@@ -8,14 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNextSequenceValue = void 0;
 const mongoose_1 = require("mongoose");
-//import { getNextSequenceValue } from './order.query';
-const counter_order_model_1 = __importDefault(require("./counter.order.model"));
+const nextSequnece_1 = require("../../utils/nextSequnece");
 const OrderSchema = new mongoose_1.Schema({
     orderId: { type: Number },
     date: { type: Date, default: Date.now() },
@@ -24,41 +19,31 @@ const OrderSchema = new mongoose_1.Schema({
     serverId: { type: Number },
     totalValue: { type: Number, default: 0 },
     tableId: { type: Number, required: true },
+    //tableId: { type: Types.ObjectId, ref: 'Table', required: true },
+    //table: {type: mongoose.Types.ObjectId, ref: 'table', required: true},
     paymentStatus: { type: String },
     paymentMethod: { type: String },
     items: { type: [String] }
-}, { timestamps: true });
-const getNextSequenceValue = function (sequenceName) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const sequenceDoc = yield counter_order_model_1.default.findOneAndUpdate({ _id: sequenceName }, { $inc: { sequence_value: 1 } }, { new: true, upsert: true });
-        return sequenceDoc.sequence_value;
-    });
-};
-exports.getNextSequenceValue = getNextSequenceValue;
-// Middleware to auto-increment consumerId
+}, {
+    timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+});
+OrderSchema.virtual('tableNumber', {
+    ref: 'table',
+    localField: 'orderId',
+    foreignField: 'currentOrderId',
+    justOne: true
+});
+// Middleware to auto-increment orderId
 OrderSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const doc = this;
         if (!doc.orderId) {
-            doc.orderId = yield (0, exports.getNextSequenceValue)('orderIdCounter');
+            doc.orderId = yield (0, nextSequnece_1.getNextSequenceValue)('orderIdCounter');
         }
         next();
     });
 });
-// OrderSchema.pre<IOrder>('save', async function (next) {
-//     try {
-//         const sequenceData = await SequenceModel.getNextAlphaNumSeq('orderId', {});
-//         if (sequenceData) {
-//             this.orderId = sequenceData.seqId || '1'; // Assuming seqId is a string representation of a number
-//         } else {
-//             // If the sequence data is not found, you may handle this case accordingly
-//             console.error('Sequence data not found for orderId');
-//         }
-//         next();
-//     } catch (error) {
-//         console.error('Error generating orderId:', error);
-//         //next(error);
-//     }
-// });
 const Order = (0, mongoose_1.model)('order', OrderSchema);
 exports.default = Order;

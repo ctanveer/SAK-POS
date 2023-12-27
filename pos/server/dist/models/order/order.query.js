@@ -14,14 +14,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteOrderById = exports.updateOrderById = exports.createOrder = exports.getOrderById = exports.getAllOrders = void 0;
 const order_model_1 = __importDefault(require("./order.model"));
-//import CounterOrderModel from "./counter.order.model";
 const getAllOrders = () => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield order_model_1.default.find();
     return orders;
 });
 exports.getAllOrders = getAllOrders;
+// const getOrderById = async (id: number) => {
+//     const order = await Order.findOne({orderId: id});
+//     return order;
+// };
 const getOrderById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const order = yield order_model_1.default.findOne({ orderId: id });
+    const order = yield order_model_1.default.findOne({ orderId: id }).populate('tableNumber').exec();
     return order;
 });
 exports.getOrderById = getOrderById;
