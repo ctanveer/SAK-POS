@@ -5,7 +5,8 @@ import {
     createTable,
     updateTableById,
     deleteTableById,
-    setTableAsOccupiedByTableId
+    setTableAsOccupiedByTableId,
+    closeAndUnoccupyTable
 } from '../models/table/table.query'
 import { parse } from 'dotenv';
 
@@ -70,6 +71,17 @@ export const setTableAsOccupiedController = async (req: Request, res: Response) 
     const tableId = parseInt(req.params.id);
     const tableObject = {...req.body}
     const response = await setTableAsOccupiedByTableId(tableId, tableObject);
+    res.json(response)
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+}
+
+export const closeAndUnoccupyTableController = async (req: Request, res: Response) => {
+  try {
+    const tableId = parseInt(req.params.id);
+    const response = await closeAndUnoccupyTable(tableId);
     res.json(response)
   } catch (error: any) {
     res.status(500);

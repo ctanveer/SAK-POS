@@ -5,7 +5,8 @@ import {
     createTableController,
     updateTableByIdController,
     deleteTableByIdController,
-    setTableAsOccupiedController
+    setTableAsOccupiedController,
+    closeAndUnoccupyTableController
 } from '../controllers/table.controller';
 
 const router = express.Router();
@@ -14,7 +15,8 @@ router.get('/', getAllTablesController);
 router.get('/:id', getTableByIdController);
 router.post('/', createTableController);
 router.put('/:id', updateTableByIdController);
-router.put('/settable/:id', setTableAsOccupiedController);
+router.put('/set-table/:id', setTableAsOccupiedController);
+router.put('/close-table/:id', closeAndUnoccupyTableController);
 router.delete('/:id', deleteTableByIdController);
 
 export default router;

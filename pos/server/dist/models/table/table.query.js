@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setTableAsOccupiedByTableId = exports.deleteTableById = exports.updateTableById = exports.createTable = exports.getTableByIdWithAllOrders = exports.getAllTables = void 0;
+exports.closeAndUnoccupyTable = exports.setTableAsOccupiedByTableId = exports.deleteTableById = exports.updateTableById = exports.createTable = exports.getTableByIdWithAllOrders = exports.getAllTables = void 0;
 const table_model_1 = __importDefault(require("./table.model"));
 const order_model_1 = __importDefault(require("../order/order.model"));
 const getAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -57,7 +57,7 @@ const updateTableById = (tableId, tableObject) => __awaiter(void 0, void 0, void
     return table;
 });
 exports.updateTableById = updateTableById;
-// set table as 
+// set table as occupied
 const setTableAsOccupiedByTableId = (tableId, tableObject) => __awaiter(void 0, void 0, void 0, function* () {
     const newOrder = yield order_model_1.default.create({ tableId: tableId, serverId: tableObject.serverId });
     const table = yield table_model_1.default.findOneAndUpdate({ tableId: tableId }, {
@@ -66,6 +66,14 @@ const setTableAsOccupiedByTableId = (tableId, tableObject) => __awaiter(void 0, 
     return table;
 });
 exports.setTableAsOccupiedByTableId = setTableAsOccupiedByTableId;
+//set table as unoccupied
+const closeAndUnoccupyTable = (tableId) => __awaiter(void 0, void 0, void 0, function* () {
+    const table = yield table_model_1.default.findOneAndUpdate({ tableId: tableId }, {
+        $set: { isOccupied: false, timeElapsed: null, capacity: null, currentOrderId: null, serverId: null, customerId: null, bill: 0 }
+    }, { new: true });
+    return table;
+});
+exports.closeAndUnoccupyTable = closeAndUnoccupyTable;
 const deleteTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const table = yield table_model_1.default.findOneAndDelete({ tableId: id });
     return table;

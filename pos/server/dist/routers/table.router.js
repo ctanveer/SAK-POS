@@ -10,6 +10,7 @@ router.get('/', table_controller_1.getAllTablesController);
 router.get('/:id', table_controller_1.getTableByIdController);
 router.post('/', table_controller_1.createTableController);
 router.put('/:id', table_controller_1.updateTableByIdController);
-router.put('/settable/:id', table_controller_1.setTableAsOccupiedController);
+router.put('/set-table/:id', table_controller_1.setTableAsOccupiedController);
+router.put('/close-table/:id', table_controller_1.closeAndUnoccupyTableController);
 router.delete('/:id', table_controller_1.deleteTableByIdController);
 exports.default = router;

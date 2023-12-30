@@ -61,7 +61,7 @@ const updateTableById = async (
 
 
 
-// set table as 
+// set table as occupied
 const setTableAsOccupiedByTableId = async (tableId: number, tableObject: ITable) => {
   const newOrder = await Order.create({tableId: tableId, serverId: tableObject.serverId})
   
@@ -73,7 +73,18 @@ const setTableAsOccupiedByTableId = async (tableId: number, tableObject: ITable)
     );
 
     return table;
+}
 
+//set table as unoccupied
+const closeAndUnoccupyTable = async (tableId: number) => {
+  const table = await Table.findOneAndUpdate({tableId: tableId},
+    {
+      $set: {isOccupied : false, timeElapsed: null, capacity: null, currentOrderId: null, serverId: null, customerId: null, bill: 0}
+    },
+    {new: true}
+    );
+
+    return table;
 }
 
 const deleteTableById = async (id: number) => {
@@ -87,5 +98,6 @@ export {
     createTable,
     updateTableById,
     deleteTableById,
-    setTableAsOccupiedByTableId
+    setTableAsOccupiedByTableId,
+    closeAndUnoccupyTable
 }
