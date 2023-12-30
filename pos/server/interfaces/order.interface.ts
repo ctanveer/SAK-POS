@@ -1,9 +1,8 @@
-import { OrderItemInterface} from "./item.interface";
-import { Schema, Types } from 'mongoose';
+import { Schema } from 'mongoose';
 
 export interface IOrder {
     orderId: number;
-    date: Date;
+    //date: Date;
     type: string;
     customerId?:number;
     serverId?: number;

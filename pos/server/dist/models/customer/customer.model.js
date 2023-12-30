@@ -11,40 +11,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const nextSequnece_1 = require("../../utils/nextSequnece");
-const OrderSchema = new mongoose_1.Schema({
-    orderId: { type: Number },
-    //date: {type: Date, default: Date.now()},
-    type: { type: String },
+const CustomerSchema = new mongoose_1.Schema({
     customerId: { type: Number },
-    serverId: { type: Number },
-    totalValue: { type: Number, default: 0 },
-    tableId: { type: Number, required: true },
-    //tableId: { type: Types.ObjectId, ref: 'Table', required: true },
-    //table: {type: mongoose.Types.ObjectId, ref: 'table', required: true},
-    paymentStatus: { type: String },
-    paymentMethod: { type: String },
-    items: { type: [String] }
-}, {
-    timestamps: true,
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true }
+    type: { type: String },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: Number },
+    orderHistory: [{
+            date: { type: Date },
+            orderId: { type: Number, required: true },
+            ratings: {
+                food: { type: String },
+                service: { type: String }
+            }
+        }],
+    vipStatus: { type: Boolean, default: false },
+    joiningDate: { type: Date, default: Date.now(), immutable: true }
 });
-OrderSchema.virtual('tableNumber', {
-    ref: 'table',
-    localField: 'orderId',
-    foreignField: 'currentOrderId',
-    justOne: true
-});
-// Middleware to auto-increment orderId
-OrderSchema.pre('save', function (next) {
+CustomerSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const doc = this;
-        if (!doc.orderId) {
-            doc.orderId = yield (0, nextSequnece_1.getNextSequenceValue)('orderIdCounter');
+        if (!doc.customerId) {
+            doc.customerId = yield (0, nextSequnece_1.getNextSequenceValue)('customerIdCounter');
             doc.type = 'inhouse';
         }
         next();
     });
 });
-const Order = (0, mongoose_1.model)('order', OrderSchema);
-exports.default = Order;
+const Customer = (0, mongoose_1.model)('customer', CustomerSchema);
+exports.default = Customer;

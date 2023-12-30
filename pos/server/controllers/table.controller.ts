@@ -4,8 +4,10 @@ import {
     getTableByIdWithAllOrders,
     createTable,
     updateTableById,
-    deleteTableById
+    deleteTableById,
+    setTableAsOccupiedByTableId
 } from '../models/table/table.query'
+import { parse } from 'dotenv';
 
 export const getAllTablesController = async (req: Request, res: Response) => {
     try {
@@ -62,6 +64,18 @@ export const deleteTableByIdController = async (req: Request, res: Response) => 
       res.json({ error: error.message });
     }
 };
+
+export const setTableAsOccupiedController = async (req: Request, res: Response) => {
+  try {
+    const tableId = parseInt(req.params.id);
+    const tableObject = {...req.body}
+    const response = await setTableAsOccupiedByTableId(tableId, tableObject);
+    res.json(response)
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+}
 
 
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteOrderByIdController = exports.updateOrderByIdController = exports.createOrderController = exports.getOrderByIdController = exports.getAllOrdersController = void 0;
+exports.deleteOrderByIdController = exports.updateOrderWithCustomerIdController = exports.updateOrderByIdController = exports.createOrderController = exports.getOrderByIdController = exports.getAllOrdersController = void 0;
 const order_query_1 = require("../models/order/order.query");
 const getAllOrdersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -60,6 +60,18 @@ const updateOrderByIdController = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.updateOrderByIdController = updateOrderByIdController;
+const updateOrderWithCustomerIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { orderId, customerId } = req.params;
+        const order = yield (0, order_query_1.updateOrderWithCustomerId)(parseInt(orderId), parseInt(customerId));
+        res.json(order);
+    }
+    catch (error) {
+        res.status(500);
+        res.json({ error: error.message });
+    }
+});
+exports.updateOrderWithCustomerIdController = updateOrderWithCustomerIdController;
 const deleteOrderByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);

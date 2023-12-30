@@ -1,6 +1,8 @@
-import mongoose from 'mongoose';
 import Table from './table.model';
 import { ITable } from '../../interfaces/table.interface';
+import Order from '../order/order.model';
+import { createOrder } from '../order/order.query';
+import { IOrder } from '../../interfaces/order.interface';
 
 const getAllTables = async () => {
     const tables = await Table.find();
@@ -57,6 +59,23 @@ const updateTableById = async (
     return table;
   };
 
+
+
+// set table as 
+const setTableAsOccupiedByTableId = async (tableId: number, tableObject: ITable) => {
+  const newOrder = await Order.create({tableId: tableId, serverId: tableObject.serverId})
+  
+  const table = await Table.findOneAndUpdate({tableId: tableId},
+    {
+      $set: {isOccupied : true, currentOrderId: newOrder.orderId, serverId: tableObject.serverId, capacity: tableObject.capacity, timeElapsed: Date.now(), bill: 0}
+    },
+    {new: true}
+    );
+
+    return table;
+
+}
+
 const deleteTableById = async (id: number) => {
     const table = await Table.findOneAndDelete ({tableId: id});
     return table;
@@ -67,5 +86,6 @@ export {
     getTableByIdWithAllOrders,
     createTable,
     updateTableById,
-    deleteTableById
+    deleteTableById,
+    setTableAsOccupiedByTableId
 }

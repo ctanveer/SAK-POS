@@ -4,8 +4,8 @@ import { getNextSequenceValue } from '../../utils/nextSequnece';
 
 const OrderSchema = new Schema<IOrder>({
     orderId: {type: Number},
-    date: {type: Date, default: Date.now()},
-    type: {type: String, required: true},
+    //date: {type: Date, default: Date.now()},
+    type: {type: String},
     customerId: {type: Number},
     serverId: {type: Number},
     totalValue: {type: Number, default: 0},
@@ -35,6 +35,7 @@ OrderSchema.pre('save', async function (next) {
     const doc = this;
     if (!doc.orderId) {
         doc.orderId = await getNextSequenceValue('orderIdCounter');
+        doc.type = 'inhouse'
     }
     next();
 });

@@ -4,6 +4,7 @@ import {
     getOrderById,
     createOrder,
     updateOrderById,
+    updateOrderWithCustomerId,
     deleteOrderById
 } from '../models/order/order.query';
 
@@ -50,6 +51,17 @@ export const updateOrderByIdController = async (req: Request, res: Response) => 
         res.status(500);
         res.json({error: error.message});
     }
+}
+
+export const updateOrderWithCustomerIdController = async (req: Request, res: Response) => {
+  try {
+    const {orderId, customerId} = req.params;
+    const order = await updateOrderWithCustomerId(parseInt(orderId), parseInt(customerId));
+    res.json(order)
+  } catch (error: any) {
+    res.status(500);
+    res.json({error: error.message});
+  }
 }
 
 export const deleteOrderByIdController = async (req: Request, res: Response) => {

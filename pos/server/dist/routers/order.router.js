@@ -10,5 +10,6 @@ router.get('/', order_controller_1.getAllOrdersController);
 router.get('/:id', order_controller_1.getOrderByIdController);
 router.post('/', order_controller_1.createOrderController);
 router.put('/:id', order_controller_1.updateOrderByIdController);
+router.put('/:orderId/add-customer/:customerId', order_controller_1.updateOrderWithCustomerIdController);
 router.delete('/:id', order_controller_1.deleteOrderByIdController);
 exports.default = router;

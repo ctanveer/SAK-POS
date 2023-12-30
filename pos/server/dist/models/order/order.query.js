@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteOrderById = exports.updateOrderById = exports.createOrder = exports.getOrderById = exports.getAllOrders = void 0;
+exports.updateOrderWithCustomerId = exports.deleteOrderById = exports.updateOrderById = exports.createOrder = exports.getOrderById = exports.getAllOrders = void 0;
 const order_model_1 = __importDefault(require("./order.model"));
 const getAllOrders = () => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield order_model_1.default.find();
@@ -38,6 +38,15 @@ const updateOrderById = (orderId, orderObject) => __awaiter(void 0, void 0, void
     return order;
 });
 exports.updateOrderById = updateOrderById;
+const updateOrderWithCustomerId = (orderId, customerId) => __awaiter(void 0, void 0, void 0, function* () {
+    let order = yield order_model_1.default.findOne({ orderId: orderId });
+    if (order) {
+        order.customerId = customerId;
+        order = yield order.save();
+    }
+    return order;
+});
+exports.updateOrderWithCustomerId = updateOrderWithCustomerId;
 const deleteOrderById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const order = yield order_model_1.default.findOneAndDelete({ orderId: id });
     return order;

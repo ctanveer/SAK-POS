@@ -19,20 +19,23 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const AutoIncrementFactory = require('mongoose-sequence');
 const table_router_1 = __importDefault(require("./routers/table.router"));
 const order_router_1 = __importDefault(require("./routers/order.router"));
+const customer_router_1 = __importDefault(require("./routers/customer.router"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use('/table', table_router_1.default);
 app.use('/order', order_router_1.default);
+app.use('/customer', customer_router_1.default);
 (function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         //await mongoose.connect(process.env.MONGO_URI as string);
-        const connection = yield mongoose_1.default.connect('mongodb://localhost:27017/pos-db');
+        // const connection = await mongoose.connect('mongodb://localhost:27017/pos-db');
+        const connection = yield mongoose_1.default.connect("mongodb+srv://pos-user1:projectcode23@cluster-pos.tadujas.mongodb.net/");
         console.log('Connected to DB');
-        //const AutoIncrement = AutoIncrementFactory(connection);
         app.listen(PORT, () => {
-            console.log(`Server is listening at http://127.0.0.1:${PORT}`);
+            // console.log(`Server is listening at http://127.0.0.1:${PORT}`);
+            console.log("Server is listening", PORT);
         });
     });
 })();

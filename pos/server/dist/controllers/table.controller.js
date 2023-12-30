@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTableByIdController = exports.updateTableByIdController = exports.createTableController = exports.getTableByIdController = exports.getAllTablesController = void 0;
+exports.setTableAsOccupiedController = exports.deleteTableByIdController = exports.updateTableByIdController = exports.createTableController = exports.getTableByIdController = exports.getAllTablesController = void 0;
 const table_query_1 = require("../models/table/table.query");
 const getAllTablesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -72,4 +72,17 @@ const deleteTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.deleteTableByIdController = deleteTableByIdController;
+const setTableAsOccupiedController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const tableId = parseInt(req.params.id);
+        const tableObject = Object.assign({}, req.body);
+        const response = yield (0, table_query_1.setTableAsOccupiedByTableId)(tableId, tableObject);
+        res.json(response);
+    }
+    catch (error) {
+        res.status(500);
+        res.json({ error: error.message });
+    }
+});
+exports.setTableAsOccupiedController = setTableAsOccupiedController;
 //const { id } = req.user as { id: string }; // This is the user id / creator id

@@ -35,6 +35,20 @@ const updateOrderById = async (
     return order
 };
 
+
+const updateOrderWithCustomerId = async (
+    orderId: number,
+    customerId: number
+) => {
+    let order = await Order.findOne({orderId: orderId});
+    if (order) {
+        order.customerId = customerId;
+        order = await order.save();
+    }
+    return order;
+
+}
+
 const deleteOrderById = async (id: number) => {
     const order = await Order.findOneAndDelete ({orderId: id});
     return order;
@@ -45,5 +59,6 @@ export {
     getOrderById,
     createOrder,
     updateOrderById,
-    deleteOrderById
+    deleteOrderById,
+    updateOrderWithCustomerId
 }
