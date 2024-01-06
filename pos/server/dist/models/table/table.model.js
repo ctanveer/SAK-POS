@@ -13,25 +13,33 @@ const mongoose_1 = require("mongoose");
 const nextSequnece_1 = require("../../utils/nextSequnece");
 const TableSchema = new mongoose_1.Schema({
     tableId: { type: Number },
-    capacity: { type: Number, required: true },
+    name: { type: String, required: true },
+    type: { type: String },
+    seats: { type: Number, required: true },
+    position: {
+        x: Number,
+        y: Number,
+        rotation: Number
+    },
+    date: { type: Number, required: true, default: Date.now() },
     timeElapsed: { type: Number, required: true, default: 0 },
-    isOccupied: { type: Boolean, required: true, default: false },
-    bill: { type: Number },
-    currentOrderId: { type: Number },
-    //order: { type: Types.ObjectId, ref: 'order' },
-    //order: { type: Number, ref: 'order' },
-    //order: { type: Number },
-    serverId: { type: Number },
-    customerId: { type: Number }
-}, {
-    toObject: { virtuals: true },
-    toJSON: { virtuals: true }
+    status: { type: String, required: true, default: 'open' },
+    currentOrderId: { type: Number, default: null },
+    waiterId: { type: Number, default: null },
+    customerId: { type: Number, default: null }
 });
+/*
+{
+    toObject: {virtuals: true},
+    toJSON: { virtuals: true }
+}
+
 TableSchema.virtual('orderList', {
     ref: 'order',
     localField: 'tableId',
     foreignField: 'tableId'
-});
+})
+*/
 // Middleware to auto-increment tableId
 TableSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {

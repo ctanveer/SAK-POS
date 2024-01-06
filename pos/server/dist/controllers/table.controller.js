@@ -22,10 +22,20 @@ const getAllTablesController = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.getAllTablesController = getAllTablesController;
+// export const getTableByIdController = async (req: Request, res: Response) => {
+//     try {
+//       const id = parseInt(req.params.id);
+//       const table = await getTableByIdWithAllOrders(id);
+//       res.json(table);
+//     } catch (error: any) {
+//       res.status(500);
+//       res.json({ error: error.message });
+//     }
+// };
 const getTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const table = yield (0, table_query_1.getTableByIdWithAllOrders)(id);
+        const table = yield (0, table_query_1.getTableById)(id);
         res.json(table);
     }
     catch (error) {

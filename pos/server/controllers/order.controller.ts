@@ -4,8 +4,8 @@ import {
     getOrderById,
     createOrder,
     updateOrderById,
-    updateOrderWithCustomerId,
-    deleteOrderById
+    deleteOrderById,
+    updateOrderWithCustomerId
 } from '../models/order/order.query';
 
 export const getAllOrdersController = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ export const getAllOrdersController = async (req: Request, res: Response) => {
 
 export const getOrderByIdController = async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = req.params.id;
       const order = await getOrderById(id);
       res.json(order);
     } catch (error: any) {
@@ -43,7 +43,7 @@ export const createOrderController = async (req: Request, res: Response) => {
 
 export const updateOrderByIdController = async (req: Request, res: Response) => {
     try {
-        const orderId = parseInt(req.params.id);
+        const orderId = req.params.id;
         const orderObject = { ...req.body };
         const order = await updateOrderById(orderId, orderObject);
         res.json(order);
@@ -56,7 +56,7 @@ export const updateOrderByIdController = async (req: Request, res: Response) => 
 export const updateOrderWithCustomerIdController = async (req: Request, res: Response) => {
   try {
     const {orderId, customerId} = req.params;
-    const order = await updateOrderWithCustomerId(parseInt(orderId), parseInt(customerId));
+    const order = await updateOrderById(orderId, {customerId: parseInt(customerId)});
     res.json(order)
   } catch (error: any) {
     res.status(500);
@@ -66,7 +66,7 @@ export const updateOrderWithCustomerIdController = async (req: Request, res: Res
 
 export const deleteOrderByIdController = async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = req.params.id;
       const response = await deleteOrderById(id);
       res.json(response);
     } catch (error: any) {

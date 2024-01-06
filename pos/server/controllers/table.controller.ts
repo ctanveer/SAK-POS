@@ -1,14 +1,12 @@
 import {Request, Response } from 'express';
 import {
     getAllTables,
-    getTableByIdWithAllOrders,
+    getTableById,
     createTable,
     updateTableById,
     deleteTableById,
-    setTableAsOccupiedByTableId,
-    closeAndUnoccupyTable
+    getTableByIdWithAllOrders,
 } from '../models/table/table.query'
-import { parse } from 'dotenv';
 
 export const getAllTablesController = async (req: Request, res: Response) => {
     try {
@@ -22,8 +20,8 @@ export const getAllTablesController = async (req: Request, res: Response) => {
 
 export const getTableByIdController = async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-      const table = await getTableByIdWithAllOrders(id);
+      const id = req.params.id;
+      const table = await getTableById(id);
       res.json(table);
     } catch (error: any) {
       res.status(500);
@@ -45,7 +43,7 @@ export const createTableController = async (req: Request, res: Response) => {
 
 export const updateTableByIdController = async (req: Request, res: Response) => {
     try {
-      const tableId = parseInt(req.params.id); 
+      const tableId = req.params.id;
       const tableObject = { ...req.body };
       const table = await updateTableById(tableId, tableObject);
       res.json(table);
@@ -57,7 +55,7 @@ export const updateTableByIdController = async (req: Request, res: Response) => 
 
 export const deleteTableByIdController = async (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
+      const id = req.params.id;
       const response = await deleteTableById(id);
       res.json(response);
     } catch (error: any) {
@@ -66,11 +64,11 @@ export const deleteTableByIdController = async (req: Request, res: Response) => 
     }
 };
 
-export const setTableAsOccupiedController = async (req: Request, res: Response) => {
+export const occcupyTableByIdController = async (req: Request, res: Response) => {
   try {
-    const tableId = parseInt(req.params.id);
-    const tableObject = {...req.body}
-    const response = await setTableAsOccupiedByTableId(tableId, tableObject);
+    const tableId = req.params.id;
+    const tableObject = {status: "occupied"};
+    const response = await updateTableById(tableId, tableObject);
     res.json(response)
   } catch (error: any) {
     res.status(500);
@@ -78,10 +76,11 @@ export const setTableAsOccupiedController = async (req: Request, res: Response) 
   }
 }
 
-export const closeAndUnoccupyTableController = async (req: Request, res: Response) => {
+export const unoccupyTableByIdController = async (req: Request, res: Response) => {
   try {
-    const tableId = parseInt(req.params.id);
-    const response = await closeAndUnoccupyTable(tableId);
+    const tableId = req.params.id;
+    const tableObject = {status: "open"};
+    const response = await updateTableById(tableId, tableObject);
     res.json(response)
   } catch (error: any) {
     res.status(500);

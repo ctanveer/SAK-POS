@@ -13,16 +13,14 @@ const mongoose_1 = require("mongoose");
 const nextSequnece_1 = require("../../utils/nextSequnece");
 const OrderSchema = new mongoose_1.Schema({
     orderId: { type: Number },
-    //date: {type: Date, default: Date.now()},
     type: { type: String },
+    date: { type: Date, default: Date.now() },
     customerId: { type: Number },
-    serverId: { type: Number },
-    totalValue: { type: Number, default: 0 },
-    tableId: { type: Number, required: true },
-    //tableId: { type: Types.ObjectId, ref: 'Table', required: true },
-    //table: {type: mongoose.Types.ObjectId, ref: 'table', required: true},
-    paymentStatus: { type: String },
-    paymentMethod: { type: String },
+    waiterId: { type: Number },
+    bill: { type: Number, default: 0 },
+    unit: { type: String },
+    status: { type: String },
+    timeSpent: { type: Number },
     items: { type: [String] }
 }, {
     timestamps: true,
@@ -48,3 +46,35 @@ OrderSchema.pre('save', function (next) {
 });
 const Order = (0, mongoose_1.model)('order', OrderSchema);
 exports.default = Order;
+/*
+const OrderSchema = new Schema<IOrder>({
+    orderId: {type: Number},
+    type: {type: String},
+    date: {type: Date, default: Date.now()},
+    customerId: {type: Number},
+    waiterId: {type: Number},
+    bill: {type: Number, default: 0},
+    unit: {type: String},
+    status: {type: String},
+    timeSpent: {type: Number},
+    items: {type: [String]}
+});
+
+
+
+Actual
+
+orderId: {type: Number},
+    //date: {type: Date, default: Date.now()},
+    type: {type: String},
+    customerId: {type: Number},
+    serverId: {type: Number},
+    totalValue: {type: Number, default: 0},
+    tableId: {type: Number, required: true},
+    //tableId: { type: Types.ObjectId, ref: 'Table', required: true },
+    //table: {type: mongoose.Types.ObjectId, ref: 'table', required: true},
+    paymentStatus: {type: String},
+    paymentMethod: {type: String},
+    items: {type: [String]}
+
+*/ 

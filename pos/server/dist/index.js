@@ -30,8 +30,8 @@ app.use('/customer', customer_router_1.default);
 (function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         //await mongoose.connect(process.env.MONGO_URI as string);
-        // const connection = await mongoose.connect('mongodb://localhost:27017/pos-db');
-        const connection = yield mongoose_1.default.connect("mongodb+srv://pos-user1:projectcode23@cluster-pos.tadujas.mongodb.net/");
+        const connection = yield mongoose_1.default.connect('mongodb://localhost:27017/pos-db');
+        //const connection = await mongoose.connect("mongodb+srv://pos-user1:projectcode23@cluster-pos.tadujas.mongodb.net/");
         console.log('Connected to DB');
         app.listen(PORT, () => {
             // console.log(`Server is listening at http://127.0.0.1:${PORT}`);

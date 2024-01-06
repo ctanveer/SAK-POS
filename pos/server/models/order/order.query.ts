@@ -6,13 +6,8 @@ const getAllOrders = async () => {
     return orders;
 };
 
-// const getOrderById = async (id: number) => {
-//     const order = await Order.findOne({orderId: id});
-//     return order;
-// };
-
-const getOrderById = async (id: number) => {
-    const order = await Order.findOne({orderId: id}).populate('tableNumber').exec();
+const getOrderById = async (id: string) => {
+    const order = await Order.findById(id)
     return order;
 };
 
@@ -22,11 +17,11 @@ const createOrder = async (orderObject: IOrder) => {
 }
 
 const updateOrderById = async (
-    orderId: number,
-    orderObject: IOrder,
+    orderId: string,
+    orderObject: Partial<IOrder>,
  ) => {
-    const order = await Order.findOneAndUpdate(
-        { orderId: orderId },
+    const order = await Order.findByIdAndUpdate(
+        { _id: orderId },
         {
             ...orderObject,
         },
@@ -35,9 +30,13 @@ const updateOrderById = async (
     return order
 };
 
+const deleteOrderById = async (id: string) => {
+    const order = await Order.findByIdAndDelete(id);
+    return order;
+};
 
 const updateOrderWithCustomerId = async (
-    orderId: number,
+    orderId: string,
     customerId: number
 ) => {
     let order = await Order.findOne({orderId: orderId});
@@ -48,11 +47,6 @@ const updateOrderWithCustomerId = async (
     return order;
 
 }
-
-const deleteOrderById = async (id: number) => {
-    const order = await Order.findOneAndDelete ({orderId: id});
-    return order;
-};
 
 export {
     getAllOrders,
