@@ -23,6 +23,7 @@ import { TableDetailsComponent } from './components/table-details/table-details.
 import { OrderStationComponent } from './pages/order-station/order-station.component';
 import { TableSetterPageComponent } from './pages/table-setter-page/table-setter-page.component';
 import en from '@angular/common/locales/en';
+import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 registerLocaleData(en);
 
@@ -33,6 +34,7 @@ registerLocaleData(en);
     TableDetailsComponent,
     OrderStationComponent,
     TableSetterPageComponent,
+    OrderPageComponent,
   ],
   imports: [
     BrowserModule,
