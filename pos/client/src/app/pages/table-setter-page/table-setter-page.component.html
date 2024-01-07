@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="editor">
+      Add table:
+      <button nz-button class="add-table-button" (click)="addNewTable('square')">
+        Square
+      </button>
+      <button
+        nz-button
+        class="add-table-button"
+        (click)="addNewTable('rectangle')"
+      >
+        Rectangle
+      </button>
+      <button nz-button class="add-table-button" (click)="addNewTable('circle')">
+        Circle
+      </button>
+      <button nz-button class="add-table-button" (click)="addNewTable('oval')">
+        Oval
+      </button>
+      <button nz-button nzType="primary" (click)="saveTables()">
+        <span nz-icon nzType="save" nzTheme="outline"></span>
+        Save
+      </button>
+      <div class="restaurant-floor">
+        <ko-stage [config]="configStage" (click)="handleStageClick($event)">
+          <ko-layer>
+            @for (table of tables; track $index) {
+            <ko-image
+              [config]="getConfig(table)"
+              (dragstart)="setSelectedTable(table)"
+              (dragmove)="handleDrag($event)"
+              (click)="setSelectedTable(table)"
+            ></ko-image>
+            <ko-text
+              [config]="{
+                text: table.info.name,
+                x: table.config.x,
+                y: table.config.y
+              }"
+            ></ko-text>
+            }
+          </ko-layer>
+        </ko-stage>
+      </div>
+    </div>
+    <app-table-details
+      [selectedTable]="selectedTable"
+      (removeTableEvent)="removeTable($event)"
+      (deselectTableEvent)="setSelectedTable(null)"
+      (updateTableEvent)="updateTable($event)"
+    ></app-table-details>
+  </div>
+  

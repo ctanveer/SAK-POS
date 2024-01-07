@@ -12,23 +12,64 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.closeAndUnoccupyTable = exports.setTableAsOccupiedByTableId = exports.deleteTableById = exports.updateTableById = exports.createTable = exports.getTableByIdWithAllOrders = exports.getTableById = exports.getAllTables = void 0;
+exports.getTableByIdWithAllOrders = exports.deleteTableById = exports.updateTableById = exports.createTable = exports.getTableById = exports.getAllTables = void 0;
 const table_model_1 = __importDefault(require("./table.model"));
-const order_model_1 = __importDefault(require("../order/order.model"));
-const order_query_1 = require("../order/order.query");
 const getAllTables = () => __awaiter(void 0, void 0, void 0, function* () {
     const tables = yield table_model_1.default.find();
     return tables;
 });
 exports.getAllTables = getAllTables;
 const getTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    //const table = await Table.findById(id);
-    const table = yield table_model_1.default.findOne({ tableId: id });
+    const table = yield table_model_1.default.findById(id);
     return table;
 });
 exports.getTableById = getTableById;
+const createTable = (tableObject) => __awaiter(void 0, void 0, void 0, function* () {
+    const table = yield table_model_1.default.create(Object.assign({}, tableObject));
+    return table;
+});
+exports.createTable = createTable;
+const updateTableById = (tableId, tableObject) => __awaiter(void 0, void 0, void 0, function* () {
+    const table = yield table_model_1.default.findByIdAndUpdate({ _id: tableId }, Object.assign({}, tableObject), { new: true });
+    return table;
+});
+exports.updateTableById = updateTableById;
+const deleteTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    // const table = await Table.findOneAndDelete ({tableId: id});
+    const table = yield table_model_1.default.findByIdAndDelete(id);
+    return table;
+});
+exports.deleteTableById = deleteTableById;
+/*
+// set table as occupied
+const setTableAsOccupiedByTableId = async (tableId: number, tableObject: ITable) => {
+  const newOrder = await Order.create({tableId: tableId, serverId: tableObject.serverId})
+  
+  const table = await Table.findOneAndUpdate({tableId: tableId},
+    {
+      $set: {isOccupied : true, currentOrderId: newOrder.orderId, serverId: tableObject.serverId, capacity: tableObject.capacity, timeElapsed: Date.now(), bill: 0}
+    },
+    {new: true}
+    );
+
+    return table;
+}
+
+
+
+//set table as unoccupied
+const closeAndUnoccupyTable = async (tableId: number) => {
+  const table = await Table.findOneAndUpdate({tableId: tableId},
+    {
+      $set: {isOccupied : false, timeElapsed: null, capacity: null, currentOrderId: null, serverId: null, customerId: null, bill: 0}
+    },
+    {new: true}
+    );
+
+    return table;
+}
+*/
 const getTableByIdWithAllOrders = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    //const table = await Table.findById(id);
     //const table = await Table.findOne({tableId: id}).populate('order').exec();
     //const table = await Table.findOne({tableId: id}).populate('orderList').exec();
     const table = yield table_model_1.default.aggregate([
@@ -49,43 +90,3 @@ const getTableByIdWithAllOrders = (id) => __awaiter(void 0, void 0, void 0, func
     return table;
 });
 exports.getTableByIdWithAllOrders = getTableByIdWithAllOrders;
-const createTable = (tableObject) => __awaiter(void 0, void 0, void 0, function* () {
-    const table = yield table_model_1.default.create(Object.assign({}, tableObject));
-    return table;
-});
-exports.createTable = createTable;
-const updateTableById = (tableId, tableObject) => __awaiter(void 0, void 0, void 0, function* () {
-    const table = yield table_model_1.default.findOneAndUpdate({ tableId: tableId }, Object.assign({}, tableObject), { new: true });
-    return table;
-});
-exports.updateTableById = updateTableById;
-// set table as occupied
-const setTableAsOccupiedByTableId = (tableId, tableObject) => __awaiter(void 0, void 0, void 0, function* () {
-    const newOrder = yield order_model_1.default.create({ tableId: tableId, waiterId: tableObject.waiterId, status: 'ongoing' });
-    const table = yield table_model_1.default.findOneAndUpdate({ tableId: tableId }, Object.assign(Object.assign({}, tableObject), { status: 'occupied', currentOrderId: newOrder.orderId, date: newOrder.date, timeElapsed: 0 }), { new: true });
-    return table;
-});
-exports.setTableAsOccupiedByTableId = setTableAsOccupiedByTableId;
-//set table as unoccupied
-const closeAndUnoccupyTable = (tableId) => __awaiter(void 0, void 0, void 0, function* () {
-    let table = yield table_model_1.default.findOne({ tableId: tableId });
-    if (table && table.currentOrderId) {
-        const closedOrder = (0, order_query_1.updateOrderById)(table.currentOrderId, { status: 'closed', timeSpent: (Date.now() - table.date) });
-    }
-    table = yield table_model_1.default.findOneAndUpdate({ tableId: tableId }, {
-        //$set: {isOccupied : false, timeElapsed: null, capacity: null, currentOrderId: null, serverId: null, customerId: null, bill: 0}
-        status: 'open',
-        currentOrderId: null,
-        waiterId: null,
-        customerId: null,
-        date: null,
-        timeElapsed: null
-    }, { new: true });
-    return table;
-});
-exports.closeAndUnoccupyTable = closeAndUnoccupyTable;
-const deleteTableById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const table = yield table_model_1.default.findOneAndDelete({ tableId: id });
-    return table;
-});
-exports.deleteTableById = deleteTableById;

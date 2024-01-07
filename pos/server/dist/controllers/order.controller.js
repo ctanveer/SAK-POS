@@ -24,7 +24,7 @@ const getAllOrdersController = (req, res) => __awaiter(void 0, void 0, void 0, f
 exports.getAllOrdersController = getAllOrdersController;
 const getOrderByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
         const order = yield (0, order_query_1.getOrderById)(id);
         res.json(order);
     }
@@ -49,7 +49,7 @@ const createOrderController = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.createOrderController = createOrderController;
 const updateOrderByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const orderId = parseInt(req.params.id);
+        const orderId = req.params.id;
         const orderObject = Object.assign({}, req.body);
         const order = yield (0, order_query_1.updateOrderById)(orderId, orderObject);
         res.json(order);
@@ -63,7 +63,7 @@ exports.updateOrderByIdController = updateOrderByIdController;
 const updateOrderWithCustomerIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { orderId, customerId } = req.params;
-        const order = yield (0, order_query_1.updateOrderWithCustomerId)(parseInt(orderId), parseInt(customerId));
+        const order = yield (0, order_query_1.updateOrderById)(orderId, { customerId: parseInt(customerId) });
         res.json(order);
     }
     catch (error) {
@@ -74,7 +74,7 @@ const updateOrderWithCustomerIdController = (req, res) => __awaiter(void 0, void
 exports.updateOrderWithCustomerIdController = updateOrderWithCustomerIdController;
 const deleteOrderByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
         const response = yield (0, order_query_1.deleteOrderById)(id);
         res.json(response);
     }

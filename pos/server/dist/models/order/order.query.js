@@ -19,12 +19,8 @@ const getAllOrders = () => __awaiter(void 0, void 0, void 0, function* () {
     return orders;
 });
 exports.getAllOrders = getAllOrders;
-// const getOrderById = async (id: number) => {
-//     const order = await Order.findOne({orderId: id});
-//     return order;
-// };
 const getOrderById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const order = yield order_model_1.default.findOne({ orderId: id }).populate('tableNumber').exec();
+    const order = yield order_model_1.default.findById(id);
     return order;
 });
 exports.getOrderById = getOrderById;
@@ -34,10 +30,15 @@ const createOrder = (orderObject) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.createOrder = createOrder;
 const updateOrderById = (orderId, orderObject) => __awaiter(void 0, void 0, void 0, function* () {
-    const order = yield order_model_1.default.findOneAndUpdate({ orderId: orderId }, Object.assign({}, orderObject), { new: true });
+    const order = yield order_model_1.default.findByIdAndUpdate({ _id: orderId }, Object.assign({}, orderObject), { new: true });
     return order;
 });
 exports.updateOrderById = updateOrderById;
+const deleteOrderById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const order = yield order_model_1.default.findByIdAndDelete(id);
+    return order;
+});
+exports.deleteOrderById = deleteOrderById;
 const updateOrderWithCustomerId = (orderId, customerId) => __awaiter(void 0, void 0, void 0, function* () {
     let order = yield order_model_1.default.findOne({ orderId: orderId });
     if (order) {
@@ -47,8 +48,3 @@ const updateOrderWithCustomerId = (orderId, customerId) => __awaiter(void 0, voi
     return order;
 });
 exports.updateOrderWithCustomerId = updateOrderWithCustomerId;
-const deleteOrderById = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const order = yield order_model_1.default.findOneAndDelete({ orderId: id });
-    return order;
-});
-exports.deleteOrderById = deleteOrderById;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.closeAndUnoccupyTableController = exports.setTableAsOccupiedController = exports.deleteTableByIdController = exports.updateTableByIdController = exports.createTableController = exports.getTableByIdController = exports.getAllTablesController = void 0;
+exports.unoccupyTableByIdController = exports.occcupyTableByIdController = exports.deleteTableByIdController = exports.updateTableByIdController = exports.createTableController = exports.getTableByIdController = exports.getAllTablesController = void 0;
 const table_query_1 = require("../models/table/table.query");
 const getAllTablesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -22,19 +22,9 @@ const getAllTablesController = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.getAllTablesController = getAllTablesController;
-// export const getTableByIdController = async (req: Request, res: Response) => {
-//     try {
-//       const id = parseInt(req.params.id);
-//       const table = await getTableByIdWithAllOrders(id);
-//       res.json(table);
-//     } catch (error: any) {
-//       res.status(500);
-//       res.json({ error: error.message });
-//     }
-// };
 const getTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
         const table = yield (0, table_query_1.getTableById)(id);
         res.json(table);
     }
@@ -59,7 +49,7 @@ const createTableController = (req, res) => __awaiter(void 0, void 0, void 0, fu
 exports.createTableController = createTableController;
 const updateTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tableId = parseInt(req.params.id);
+        const tableId = req.params.id;
         const tableObject = Object.assign({}, req.body);
         const table = yield (0, table_query_1.updateTableById)(tableId, tableObject);
         res.json(table);
@@ -72,7 +62,7 @@ const updateTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0
 exports.updateTableByIdController = updateTableByIdController;
 const deleteTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
         const response = yield (0, table_query_1.deleteTableById)(id);
         res.json(response);
     }
@@ -82,11 +72,11 @@ const deleteTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.deleteTableByIdController = deleteTableByIdController;
-const setTableAsOccupiedController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const occcupyTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tableId = parseInt(req.params.id);
-        const tableObject = Object.assign({}, req.body);
-        const response = yield (0, table_query_1.setTableAsOccupiedByTableId)(tableId, tableObject);
+        const tableId = req.params.id;
+        const tableObject = { status: "occupied" };
+        const response = yield (0, table_query_1.updateTableById)(tableId, tableObject);
         res.json(response);
     }
     catch (error) {
@@ -94,11 +84,12 @@ const setTableAsOccupiedController = (req, res) => __awaiter(void 0, void 0, voi
         res.json({ error: error.message });
     }
 });
-exports.setTableAsOccupiedController = setTableAsOccupiedController;
-const closeAndUnoccupyTableController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.occcupyTableByIdController = occcupyTableByIdController;
+const unoccupyTableByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tableId = parseInt(req.params.id);
-        const response = yield (0, table_query_1.closeAndUnoccupyTable)(tableId);
+        const tableId = req.params.id;
+        const tableObject = { status: "open" };
+        const response = yield (0, table_query_1.updateTableById)(tableId, tableObject);
         res.json(response);
     }
     catch (error) {
@@ -106,5 +97,5 @@ const closeAndUnoccupyTableController = (req, res) => __awaiter(void 0, void 0, 
         res.json({ error: error.message });
     }
 });
-exports.closeAndUnoccupyTableController = closeAndUnoccupyTableController;
+exports.unoccupyTableByIdController = unoccupyTableByIdController;
 //const { id } = req.user as { id: string }; // This is the user id / creator id

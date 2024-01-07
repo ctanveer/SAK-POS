@@ -1,0 +1,85 @@
+@if (selectedTable) {
+    <form nz-form>
+      <h3>Table Details</h3>
+      <nz-form-item class="full">
+        <nz-form-label nzFor="name">Table name</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            name="name"
+            type="text"
+            id="name"
+            [(ngModel)]="selectedTable.info.name"
+          />
+        </nz-form-control>
+      </nz-form-item>
+    
+      <nz-form-item class="full">
+        <nz-row class="full">
+          <nz-form-label nzFor="seats">Seats</nz-form-label>
+          <nz-col nzSpan="12">
+            <nz-slider
+              name="seats-slider"
+              id="seats"
+              [nzMin]="getSeatData().min"
+              [nzMax]="getSeatData().max"
+              [(ngModel)]="selectedTable.info.seats"
+              (ngModelChange)="updateTable(selectedTable.info)"
+              [nzStep]="getSeatData().step"
+            ></nz-slider>
+          </nz-col>
+          <div nz-col nzSpan="2">
+            <nz-input-number
+              [nzMin]="getSeatData().min"
+              [nzMax]="getSeatData().max"
+              [(ngModel)]="selectedTable.info.seats"
+              (ngModelChange)="updateTable(selectedTable.info)"
+              name="seats"
+              id="seats-input"
+            ></nz-input-number>
+          </div>
+        </nz-row>
+      </nz-form-item>
+    
+      <div class="full rotate-container">
+        <p>Rotate: </p>
+        <button
+          type="button"
+          nz-button
+          (click)="rotateTable('clockwise')"
+        >
+          <span nz-icon nzType="rotate-right" nzTheme="outline"></span>
+        </button>
+    
+        <button
+        type="button"
+        nz-button
+        (click)="rotateTable('anti-clockwise')"
+      >
+        <span nz-icon nzType="rotate-left" nzTheme="outline"></span>
+      </button>
+      </div>
+    
+      <div class="full button-container">
+        <button
+          type="button"
+          [nzGhost]="true"
+          nzType="primary"
+          nz-button
+          (click)="deselectTable()"
+        >
+          <span nz-icon nzType="close-circle" nzTheme="outline"></span>Close
+        </button>
+        <button
+          type="button"
+          [nzDanger]="true"
+          nzType="primary"
+          nz-button
+          (click)="removeTable()"
+        >
+          <span nz-icon nzType="delete"></span> Remove
+        </button>
+      </div>
+    </form>
+}
+    
