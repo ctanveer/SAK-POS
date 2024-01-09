@@ -1,3 +1,18 @@
+
+<div class="py-4 px-4">
+    <h2>Table View</h2>
+    <div class="flex">
+        @for (table of tables; track $index) {
+            <div class="table-block my-4 mx-4 text-center rounded-md" (click)="setEditTable(table)">
+                <p>{{table.name}}</p>
+                <p>Seats: {{table.seats}}</p>
+            </div>
+        }
+    </div>
+</div>
+
+
+
 <div class="py-5 px-4">
     <button nz-button class="add-table-button" (click)="addNewTable('square', 'open')">
         Add Table

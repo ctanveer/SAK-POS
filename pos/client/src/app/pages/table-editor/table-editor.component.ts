@@ -10,6 +10,7 @@ import { TableService } from '../../services/table.service';
 export class TableEditorComponent implements OnInit{
   tables:ITable[] = [];
   selectedTable:ITable | null = null;
+  selectTableToEdit: ITable | null = null;
 
   constructor(private tableService: TableService){}
 
@@ -73,6 +74,11 @@ export class TableEditorComponent implements OnInit{
       default:
         return { min: 2, max: 4, step: 1 };
     }
+  }
+
+  setEditTable (table: ITable | null) {
+    this.selectTableToEdit = table;
+    console.log(this.selectTableToEdit)
   }
 
   updateTable (table: ITable) {
