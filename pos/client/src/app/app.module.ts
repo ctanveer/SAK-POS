@@ -3,12 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NZ_I18N } from 'ng-zorro-antd/i18n';
-import { en_US } from 'ng-zorro-antd/i18n';
+import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -21,6 +20,15 @@ import { TableEditorComponent } from './pages/table-editor/table-editor.componen
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { PageContainerComponent } from './pages/page-container/page-container.component';
+import { TablesPageComponent } from './pages/tables-page/tables-page.component';
+import { EditorPageComponent } from './pages/editor-page/editor-page.component';
+import { OrderHistoryPageComponent } from './pages/order-history-page/order-history-page.component';
+import { AuthRedirectPageComponent } from './pages/auth-redirect-page/auth-redirect-page.component';
+import { SplashLogoComponent } from './components/splash-logo/splash-logo.component';
+import { AuthInterceptor } from './interceptors/auth-interceptor/auth-interceptor.service';
+import { ErrorInterceptor } from './interceptors/error-interceptor/error-interceptor.service';
+import { TokenInterceptor } from './interceptors/token-interceptor/token-interceptor.service';
 
 registerLocaleData(en);
 
@@ -30,7 +38,13 @@ registerLocaleData(en);
     AppComponent,
     NavbarComponent,
     HomepageComponent,
-    TableEditorComponent
+    TableEditorComponent,
+    PageContainerComponent,
+    TablesPageComponent,
+    EditorPageComponent,
+    OrderHistoryPageComponent,
+    AuthRedirectPageComponent,
+    SplashLogoComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +62,22 @@ registerLocaleData(en);
     NzInputNumberModule
   ],
   providers: [
-    { provide: NZ_I18N, useValue: en_US }
+    { provide: NZ_I18N, useValue: en_US },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    }
   ],
   bootstrap: [AppComponent]
 })

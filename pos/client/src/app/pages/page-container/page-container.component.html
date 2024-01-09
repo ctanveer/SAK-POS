@@ -1,0 +1,12 @@
+<app-navbar></app-navbar>
+<div class="flex">
+  <ul nz-menu nzMode="inline" >
+    @for (path of paths; track $index) {
+      <li nz-menu-item [nzSelected]="isSelected(path)" [routerLink]="'/' + path">{{ parseName(path)}}</li>
+    }
+  </ul>
+
+  <div class="grow">
+    <router-outlet></router-outlet>
+  </div>
+</div>
