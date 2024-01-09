@@ -10,7 +10,7 @@ import { config } from './config';
 
 const app = express();
 
-app.use(cors({ origin: config.CORS_ORIGIN.split(",") }));
+app.use(cors({ origin: config.CORS_ORIGIN.split(","), exposedHeaders: ['Authorization']}));
 app.use(express.json());
 
 app.use('/auth', authRouter);
