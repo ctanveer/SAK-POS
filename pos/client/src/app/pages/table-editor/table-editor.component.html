@@ -1,0 +1,57 @@
+<div class="py-5 px-4">
+    <button nz-button class="add-table-button" (click)="addNewTable('square', 'open')">
+        Add Table
+    </button>
+    
+    <div class="pt-4">
+        <h3>Edit a Table</h3>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a table" [(ngModel)]="selectedTable">
+            @for (table of tables; track $index) {
+                <nz-option [nzLabel]="table.name" [nzValue]="table._id"></nz-option>
+            }
+        </nz-select>
+    </div>
+    
+    <form nz-form *ngIf="selectedTable" class="pt-4">
+        <h3>Table Details</h3>
+        <nz-form-item class="full">
+            <nz-form-label nzFor="name">Table name</nz-form-label>
+            <nz-form-control>
+                <input
+                nz-input
+                name="name"
+                type="text"
+                id="name"
+            />
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="full">
+            <nz-row class="full">
+            <nz-form-label nzFor="seats">Seats</nz-form-label>
+            <nz-col nzSpan="12">
+                <nz-slider
+                name="seats-slider"
+                id="seats"
+                [nzMin]="getSeatData().min"
+                [nzMax]="getSeatData().max"
+                [(ngModel)]="selectedTable.seats"
+                (ngModelChange)="updateTable(selectedTable)"
+                [nzStep]="getSeatData().step"
+                ></nz-slider>
+            </nz-col>
+            <div nz-col nzSpan="2">
+                <nz-input-number
+                [nzMin]="getSeatData().min"
+                [nzMax]="getSeatData().max"
+                [(ngModel)]="selectedTable.seats"
+                (ngModelChange)="updateTable(selectedTable)"
+                name="seats"
+                id="seats-input"
+                ></nz-input-number>
+            </div>
+            </nz-row>
+        </nz-form-item>
+    
+    </form>
+</div>

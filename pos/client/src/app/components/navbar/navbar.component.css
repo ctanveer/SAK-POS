@@ -1,7 +1,7 @@
 .navbar-container {
   width: 100dvw;
   height: 5rem;
-  background-color: #26a366;
+  background-color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,4 +13,9 @@ h2 {
   
 .nav-button {
   margin-right: 30px;
+}
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
 }

@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OrderStationComponent } from './pages/order-station/order-station.component';
-import { TableSetterPageComponent } from './pages/table-setter-page/table-setter-page.component';
-import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { HomepageComponent } from './pages/homepage/homepage.component';
+import { TableEditorComponent } from './pages/table-editor/table-editor.component';
+
 
 const routes: Routes = [
-  { path: 'order', component: OrderStationComponent, pathMatch: 'full' },
-  { path: 'table-setter', component: TableSetterPageComponent, pathMatch: 'full' },
-  { path: 'order-page', component: OrderPageComponent, pathMatch: 'full'},
-  { path: '**', redirectTo: '/order'}
+  {path: 'homepage', component: HomepageComponent, pathMatch: 'full'},
+  {path: 'table-editor', component: TableEditorComponent, pathMatch: 'full'},
+  {path: '**', redirectTo: '/homepage'}
 ];
+
+//use a page
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

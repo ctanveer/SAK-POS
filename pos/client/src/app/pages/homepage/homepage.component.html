@@ -1,0 +1,18 @@
+<nz-descriptions nzTitle="USER Info" class="mt-4 mb-1 px-5 bg-light-gray">
+    <nz-descriptions-item nzTitle="Name">{{waiter.name}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="ID">{{waiter.id}}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Login Time">{{waiter.loginTime}}</nz-descriptions-item>
+</nz-descriptions>
+
+
+<div class="flex">
+    <ul nz-menu nzMode="inline" >
+      @for (path of paths; track $index) {
+        <li nz-menu-item [nzSelected]="isSelected(path)" [routerLink]="'/' + path">{{ parseName(path) }}</li>
+      }
+    </ul>
+  
+    <div class="grow">
+      <router-outlet></router-outlet>
+    </div>
+</div>

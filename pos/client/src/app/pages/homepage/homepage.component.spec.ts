@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableSetterPageComponent } from './table-setter-page.component';
+import { HomepageComponent } from './homepage.component';
 
-describe('TableSetterPageComponent', () => {
-  let component: TableSetterPageComponent;
-  let fixture: ComponentFixture<TableSetterPageComponent>;
+describe('HomepageComponent', () => {
+  let component: HomepageComponent;
+  let fixture: ComponentFixture<HomepageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TableSetterPageComponent]
+      declarations: [HomepageComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(TableSetterPageComponent);
+    fixture = TestBed.createComponent(HomepageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
