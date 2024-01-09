@@ -29,6 +29,7 @@ import { SplashLogoComponent } from './components/splash-logo/splash-logo.compon
 import { AuthInterceptor } from './interceptors/auth-interceptor/auth-interceptor.service';
 import { ErrorInterceptor } from './interceptors/error-interceptor/error-interceptor.service';
 import { TokenInterceptor } from './interceptors/token-interceptor/token-interceptor.service';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 registerLocaleData(en);
 
@@ -59,7 +60,8 @@ registerLocaleData(en);
     NzFormModule,
     NzSelectModule,
     NzSliderModule,
-    NzInputNumberModule
+    NzInputNumberModule,
+    NzMessageModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
