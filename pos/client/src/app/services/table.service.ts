@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ITable } from '../models/table.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class TableService {
   
   constructor(  private http: HttpClient) { }
 
-  private tableUrl = "https://bento-pos-server.onrender.com/table"
+  private tableUrl = environment.API_URL + "/table";
 
   getAllTables (): Observable<any> {
     return this.http.get<ITable[]>(this.tableUrl);

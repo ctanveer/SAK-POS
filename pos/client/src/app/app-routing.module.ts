@@ -2,12 +2,23 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { TableEditorComponent } from './pages/table-editor/table-editor.component';
+import { PageContainerComponent } from './pages/page-container/page-container.component';
+import { TablesPageComponent } from './pages/tables-page/tables-page.component';
+import { EditorPageComponent } from './pages/editor-page/editor-page.component';
+import { OrderHistoryPageComponent } from './pages/order-history-page/order-history-page.component';
+import { AuthRedirectPageComponent } from './pages/auth-redirect-page/auth-redirect-page.component';
 
 
 const routes: Routes = [
   {path: 'homepage', component: HomepageComponent, pathMatch: 'full'},
-  {path: 'table-editor', component: TableEditorComponent, pathMatch: 'full'},
-  {path: '**', redirectTo: '/homepage'}
+  {path: 'editor', component: TableEditorComponent, pathMatch: 'full'},
+  {path: 'auth-redirect', component: AuthRedirectPageComponent, pathMatch: 'full'},
+  {path: '', component: PageContainerComponent, children: [
+    {path: 'tables', component: TablesPageComponent, pathMatch: 'full'},
+    {path: 'table-editor', component: EditorPageComponent, pathMatch: 'full'},
+    {path: 'order-history', component: OrderHistoryPageComponent, pathMatch: 'full'},
+  ]},
+  {path: '**', redirectTo: '/tables'}
 ];
 
 //use a page
