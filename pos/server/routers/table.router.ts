@@ -8,12 +8,13 @@ import {
     occcupyTableByIdController,
     unoccupyTableByIdController
 } from '../controllers/table.controller';
+import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
-router.get('/', getAllTablesController);
+router.get('/', authMiddleware, getAllTablesController);
 router.get('/:id', getTableByIdController);
-router.post('/', createTableController);
+router.post('/', authMiddleware, createTableController);
 router.put('/:id', updateTableByIdController);
 router.delete('/:id', deleteTableByIdController);
 router.put('/table-occupy/:id', occcupyTableByIdController);
