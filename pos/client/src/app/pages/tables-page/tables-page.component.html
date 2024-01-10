@@ -4,9 +4,11 @@
         @for (table of tables; track $index) {
             <div class="table-block p-4 m-4 text-center rounded-md" 
             (click)="setSelectedTable(table) "
-            [ngStyle]="{ 'background-color': getStatusColor(table.status) }">
+            [ngStyle]="{ 'background-color': getStatusColor(table.status), 'min-width': '120px', 'cursor': 'pointer' }"
+            >
                 <p><strong>{{table.name}}</strong></p>
                 <p>Seats: {{table.seats}}</p>
+                <img [src]="getTableImage(table)" />
             </div>
         }
     </div>
@@ -43,6 +45,8 @@
             </nz-form-item>
         </div>
         <!-- [(ngModel)]="selectedTable.status" -->
+
+        <img [src]="getSelectedTableImage()" alt="Selected table" />
 
      
     </ng-container>
