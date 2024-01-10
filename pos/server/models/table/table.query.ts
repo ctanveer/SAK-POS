@@ -1,9 +1,14 @@
 import Table from './table.model';
 import { ITable } from '../../interfaces/table.interface';
 
-const getAllTables = async () => {
-    const tables = await Table.find();
+const getAllTablesForRestaurant = async (restaurantId: number) => {
+  try {
+    const tables = await Table.find({ restaurantId });
     return tables;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error getting tables for restaurant');
+  }
 };
 
 const getTableById = async (id:string) => {
@@ -89,7 +94,7 @@ const getTableByIdWithAllOrders = async (id: number) => {
 };
 
 export {
-    getAllTables,
+    getAllTablesForRestaurant,
     getTableById,
     createTable,
     updateTableById,

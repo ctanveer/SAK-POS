@@ -1,20 +1,24 @@
 import {Request, Response } from 'express';
 import {
-    getAllTables,
     getTableById,
     createTable,
     updateTableById,
     deleteTableById,
     getTableByIdWithAllOrders,
+    getAllTablesForRestaurant,
 } from '../models/table/table.query'
+import { AuthRequest } from '../interfaces/authRequest.interface';
 
-export const getAllTablesController = async (req: Request, res: Response) => {
+export const getAllTablesController = async (req: AuthRequest, res: Response) => {
     try {
-        const tables = await getAllTables();
-        res.json(tables)
+      const user = req.user;
+      if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+      
+      const tables = await getAllTablesForRestaurant(user.employeeInformation.restaurantId);
+      res.json(tables)
     } catch (error: any) {
-        res.status(500);
-        res.json({ error: error.message });
+      res.status(500);
+      res.json({ error: error.message });
     }
 };
 
@@ -29,9 +33,12 @@ export const getTableByIdController = async (req: Request, res: Response) => {
     }
 };
 
-export const createTableController = async (req: Request, res: Response) => {
+export const createTableController = async (req: AuthRequest, res: Response) => {
     try {
-      const tableObject = {...req.body };
+      const user = req.user;
+      if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+      const tableObject = {...req.body, restaurantId: user.employeeInformation.restaurantId };
       const table = await createTable(tableObject);
       res.status(201);
       res.json(table);

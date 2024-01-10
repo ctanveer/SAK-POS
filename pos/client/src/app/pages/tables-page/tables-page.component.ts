@@ -30,16 +30,26 @@ export class TablesPageComponent implements OnInit{
 
   }
 
+  getTableImage (table: ITable) {
+    return `../../../assets/svg/tables/${table.status}/${table.type}-${table.seats}.svg`
+  }
+
+  getSelectedTableImage () {
+    if (this.selectedTable)
+      return `../../../assets/svg/tables/${this.selectedStatus}/${this.selectedTable.type}-${this.selectedTable.seats}.svg`;
+    return ''
+  }
+
   getStatusColor(status: string): string {
     switch (status) {
         case 'open':
             return 'white';
         case 'occupied':
-            return '#33FF57';
+            return '#d7ffde';
         case 'reserved':
-            return '#FFBD33';
+            return '#ffeabd';
         case 'closed':
-            return '#FF5733';
+            return '#ffd7cf';
         default:
             return 'white';
     }
@@ -47,6 +57,7 @@ export class TablesPageComponent implements OnInit{
 
   setSelectedTable (table: ITable | null) {
     this.selectedTable = table;
+    if (table) this.selectedStatus = table.status;
     console.log(this.selectedTable);
     this.open();
   }
