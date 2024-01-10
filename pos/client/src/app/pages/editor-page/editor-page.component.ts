@@ -32,6 +32,14 @@ export class EditorPageComponent implements OnInit{
 
   }
 
+  getSeatInputData (type: "square" | "round" | "rectangle" | "oval" | null) {
+    if (type === 'square' || type === "round") return { min: 2, max: 4, step: 1};
+    else return { min: 4, max: 8, step: 2};
+  }
+
+  getTableImage (type: "square" | "round" | "rectangle" | "oval", seats: number) {
+    return `../../../assets/svg/tables/open/${type}-${seats}.svg`
+  }
 
   addNewTable (
     name: string | null,

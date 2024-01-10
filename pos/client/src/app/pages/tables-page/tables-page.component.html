@@ -44,9 +44,10 @@
             <button nz-button nzType="default" (click)="changeTableStatus()">Save</button>
             </nz-form-item>
         </div>
-        <!-- [(ngModel)]="selectedTable.status" -->
 
-        <img [src]="getSelectedTableImage()" alt="Selected table" />
+        <div class="flex justify-center">
+            <img [src]="getSelectedTableImage()" alt="Selected table" />
+        </div>
 
      
     </ng-container>

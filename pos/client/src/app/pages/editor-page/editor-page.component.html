@@ -5,6 +5,8 @@
             <div class="table-block my-4 mx-4 text-center rounded-md" (click)="setSelectEditTable(table)">
                 <p><strong>{{table.name}}</strong></p>
                 <p>Seats: {{table.seats}}</p>
+
+                <img [src]="getTableImage(table.type, table.seats)" alt="table"/>
             </div>
         }
     </div>
@@ -45,7 +47,7 @@
               <nz-form-control>
                 <nz-select name='table-type' [nzPlaceHolder]="selectedTableToEdit.type" [(ngModel)]="selectedTableToEdit.type">
                     @for (type of tableTypes; track $index) {
-                        <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                        <nz-option [nzLabel]="(type[0].toUpperCase() + type.slice(1))" [nzValue]="type"></nz-option>
                     }
                 </nz-select>
               </nz-form-control>
@@ -55,19 +57,24 @@
             <nz-form-item>
               <nz-form-label>Seats</nz-form-label>
               <nz-form-control>
-                <input
-                    nz-input
-                    name="seats"
+                <nz-input-number
+                  name="seats"
                     type="number"
                     id="seats"
                     [(ngModel)]="selectedTableToEdit.seats"
-                    min="1"
-                />
+                    [nzMin]="getSeatInputData(selectedTableToEdit.type).min"
+                    [nzMax]="getSeatInputData(selectedTableToEdit.type).max"
+                    [nzStep]="getSeatInputData(selectedTableToEdit.type).step"
+                 />
               </nz-form-control>
             </nz-form-item>
           </div>
         </div>
+        <div class="flex justify-center">
+          <img [src]="getTableImage(selectedTableToEdit.type, selectedTableToEdit.seats)" alt="Edit table" />
+        </div>
       </form>
+
 
       <ng-template #footerTpl>
         <div style="float: left">
@@ -121,7 +128,7 @@
                 <nz-form-control>
                   <nz-select name='table-type' nzPlaceHolder="Select Table type" [(ngModel)]="newTableType">
                       @for (type of tableTypes; track $index) {
-                          <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                          <nz-option [nzLabel]="(type[0].toUpperCase() + type.slice(1))" [nzValue]="type"></nz-option>
                       }
                   </nz-select>
                 </nz-form-control>
@@ -131,18 +138,24 @@
               <nz-form-item>
                 <nz-form-label>Seats</nz-form-label>
                 <nz-form-control>
-                  <input
-                      nz-input
-                      name="seats"
-                      type="number"
-                      id="seats"
-                      [(ngModel)]="newTableSeats"
-                      min="1"
+
+                  <nz-input-number
+                    name="seats"
+                    [(ngModel)]="newTableSeats"
+                    [nzMin]="getSeatInputData(newTableType).min"
+                    [nzMax]="getSeatInputData(newTableType).max"
+                    [nzStep]="getSeatInputData(newTableType).step"
                   />
                 </nz-form-control>
               </nz-form-item>
             </div>
           </div>
+
+          @if (newTableType && newTableSeats) {
+            <div class="flex justify-center">
+              <img [src]="getTableImage(newTableType, newTableSeats)" alt="Edit table" />
+            </div>
+          }
     </form>
 
     <ng-template #footerTpl>

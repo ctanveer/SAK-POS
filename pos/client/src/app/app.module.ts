@@ -33,6 +33,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 registerLocaleData(en);
 
@@ -67,7 +68,8 @@ registerLocaleData(en);
     NzMessageModule,
     NzDrawerModule,
     NzDividerModule,
-    NzIconModule
+    NzIconModule,
+    NzInputModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
