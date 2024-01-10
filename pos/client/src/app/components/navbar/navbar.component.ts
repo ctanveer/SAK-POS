@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IUser } from '../../models/user.model';
 // import { RouterLink } from '@angular/router';
 // import { NzButtonComponent } from 'ng-zorro-antd/button';
 // import { NzTypographyModule } from 'ng-zorro-antd/typography';
@@ -10,8 +11,11 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+
+  @Input() user : IUser | undefined;
+
   logout () {
-    // localStorage.removeItem('accessToken');
-    // window.location.href = 'https://bento-client.vercel.app/login';
+    localStorage.removeItem('accessToken');
+    window.location.href = 'https://bento-client.vercel.app/login';
   }
 }

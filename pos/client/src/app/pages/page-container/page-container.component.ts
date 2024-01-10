@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import { IUser } from '../../models/user.model';
+import { AuthApiService } from '../../services/auth-api/auth-api.service';
 
 @Component({
   selector: 'app-page-container',
@@ -8,13 +10,17 @@ import { NavigationStart, Router } from '@angular/router';
 })
 export class PageContainerComponent implements OnInit {
 
-  constructor (private router: Router) {}
+  constructor (private router: Router, private route: ActivatedRoute, private auth: AuthApiService) {}
 
   paths = ['tables','table-editor','order-history'];
   currentPath : string = '/tables';
 
+  user : IUser | undefined;
+
   ngOnInit(): void {
+    this.currentPath = this.router.routerState.snapshot.url;
     this.router.events.subscribe(event => (event instanceof NavigationStart) ? this.currentPath=event.url : null);
+    this.auth.getUser().subscribe(data => this.user = data.user);
   }
 
 

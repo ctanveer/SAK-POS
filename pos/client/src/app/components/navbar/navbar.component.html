@@ -2,13 +2,20 @@
   class="flex justify-between items-center border border-light-gray border-l-0 border-r-0 px-4 py-2"
 >
   <div>
-    <img
-      class="w-24 cursor-pointer"
-      src="../../../assets/logo/logo-1.png"
-      alt=""
-    />
+    <a
+      href="https://bento-client.vercel.app/dashboard"
+      >
+      <img
+        class="w-24 cursor-pointer"
+        src="../../../assets/logo/logo-1.png"
+        alt=""
+      />
+    </a>
   </div>
 
-  <button nz-button nzType="primary" (click)="logout()">Logout</button>
-
+  <div class="flex items-center">
+    <p class="mx-5">{{(user ? user.employeeInformation.name : "")}}</p>
+    <button nz-button nzType="primary" (click)="logout()"><span nz-icon nzType="logout" nzTheme="outline"></span>Logout</button>
+  </div>
+   
 </div>
