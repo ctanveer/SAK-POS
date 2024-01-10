@@ -32,6 +32,7 @@ import { TokenInterceptor } from './interceptors/token-interceptor/token-interce
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import {NzDrawerModule} from 'ng-zorro-antd/drawer';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 registerLocaleData(en);
 
@@ -65,7 +66,8 @@ registerLocaleData(en);
     NzInputNumberModule,
     NzMessageModule,
     NzDrawerModule,
-    NzDividerModule
+    NzDividerModule,
+    NzIconModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
