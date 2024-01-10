@@ -16,6 +16,6 @@ export class NavbarComponent {
 
   logout () {
     localStorage.removeItem('accessToken');
-    window.location.href = 'https://bento-client.vercel.app/login';
+    window.location.href = 'https://bento-client.vercel.app/logout';
   }
 }
