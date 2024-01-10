@@ -26,8 +26,13 @@ export class TableService {
   }
 
   updateTable(table: ITable): Observable<any> {
-    const url = `${this.tableUrl}/${table._id}`
-    return this.http.put(url, table, this.httpOptions);
+    const url = `${this.tableUrl}/${table._id}`;
+    return this.http.put<ITable>(url, table, this.httpOptions);
+  }
+
+  deleteTable(table: ITable): Observable<any> {
+    const url = `${this.tableUrl}/${table._id}`;
+    return this.http.delete<ITable>(url, this.httpOptions)
   }
 
 }
