@@ -10,10 +10,13 @@ import { TableService } from '../../services/table.service';
 export class EditorPageComponent implements OnInit{
   tables:ITable[] = [];
   selectedTable:ITable | null = null;
-  selectedTableToEdit: ITable | null = null;
   tableTypes = ['square', 'rectangle', 'round', 'oval'];
+  
+  // Table Editor Variables
+  selectedTableToEdit: ITable | null = null;
   editVisible = false;
 
+  //Table Adder Variables
   adderVisible = false;
   newTableName: string | null = null;
   newTableType: 'square'| 'rectangle' | 'round' | 'oval' | null = null;

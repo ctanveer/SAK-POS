@@ -33,6 +33,16 @@ export const getTableLogsByTableIdController = async (req: Request, res: Respons
 
 export const createTableLogController = async (req: Request, res: Response) => {
     try {
+        const tableObject = {...req.body };
+        const tableLog = await createTableLog(tableObject);
+        res.status(201);
+        res.json(tableLog);
+      } catch (error: any) {
+        res.status(500);
+        res.json({ error: error.message });
+      }
+    /*
+    try {
         const id = req.params.id;
         const waiterObject = {...req.body};
         //update table status using tableId property in params
@@ -49,4 +59,5 @@ export const createTableLogController = async (req: Request, res: Response) => {
       res.status(500);
       res.json({ error: error.message });
     }
+    */
 };

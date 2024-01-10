@@ -21,8 +21,6 @@ const routes: Routes = [
   {path: '**', redirectTo: '/tables'}
 ];
 
-//use a page
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

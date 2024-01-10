@@ -1,1 +1,65 @@
-<p>tables-page works!</p>
+<div class="py-4 px-4 hp-50">
+    <h2>Table Viewer</h2>
+    <div class="flex">
+        @for (table of tables; track $index) {
+            <div class="table-block p-4 m-4 text-center rounded-md" (click)="setSelectedTable(table)">
+                <p>{{table.name}}</p>
+                <p>Seats: {{table.seats}}</p>
+            </div>
+        }
+    </div>
+</div>
+
+<nz-drawer *ngIf="selectedTable"
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="720"
+      [nzVisible]="visible"
+      nzTitle="View Table"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="close()"
+    >
+    <ng-container *nzDrawerContent>
+        <nz-descriptions [nzColumn]="2" nzTitle="Table Info">
+          <nz-descriptions-item nzTitle="Table Number" [nzSpan]="1">{{ selectedTable.name }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Type" [nzSpan]="1">{{ selectedTable.type | uppercase}}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Seats" [nzSpan]="1">{{ selectedTable.seats }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Status" [nzSpan]="1">{{ selectedTable.status }}</nz-descriptions-item>
+        </nz-descriptions>
+        <nz-divider></nz-divider>
+        <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Status</nz-form-label>
+              <nz-form-control>
+                <nz-select name='status-type' nzPlaceHolder="Please select status" [(ngModel)]="selectedStatus" >
+                    @for (type of statusTypes; track $index) {
+                        <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                    }
+                </nz-select>
+            </nz-form-control>
+            <button nz-button nzType="default" (click)="changeTableStatus()">Save</button>
+            </nz-form-item>
+        </div>
+        <!-- [(ngModel)]="selectedTable.status" -->
+
+     
+    </ng-container>
+    
+    <div class="border">
+        <h3>Table Info</h3>
+        <p>Table Number: {{ selectedTable.name }}</p>
+        <p>Type: {{ selectedTable.type }}</p>
+        <p>Seats: {{ selectedTable.seats }}</p>
+        <p>Status: {{ selectedTable.status }}</p>
+    </div>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px;" (click)="close()">Cancel</button>
+          <button nz-button nzType="primary" (click)="close()">Save</button>
+        </div>
+    </ng-template>
+</nz-drawer>
+
+
+
