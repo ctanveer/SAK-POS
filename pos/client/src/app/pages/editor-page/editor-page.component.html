@@ -3,7 +3,7 @@
     <div class="flex">
         @for (table of tables; track $index) {
             <div class="table-block my-4 mx-4 text-center rounded-md" (click)="setSelectEditTable(table)">
-                <p>{{table.name}}</p>
+                <p><strong>{{table.name}}</strong></p>
                 <p>Seats: {{table.seats}}</p>
             </div>
         }

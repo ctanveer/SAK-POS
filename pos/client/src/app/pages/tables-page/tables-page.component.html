@@ -2,8 +2,10 @@
     <h2>Table Viewer</h2>
     <div class="flex">
         @for (table of tables; track $index) {
-            <div class="table-block p-4 m-4 text-center rounded-md" (click)="setSelectedTable(table)">
-                <p>{{table.name}}</p>
+            <div class="table-block p-4 m-4 text-center rounded-md" 
+            (click)="setSelectedTable(table) "
+            [ngStyle]="{ 'background-color': getStatusColor(table.status) }">
+                <p><strong>{{table.name}}</strong></p>
                 <p>Seats: {{table.seats}}</p>
             </div>
         }
@@ -44,14 +46,6 @@
 
      
     </ng-container>
-    
-    <div class="border">
-        <h3>Table Info</h3>
-        <p>Table Number: {{ selectedTable.name }}</p>
-        <p>Type: {{ selectedTable.type }}</p>
-        <p>Seats: {{ selectedTable.seats }}</p>
-        <p>Status: {{ selectedTable.status }}</p>
-    </div>
 
     <ng-template #footerTpl>
         <div style="float: right">

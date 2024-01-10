@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ITable } from '../../models/table.model';
+import { IOrder } from '../../models/order.model';
+import { ITableLog } from '../../models/tablelog.model';
 import { TableService } from '../../services/table.service';
+import { OrderService } from '../../services/order.service';
+import { TablelogService } from '../../services/tablelog.service';
 
 @Component({
   selector: 'app-tables-page',
@@ -12,9 +16,11 @@ export class TablesPageComponent implements OnInit{
   selectedTable:ITable | null = null;
   statusTypes = ['open', 'occupied', 'reserved', 'closed'];
   visible = false;
-  selectedStatus: string | null = null;
+  selectedStatus: 'open' | 'occupied' | 'reserved' | 'closed' = 'open';
+  createdOrder: IOrder | null = null;
+  createdTableLog: ITableLog | null = null;
 
-  constructor(private tableService: TableService){};
+  constructor(private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService){};
 
   ngOnInit(): void {
     this.tableService.getAllTables().subscribe((data) =>{
@@ -22,6 +28,21 @@ export class TablesPageComponent implements OnInit{
       console.log(data);
     })
 
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+        case 'open':
+            return 'white';
+        case 'occupied':
+            return '#33FF57';
+        case 'reserved':
+            return '#FFBD33';
+        case 'closed':
+            return '#FF5733';
+        default:
+            return 'white';
+    }
   }
 
   setSelectedTable (table: ITable | null) {
@@ -34,11 +55,28 @@ export class TablesPageComponent implements OnInit{
     console.log(this.selectedTable);
     if (this.selectedTable) {
       if (this.selectedTable.status === 'open' && this.selectedStatus === 'occupied') {
+        this.selectedTable.status = this.selectedStatus;
+        this.tableService.updateTable(this.selectedTable).subscribe(data => {
+          let index = this.tables.findIndex(table => table._id === data._id);
+          if (index !== -1) {
+            this.tables[index] = data;
+          } 
+        });
+
+        this.orderService.createOrder({waiterId: 10}).subscribe(order => {
+          this.createdOrder = order;
+        });
         
+        //issue here
+        this.tablelogService.createTablelog({tableId: this.selectedTable._id, orderId: this.createdOrder?._id, waiterId: 10}).subscribe(tlog => {
+          this.createdTableLog = tlog;
+        })
+      }
+      else {
+        this.selectedTable.status = this.selectedStatus;
       }
     }
   }
-
 
   open() {
     this.visible = true;

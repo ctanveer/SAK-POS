@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get('/', getAllTableLogsController);
 router.get('/:id', getTableLogsByTableIdController);
-router.post('/:id', createTableLogController);
+// router.post('/:id', createTableLogController);
+router.post('/', createTableLogController);
 
 export default router;
