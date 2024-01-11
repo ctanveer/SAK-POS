@@ -13,10 +13,10 @@ export class EditorPageComponent implements OnInit{
   tableTypes = ['square', 'rectangle', 'round', 'oval'];
   
   // Table Editor Variables
-  selectedTableToEdit: ITable | null = null;
   editVisible = false;
+  selectedTableToEdit: ITable | null = null;
 
-  //Table Adder Variables
+  // Table Adder Variables
   adderVisible = false;
   newTableName: string | null = null;
   newTableType: 'square'| 'rectangle' | 'round' | 'oval' | null = null;
