@@ -34,6 +34,7 @@ import {NzDrawerModule} from 'ng-zorro-antd/drawer';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 registerLocaleData(en);
 
@@ -49,7 +50,8 @@ registerLocaleData(en);
     EditorPageComponent,
     OrderHistoryPageComponent,
     AuthRedirectPageComponent,
-    SplashLogoComponent
+    SplashLogoComponent,
+    OrderPageComponent
   ],
   imports: [
     BrowserModule,
