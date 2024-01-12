@@ -3,9 +3,9 @@ import { IMenuItem } from '../../models/menuitem.model';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { MenuService } from '../../services/menu.service';
-import { IMenuInterface } from '../../models/item-interfaces/posInput/menu.model';
-import { ICategoriesInterface } from '../../models/item-interfaces/categories.model';
-import { IItemInterface } from '../../models/item-interfaces/posInput/item.model';
+import { IMenu } from '../../models/item-interfaces/posInput/menu.model';
+import { ICategories } from '../../models/item-interfaces/categories.model';
+import { IItem } from '../../models/item-interfaces/posInput/item.model';
 
 @Component({
   selector: 'app-order-page',
@@ -23,11 +23,11 @@ export class OrderPageComponent implements OnInit {
   constructor ( private auth: AuthApiService, private menu: MenuService) {}
 
   user : IUser | undefined;
-  menuList : IMenuInterface | undefined;
-  categories: ICategoriesInterface[] | undefined;
+  menuList : IMenu | undefined;
+  categories: ICategories[] | undefined;
   timeOfDays: string[] = [];
 
-  orderCart: IItemInterface[] = [];
+  orderCart: IItem[] = [];
 
 
   ngOnInit(): void {
@@ -54,7 +54,7 @@ export class OrderPageComponent implements OnInit {
     this.timeOfDays = [...new Set(tempArr)];
   }
 
-  addToCart(item: IItemInterface) {
+  addToCart(item: IItem) {
     console.log(item);
     this.orderCart.push(item);
   }

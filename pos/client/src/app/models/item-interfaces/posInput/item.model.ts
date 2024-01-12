@@ -1,7 +1,7 @@
-import { IItemDetailPosInputInterface } from "../itemDetail.model";
+import { IItemDetailPosInput } from "../itemDetail.model";
 
-export interface IItemInterface{
+export interface IItem{
     restaurantId: number;
     categoryId: number;
-    item: IItemDetailPosInputInterface;
+    item: IItemDetailPosInput;
 }

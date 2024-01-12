@@ -1,8 +1,8 @@
-import { IItemInterface } from "./item.model";
-import { ICategoriesInterface } from "../categories.model";
+import { IItem } from "./item.model";
+import { ICategories } from "../categories.model";
 
-export interface IMenuInterface{
+export interface IMenu{
     restaurantId: number;
-    categories: ICategoriesInterface[];
-    items: IItemInterface[];
+    categories: ICategories[];
+    items: IItem[];
 }

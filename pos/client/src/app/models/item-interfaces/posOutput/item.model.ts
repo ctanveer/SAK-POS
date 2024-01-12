@@ -1,7 +1,7 @@
-import { ItemDetailPosOutputInterface } from "../itemDetail.model";
+import { IItemDetailPosOutput } from "../itemDetail.model";
 
-export interface IItemInterface{
+export interface IItem{
     restaurantId: number;
     categoryId: number;
-    item: ItemDetailPosOutputInterface;
+    item: IItemDetailPosOutput;
 }

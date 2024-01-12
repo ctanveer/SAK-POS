@@ -1,7 +1,7 @@
-import { IIngredientInterface } from "./ingredient.model";
+import { IIngredient } from "./ingredient.model";
 
-export interface IAddOptionInterface {
+export interface IAddOption {
     ingredientName: string;
     quantity: number;       //fixed number, cannot be changed
-    ingredient: IIngredientInterface;
+    ingredient: IIngredient;
 }

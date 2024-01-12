@@ -1,4 +1,4 @@
-import { IItemInterface } from "./item-interfaces/posOutput/item.model";
+import { IItem } from "./item-interfaces/posOutput/item.model";
 
 export interface IOrder {
     _id?: string;
@@ -9,7 +9,7 @@ export interface IOrder {
     unit: string;
     status: string;
     timeSpent: number;
-    item: IItemInterface[];
+    item: IItem[];
     createdAt: string;
     updatedAt: string;
 }

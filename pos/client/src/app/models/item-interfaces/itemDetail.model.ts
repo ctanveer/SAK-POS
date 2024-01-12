@@ -1,8 +1,8 @@
-import { IIngredientInterface } from "./ingredient.model";
-import { IAddOptionInterface } from "./addOption.model";
-import { INoOptionInterface } from "./noOption.model";
+import { IIngredient } from "./ingredient.model";
+import { IAddOption } from "./addOption.model";
+import { INoOption } from "./noOption.model";
 
-export interface IItemDetailPosInputInterface {
+export interface IItemDetailPosInput {
     itemId: number;
     itemName: string;
     discount: number;   //extra added by Skeleton
@@ -18,12 +18,12 @@ export interface IItemDetailPosInputInterface {
     typeOfFoods: string[]; //options 'delivery only', 'eat only', 'pickup only', 'all'
     servingTemperature: number;
     itemDietaryRestrictions: string[];
-    ingredients: IIngredientInterface[];
+    ingredients: IIngredient[];
     itemPackingType: string;  
-    options: { add: IAddOptionInterface[]; no: INoOptionInterface[] };
+    options: { add: IAddOption[]; no: INoOption[] };
 }
 
-export interface ItemDetailPosOutputInterface extends IItemDetailPosInputInterface{
+export interface IItemDetailPosOutput extends IItemDetailPosInput{
     itemQuantity: number;   //Field added when sending from POS to Skeleton
     optionalNotes: String;  ////Field added when sending from POS to Skeleton
 }
