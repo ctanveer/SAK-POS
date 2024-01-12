@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IMenuItem } from '../../models/menuitem.model';
+import { AuthApiService } from '../../services/auth-api/auth-api.service';
+import { IUser } from '../../models/user.model';
+import { MenuService } from '../../services/menu.service';
+import { IMenuInterface } from '../../models/item-interfaces/posInput/menu.model';
+import { ICategoriesInterface } from '../../models/item-interfaces/categories.model';
+import { IItemInterface } from '../../models/item-interfaces/posInput/item.model';
 
 @Component({
   selector: 'app-order-page',
   templateUrl: './order-page.component.html',
   styleUrl: './order-page.component.css'
 })
-export class OrderPageComponent {
+export class OrderPageComponent implements OnInit {
   
   menuItems: IMenuItem[] = [
     { itemId: 1, name: 'Beef Burger', price: 5.00, description: "the burger here", image: '../../../assets/item-images/burger-1.jpg' },
@@ -14,19 +20,51 @@ export class OrderPageComponent {
     { itemId: 3, name: 'Chicken Pasta', price: 6.20, description: "the pasta here", image: '../../../assets/item-images/pasta-1.jpg' }
   ];
 
-  orderCart: IMenuItem[] = [];
+  constructor ( private auth: AuthApiService, private menu: MenuService) {}
 
-  addToCart(item: IMenuItem) {
+  user : IUser | undefined;
+  menuList : IMenuInterface | undefined;
+  categories: ICategoriesInterface[] | undefined;
+  timeOfDays: string[] = [];
+
+  orderCart: IItemInterface[] = [];
+
+
+  ngOnInit(): void {
+    this.auth.getUser().subscribe(data => this.user = data.user);
+    this.menuList = this.menu.getMenu();
+    console.log('Menu:', this.menuList);
+    this.categories = this.menuList.categories;
+    console.log('Categories', this.categories);
+    this.getTimeOfDays();
+    console.log('Time of Days are: ', this.timeOfDays);
+    console.log('item name is: ', this.menuList.items[0].item.itemName);
+  }
+
+  getTimeOfDays() {
+    let tempArr = []
+    if (this.menuList) {
+      for (let i = 0; i < this.menuList.items.length; i++) {
+        let timeList = this.menuList.items[i].item.timeOfDay;
+        for (let j = 0; j < timeList.length; j++) {
+          tempArr.push(timeList[j])
+        }
+      }
+    }
+    this.timeOfDays = [...new Set(tempArr)];
+  }
+
+  addToCart(item: IItemInterface) {
     console.log(item);
     this.orderCart.push(item);
   }
 
   //need to add tag to identify items which are already sent
-  sendOrder() {
+  confirmOrder() {
     console.log('order sent');
   }
 
   calculateTotal() {
-    return this.orderCart.reduce((total, item) => total + item.price, 0);
+    return this.orderCart.reduce((total, item) => total + item.item.itemPrice, 0);
   }
 }

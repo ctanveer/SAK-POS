@@ -1,27 +1,50 @@
-<app-navbar></app-navbar>
-<!-- [user]="user" -->
+<app-navbar [user]="user"></app-navbar>
 <h2>Order Management</h2>
 <div class="order-container">
     <div class="menu-items-container">
-        <div *ngFor="let item of menuItems" class="menu-item">
-            <div class="inner-item">
-                <img src="{{ item.image }}" alt="{{ item.name }}" class="menu-item-image">
-              <span><strong>{{ item.name }}</strong> - {{ item.price }} </span>
-              <button nz-button (click)="addToCart(item)">Add to Cart</button>
-            </div>
-        </div>
+      <!-- class="menu-item" -->
+      @if (menuList) {
+        @for (item of menuList.items; track $index) {
+          <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+            <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+            <p><strong>{{item.item.itemName}}</strong></p>
+            <p>${{item.item.itemPrice}}</p>
+          </div>
+        }
+      } 
+
     </div>
 
     <div class="order-cart-container">
         <h3>Order Summary</h3>
         <ul>
-          <li *ngFor="let cartItem of orderCart">
-            {{ cartItem.name }} - {{ cartItem.price }}
-          </li>
+          @for (cartItem of orderCart; track $index) {
+            <li>
+              {{ cartItem.item.itemName }} - {{ cartItem.item.itemPrice }}
+            </li>
+          }
         </ul>
       
         <h3>Total: {{ calculateTotal() }}</h3>
 
-        <button nz-button (click)="sendOrder()">Send Order</button>
+        <button nz-button (click)="confirmOrder()">Send Order</button>
     </div>
 </div>
+
+
+
+
+<!-- <div *ngFor="let item of menuList.items" class="menu-item">
+  <nz-card nzHoverable style="width:100px; height:80px" [nzCover]="coverTemplate">
+    <nz-card-meta [nzTitle]="item.item.itemName" ></nz-card-meta>
+  </nz-card>
+  <ng-template #coverTemplate>
+    <img alt="example" src="../../../assets/item-images/burger-1.jpg" />
+  </ng-template> -->
+
+
+              <!-- <div class="inner-item">
+                <img src="{{ item.image }}" alt="{{ item.name }}" class="menu-item-image">
+              <span><strong>{{ item.name }}</strong> - {{ item.price }} </span>
+              <button nz-button (click)="addToCart(item)">Add to Cart</button>
+            </div> -->

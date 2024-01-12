@@ -30,10 +30,11 @@ import { AuthInterceptor } from './interceptors/auth-interceptor/auth-intercepto
 import { ErrorInterceptor } from './interceptors/error-interceptor/error-interceptor.service';
 import { TokenInterceptor } from './interceptors/token-interceptor/token-interceptor.service';
 import { NzMessageModule } from 'ng-zorro-antd/message';
-import {NzDrawerModule} from 'ng-zorro-antd/drawer';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzCardModule } from 'ng-zorro-antd/card';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 registerLocaleData(en);
@@ -71,7 +72,8 @@ registerLocaleData(en);
     NzDrawerModule,
     NzDividerModule,
     NzIconModule,
-    NzInputModule
+    NzInputModule,
+    NzCardModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
