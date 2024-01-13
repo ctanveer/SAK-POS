@@ -24,21 +24,31 @@ export class OrderPageComponent implements OnInit {
 
   user : IUser | undefined;
   menuList : IMenu | undefined;
-  categories: ICategories[] | undefined;
+  categories: ICategories[] = [];
   timeOfDays: string[] = [];
+  selectedTimeTab: string = 'Lunch';
+  selectedCategory: ICategories | undefined;
+  filteredMenu: IItem[] | undefined;
 
   orderCart: IItem[] = [];
+  selectedCartItem: IItem | undefined;
+  editorVisible: boolean = false;
 
 
   ngOnInit(): void {
     this.auth.getUser().subscribe(data => this.user = data.user);
     this.menuList = this.menu.getMenu();
-    console.log('Menu:', this.menuList);
-    this.categories = this.menuList.categories;
-    console.log('Categories', this.categories);
     this.getTimeOfDays();
+    this.selectedTimeTab = this.timeOfDays[0];
+    this.categories = this.menuList.categories;
+    this.selectedCategory = this.categories[0];
+    this.setFilteredMenu();
+    
+    console.log('Menu:', this.menuList);
+    console.log('Categories', this.categories);
     console.log('Time of Days are: ', this.timeOfDays);
     console.log('item name is: ', this.menuList.items[0].item.itemName);
+    
   }
 
   getTimeOfDays() {
@@ -54,11 +64,54 @@ export class OrderPageComponent implements OnInit {
     this.timeOfDays = [...new Set(tempArr)];
   }
 
+  setFilteredMenu() {
+    this.filteredMenu = this.menuList?.items.filter(item => {
+      return (item.categoryId === this.selectedCategory?.id) && !item.item.isDisabled})
+      .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
+  }
+
+  handleTimeTabChange(index: number) {
+    this.selectedTimeTab = this.timeOfDays[index];
+    this.setFilteredMenu();
+  }
+
+  handleCategoryTabChange(index: number) {
+    this.selectedCategory = this.categories[index];
+    this.setFilteredMenu();
+  }
+
+  //does not WORK
+  clearTabs() {
+    console.log('at clear tabs func');
+    this.selectedTimeTab = this.timeOfDays[0];
+    this.selectedCategory = this.categories[0];
+    this.setFilteredMenu();
+  }
+
   addToCart(item: IItem) {
-    console.log(item);
+    console.log('Item is:', item);
     this.orderCart.push(item);
   }
 
+  removeItemFromCart(item: IItem) {
+    let index = this.orderCart.findIndex(cartItem => cartItem === item);
+    if (index !== -1) {
+      this.orderCart.splice(index, 1);
+    }
+  }
+
+  editCartItem(item: IItem) {
+    this.selectedCartItem = item;
+    if(this.selectedCartItem) this.editorVisible = true;
+  }
+
+  check() {}
+
+  closeEditor() {
+    this.editorVisible = false;
+    this.selectedCartItem = undefined;
+  }
+ 
   //need to add tag to identify items which are already sent
   confirmOrder() {
     console.log('order sent');
@@ -67,4 +120,6 @@ export class OrderPageComponent implements OnInit {
   calculateTotal() {
     return this.orderCart.reduce((total, item) => total + item.item.itemPrice, 0);
   }
+
+
 }

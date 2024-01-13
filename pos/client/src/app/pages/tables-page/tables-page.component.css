@@ -2,4 +2,10 @@
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.table-block:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
 }

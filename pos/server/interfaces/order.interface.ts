@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { ItemInterface } from './item-interfaces/posOutput/item.interface';
 
 export interface IOrder {
     type: string;
@@ -8,5 +9,6 @@ export interface IOrder {
     unit: string;
     status: string;
     timeSpent: number;
-    items: string[];
+    // items: string[];
+    items: ItemInterface[];
 }

@@ -1,50 +1,121 @@
 <app-navbar [user]="user"></app-navbar>
-<h2>Order Management</h2>
-<div class="order-container">
-    <div class="menu-items-container">
+<h2 class="px-2">Order Management</h2>
+<div class="order-page-container p-2">
+    <div class="full-menu-container">
       <!-- class="menu-item" -->
-      @if (menuList) {
-        @for (item of menuList.items; track $index) {
-          <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-            <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
-            <p><strong>{{item.item.itemName}}</strong></p>
-            <p>${{item.item.itemPrice}}</p>
-          </div>
+
+      <!-- This would work, but menu-items-container is set as flex which is causing a issue -->
+      
+      <nz-tabset 
+        [nzTabBarExtraContent]="clearTemplate" 
+        nzCentered
+        [nzTabBarGutter]="100" 
+        [nzAnimated]="false"
+        (nzSelectedIndexChange)="handleTimeTabChange($event)"
+      >
+        <nz-tab *ngFor="let time of timeOfDays" [nzTitle]="time">
+          <nz-tabset 
+            nzCentered 
+            [nzTabBarGutter]="100"
+            (nzSelectedIndexChange)="handleCategoryTabChange($event)"
+          >
+            <nz-tab *ngFor="let category of categories" [nzTitle]="category.name">
+              <div class="menu-items-container">
+                @if (filteredMenu) {
+                  @for (item of filteredMenu; track $index) {
+                    <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+                      <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+                      <p><strong>{{item.item.itemName}}</strong></p>
+                      <p>${{item.item.itemPrice}}</p>
+                    </div>
+                  }
+                }
+              </div>
+            </nz-tab>
+          </nz-tabset>
+        </nz-tab>
+      </nz-tabset>
+      <ng-template #clearTemplate>
+        <button nz-button (click)="clearTabs()">Clear</button>
+      </ng-template>
+
+      <!-- <div class="menu-items-container">
+        @if (menuList) {
+          @for (item of menuList.items; track $index) {
+            <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+              <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+              <p><strong>{{item.item.itemName}}</strong></p>
+              <p>${{item.item.itemPrice}}</p>
+            </div>
+          }
         }
-      } 
+      </div>  -->
 
     </div>
 
     <div class="order-cart-container">
-        <h3>Order Summary</h3>
-        <ul>
-          @for (cartItem of orderCart; track $index) {
-            <li>
-              {{ cartItem.item.itemName }} - {{ cartItem.item.itemPrice }}
-            </li>
-          }
-        </ul>
-      
-        <h3>Total: {{ calculateTotal() }}</h3>
-
-        <button nz-button (click)="confirmOrder()">Send Order</button>
+      <h3 class="px-2 pt-2">Order Summary</h3>
+      <!-- <div class="order-items-container"> -->
+      @for (cartItem of orderCart; track $index) {
+        <div class="order-items-container mr-2">
+          <div class="pt-1"><strong>{{cartItem.item.itemName}}</strong></div>
+          <div class="pt-1">${{cartItem.item.itemPrice}}</div>
+          <button nz-button nzShape="circle" (click)="editCartItem(cartItem)">
+            <span nz-icon nzType="edit" nzTheme="outline"></span>
+          </button>
+          <button nz-button nzShape="circle" (click)="removeItemFromCart(cartItem)">
+            <span nz-icon nzType="close" nzTheme="outline"></span>
+          </button>
+        </div>
+      }
+      <!-- </div> -->
     </div>
 </div>
 
 
+<nz-drawer *ngIf="selectedCartItem"
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="720"
+      [nzVisible]="editorVisible"
+      nzTitle="Item Customization"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="closeEditor()"
+    >
+    <ng-container *nzDrawerContent>
+      <nz-descriptions [nzColumn]="2" nzTitle="Item Info">
+        <nz-descriptions-item nzTitle="Item Name" [nzSpan]="1">{{ selectedCartItem.item.itemName }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Id" [nzSpan]="1">{{ selectedCartItem.item.itemId}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Price" [nzSpan]="1">${{ selectedCartItem.item.itemPrice }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Portion Size" [nzSpan]="1">{{ selectedCartItem.item.itemPortionSize }}</nz-descriptions-item>
+      </nz-descriptions>
+      <nz-divider></nz-divider>
+    </ng-container>
+    <ng-template #footerTpl>
+      <div style="float: right">
+        <button nz-button style="margin-right: 8px;" (click)="closeEditor()">Cancel</button>
+        <button nz-button nzType="primary" (click)="check(); closeEditor()">Save</button>
+      </div>
+    </ng-template>
+  </nz-drawer>
+
+<!-- <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+  <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+  <p><strong>{{cartItem.item.itemName}}</strong></p>
+  <p>${{cartItem.item.itemPrice}}</p>
+</div> -->
 
 
-<!-- <div *ngFor="let item of menuList.items" class="menu-item">
-  <nz-card nzHoverable style="width:100px; height:80px" [nzCover]="coverTemplate">
-    <nz-card-meta [nzTitle]="item.item.itemName" ></nz-card-meta>
-  </nz-card>
-  <ng-template #coverTemplate>
-    <img alt="example" src="../../../assets/item-images/burger-1.jpg" />
-  </ng-template> -->
 
+<!-- <h3 class="px-2 pt-2">Order Summary</h3>
+<ul>
+  @for (cartItem of orderCart; track $index) {
+    <li>
+      {{ cartItem.item.itemName }} - {{ cartItem.item.itemPrice }}
+    </li>
+  }
+</ul>
 
-              <!-- <div class="inner-item">
-                <img src="{{ item.image }}" alt="{{ item.name }}" class="menu-item-image">
-              <span><strong>{{ item.name }}</strong> - {{ item.price }} </span>
-              <button nz-button (click)="addToCart(item)">Add to Cart</button>
-            </div> -->
+<h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
+
+<button nz-button (click)="confirmOrder()">Send Order</button> -->
