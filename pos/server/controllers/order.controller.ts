@@ -7,6 +7,8 @@ import {
     deleteOrderById,
     updateOrderWithCustomerId
 } from '../models/order/order.query';
+import { AuthRequest } from '../interfaces/authRequest.interface';
+import { postOrderToKDS } from '../services/skeleton.service';
 
 export const getAllOrdersController = async (req: Request, res: Response) => {
     try {
@@ -74,3 +76,22 @@ export const deleteOrderByIdController = async (req: Request, res: Response) => 
       res.json({ error: error.message });
     }
 };
+
+
+export const sendOrderToKDS = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    const authHeaders = req.headers["authorization"];
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+    if (!authHeaders) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const order = req.body.order;
+    order.restaurantId = user.employeeInformation.restaurantId;
+    await postOrderToKDS(order, authHeaders);
+    res.send({ message: "Success"});
+
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+}
