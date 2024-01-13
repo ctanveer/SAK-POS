@@ -38,19 +38,6 @@
       <ng-template #clearTemplate>
         <button nz-button (click)="clearTabs()">Clear</button>
       </ng-template>
-
-      <!-- <div class="menu-items-container">
-        @if (menuList) {
-          @for (item of menuList.items; track $index) {
-            <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-              <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
-              <p><strong>{{item.item.itemName}}</strong></p>
-              <p>${{item.item.itemPrice}}</p>
-            </div>
-          }
-        }
-      </div>  -->
-
     </div>
 
     <div class="order-cart-container">
@@ -68,11 +55,13 @@
           </button>
         </div>
       }
-      <!-- </div> -->
+      <h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
+
+      <button nz-button (click)="confirmAndSendOrder()">Send Order</button>
     </div>
 </div>
 
-
+<!--  Drawer for Order Customization -->
 <nz-drawer *ngIf="selectedCartItem"
       [nzBodyStyle]="{ overflow: 'auto' }"
       [nzMaskClosable]="false"
@@ -80,7 +69,7 @@
       [nzVisible]="editorVisible"
       nzTitle="Item Customization"
       [nzFooter]="footerTpl"
-      (nzOnClose)="closeEditor()"
+      (nzOnClose)="cancelEdit(); closeEditor()"
     >
     <ng-container *nzDrawerContent>
       <nz-descriptions [nzColumn]="2" nzTitle="Item Info">
@@ -90,11 +79,49 @@
         <nz-descriptions-item nzTitle="Portion Size" [nzSpan]="1">{{ selectedCartItem.item.itemPortionSize }}</nz-descriptions-item>
       </nz-descriptions>
       <nz-divider></nz-divider>
+      <form>
+        <div nz-col nzSpan="14">
+          <nz-form-item>
+            <nz-form-label><h3>Quantity</h3></nz-form-label>
+            <nz-form-control>
+              <nz-input-number
+                name="seats"
+                  type="number"
+                  id="seats"
+                  [(ngModel)]="selectedCartItem.item.itemQuantity"
+                  [nzMin]="1"
+               />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+      </form>
+      <h3>Customize Add-ons</h3>
+      <button nz-button class="px-16" style="margin-right: 8px;" (click)="selectAddNoOtion('Add')">Add</button>
+      <button nz-button class="px-16" style="margin-right: 8px;" (click)="selectAddNoOtion('No')">No</button>
+      
+      <div>
+        @if (selectedOption === 'Add') {
+          @for(option of selectedCartItem.item.options.add; track $index) {
+            <button nz-button class="px-12 py-8 my-4 text-align" style="margin-right: 8px;" (click)="insertToAddOption(option)">{{option.ingredientName}}</button>
+          }
+        } 
+        @if (selectedOption === 'No') {
+          @for(option of selectedCartItem.item.options.no; track $index) {
+            <button nz-button class="px-12 py-8 my-4 text-align" style="margin-right: 8px;" (click)="insertToNoOption(option)">{{option.ingredientName}}</button>
+          }
+        }
+      </div>
+
+      <h3 class="mt-4">Optional Notes</h3>
+      <input nz-input placeholder="Add notes here" [(ngModel)]="optionalNotes" type="string" />
+      <button nz-button class="px-16" style="margin-right: 8px;" (click)="insertOptionalNotes()">Save Note</button>
     </ng-container>
+
+
     <ng-template #footerTpl>
       <div style="float: right">
         <button nz-button style="margin-right: 8px;" (click)="closeEditor()">Cancel</button>
-        <button nz-button nzType="primary" (click)="check(); closeEditor()">Save</button>
+        <button nz-button nzType="primary" (click)="closeEditor()">Save</button>
       </div>
     </ng-template>
   </nz-drawer>
@@ -115,7 +142,5 @@
     </li>
   }
 </ul>
+-->
 
-<h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
-
-<button nz-button (click)="confirmOrder()">Send Order</button> -->

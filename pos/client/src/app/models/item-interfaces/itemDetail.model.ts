@@ -24,6 +24,7 @@ export interface IItemDetailPosInput {
 }
 
 export interface IItemDetailPosOutput extends IItemDetailPosInput{
-    itemQuantity: number;   //Field added when sending from POS to Skeleton
-    optionalNotes: String;  ////Field added when sending from POS to Skeleton
+    itemQuantity?: number;   //Field added when sending from POS to Skeleton
+    optionalNotes?: string;  ////Field added when sending from POS to Skeleton
+    chosenOptions?: { add: IAddOption[]; no: INoOption[] }; 
 }

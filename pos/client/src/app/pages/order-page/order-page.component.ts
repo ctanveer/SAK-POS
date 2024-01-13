@@ -5,7 +5,14 @@ import { IUser } from '../../models/user.model';
 import { MenuService } from '../../services/menu.service';
 import { IMenu } from '../../models/item-interfaces/posInput/menu.model';
 import { ICategories } from '../../models/item-interfaces/categories.model';
-import { IItem } from '../../models/item-interfaces/posInput/item.model';
+//IItem is output model. Has 3 extra fields -> itemQuantity, optionalNotes and chosenOptions
+import { IItem } from '../../models/item-interfaces/posOutput/item.model';
+import { IAddOption } from '../../models/item-interfaces/addOption.model';
+import { INoOption } from '../../models/item-interfaces/noOption.model';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { IOrderListInterface } from '../../models/item-interfaces/posOutput/orderList.model';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-order-page',
@@ -20,7 +27,7 @@ export class OrderPageComponent implements OnInit {
     { itemId: 3, name: 'Chicken Pasta', price: 6.20, description: "the pasta here", image: '../../../assets/item-images/pasta-1.jpg' }
   ];
 
-  constructor ( private auth: AuthApiService, private menu: MenuService) {}
+  constructor ( private auth: AuthApiService, private menu: MenuService, private router: Router, private location: Location, private orderService: OrderService) {}
 
   user : IUser | undefined;
   menuList : IMenu | undefined;
@@ -31,11 +38,27 @@ export class OrderPageComponent implements OnInit {
   filteredMenu: IItem[] | undefined;
 
   orderCart: IItem[] = [];
-  selectedCartItem: IItem | undefined;
+  selectedCartItem: IItem | null = null;
   editorVisible: boolean = false;
+
+  selectedOption: string | null = null;
+  optionalNotes: string | null = null;
+
+  orderId : string = '';
+  tableId: string = '';
 
 
   ngOnInit(): void {
+    const state = this.location.getState() as { orderId: string, tableId: string } | undefined;
+    if (!state || !state.orderId || !state.tableId) this.router.navigate(['table']);
+    else {
+      this.orderId = state.orderId;
+      this.tableId = state.tableId;
+    }
+
+    console.log(this.orderId);
+    console.log(this.tableId);
+
     this.auth.getUser().subscribe(data => this.user = data.user);
     this.menuList = this.menu.getMenu();
     this.getTimeOfDays();
@@ -90,7 +113,9 @@ export class OrderPageComponent implements OnInit {
 
   addToCart(item: IItem) {
     console.log('Item is:', item);
+    item.item.itemQuantity = 1;
     this.orderCart.push(item);
+    console.log(item.item.options.add)
   }
 
   removeItemFromCart(item: IItem) {
@@ -103,18 +128,72 @@ export class OrderPageComponent implements OnInit {
   editCartItem(item: IItem) {
     this.selectedCartItem = item;
     if(this.selectedCartItem) this.editorVisible = true;
+    console.log('Cart item is: ', this.selectedCartItem);
   }
 
   check() {}
 
   closeEditor() {
     this.editorVisible = false;
-    this.selectedCartItem = undefined;
+    this.selectedCartItem = null;
+    this.selectedOption = null;
+    this.optionalNotes = null;
+  }
+  
+  cancelEdit() {
+    //NEEDS TO BE WORKED ON
+  }
+
+  selectAddNoOtion(option: string) {
+    if (option === 'Add') this.selectedOption = 'Add';
+    else if (option === 'No') this.selectedOption = 'No';
+    else this.selectedOption = null;
+    console.log(this.selectedOption);
+    
+  }
+
+  insertToAddOption(option: IAddOption) {
+    if (!this.selectedCartItem) return;
+    if (this.selectedCartItem.item.chosenOptions)
+      this.selectedCartItem.item.chosenOptions?.add.push(option);
+    else 
+      this.selectedCartItem.item.chosenOptions = {add: [option], no: []}
+    console.log(this.selectedCartItem?.item);
+  }
+
+  insertToNoOption(option: INoOption) {
+    if (!this.selectedCartItem) return;
+    if (this.selectedCartItem.item.chosenOptions)
+      this.selectedCartItem.item.chosenOptions?.no.push(option);
+    else 
+      this.selectedCartItem.item.chosenOptions = {add: [], no: [option]}
+    console.log(this.selectedCartItem?.item);
+  }
+
+  insertOptionalNotes() {
+    if (!this.selectedCartItem) return;
+    if (this.selectedCartItem.item.optionalNotes && this.optionalNotes)
+      this.selectedCartItem.item.optionalNotes = this.optionalNotes;
+    //ADD ELSE STATEMENT HERE
   }
  
   //need to add tag to identify items which are already sent
-  confirmOrder() {
+  confirmAndSendOrder() {
     console.log('order sent');
+    if (this.orderCart) {
+      console.log(this.orderCart);
+    }
+    let newOrder:IOrderListInterface = {
+      orderId: this.orderId,
+      categories: this.categories,
+      orderTime: Date.now(),
+      orderType: 'inhouse',
+      vipCustomer: false,
+      tableId: this.tableId,
+      items: this.orderCart
+    }
+    //work pending here
+    this.orderService.createOrder(newOrder);
   }
 
   calculateTotal() {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { IOrderListInterface } from '../models/item-interfaces/posOutput/orderList.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,4 +21,8 @@ export class OrderService {
   createOrder(order: any):Observable<any> {
     return this.http.post(this.orderUrl, order, this.httpOptions);
   }
+
+  // postOrder(order:IOrderListInterface):Observable<any> {
+    
+  // }
 }

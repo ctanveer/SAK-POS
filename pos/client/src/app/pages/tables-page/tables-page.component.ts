@@ -5,6 +5,7 @@ import { ITableLog } from '../../models/tablelog.model';
 import { TableService } from '../../services/table.service';
 import { OrderService } from '../../services/order.service';
 import { TablelogService } from '../../services/tablelog.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tables-page',
@@ -20,7 +21,7 @@ export class TablesPageComponent implements OnInit{
   createdOrder: IOrder | null = null;
   createdTableLog: ITableLog | null = null;
 
-  constructor(private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService){};
+  constructor(private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private router: Router){};
 
   ngOnInit(): void {
     this.tableService.getAllTables().subscribe((data) =>{
@@ -28,6 +29,11 @@ export class TablesPageComponent implements OnInit{
       console.log(data);
     })
 
+  }
+
+  generateOrder() {
+    // Add order generation here.
+    this.router.navigate(['order'], { state: { orderId: '123', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {

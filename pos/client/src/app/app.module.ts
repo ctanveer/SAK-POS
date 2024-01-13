@@ -36,6 +36,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 
 registerLocaleData(en);
@@ -75,7 +76,8 @@ registerLocaleData(en);
     NzIconModule,
     NzInputModule,
     NzCardModule,
-    NzTabsModule
+    NzTabsModule,
+    NzDropDownModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

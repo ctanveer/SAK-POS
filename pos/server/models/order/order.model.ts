@@ -1,5 +1,6 @@
 import {Schema, model, Types} from 'mongoose'
 import { IOrder } from '../../interfaces/order.interface'
+import { ItemInterface } from '../../interfaces/item-interfaces/posOutput/item.interface';
 
 const OrderSchema = new Schema<IOrder>({
     type: {type: String, required: true, default: 'inhouse'},

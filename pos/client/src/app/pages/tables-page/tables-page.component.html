@@ -3,7 +3,7 @@
     <div class="flex">
         @for (table of tables; track $index) {
             <div class="table-block p-4 m-4 text-center rounded-md" 
-            (click)="setSelectedTable(table) "
+            (click)="setSelectedTable(table)"
             [ngStyle]="{ 'background-color': getStatusColor(table.status), 'min-width': '120px', 'cursor': 'pointer' }"
             >
                 <p><strong>{{table.name}}</strong></p>
@@ -47,6 +47,10 @@
 
         <div class="flex justify-center">
             <img [src]="getSelectedTableImage()" alt="Selected table" />
+        </div>
+
+        <div>
+            <button (click)="generateOrder()">Order</button>
         </div>
 
      
