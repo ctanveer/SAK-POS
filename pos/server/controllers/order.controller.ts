@@ -85,7 +85,13 @@ export const sendOrderToKDS = async (req: AuthRequest, res: Response) => {
     if (!user) return res.status(401).send({ message: 'Unauthorized.' });
     if (!authHeaders) return res.status(401).send({ message: 'Unauthorized.' });
 
+    console.log(authHeaders)
+
+    console.log('User:', user);
+
+
     const order = req.body.order;
+    console.log('Order:', order)
     order.restaurantId = user.employeeInformation.restaurantId;
     await postOrderToKDS(order, authHeaders);
     res.send({ message: "Success"});

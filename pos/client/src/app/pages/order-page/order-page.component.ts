@@ -179,21 +179,22 @@ export class OrderPageComponent implements OnInit {
  
   //need to add tag to identify items which are already sent
   confirmAndSendOrder() {
-    console.log('order sent');
-    if (this.orderCart) {
-      console.log(this.orderCart);
-    }
+    // console.log('order sent');
+    // if (this.orderCart) {
+    //   console.log(this.orderCart);
+    // }
     let newOrder:IOrderListInterface = {
       orderId: this.orderId,
       categories: this.categories,
       orderTime: Date.now(),
-      orderType: 'inhouse',
+      orderType: 'in-house',
       vipCustomer: false,
       tableId: this.tableId,
       items: this.orderCart
     }
     //work pending here
-    this.orderService.createOrder(newOrder);
+    console.log('NEW ORDER IS: ', newOrder);
+    this.orderService.createOrder(newOrder).subscribe(order => console.log('Posted Order is:', order));
   }
 
   calculateTotal() {
