@@ -16,10 +16,10 @@ export class OrderService {
 
   constructor(  private http: HttpClient) { }
 
-  private orderUrl = environment.API_URL + "/order";
+  private orderUrl = environment.API_URL + "/order/new";
 
   createOrder(order: any):Observable<any> {
-    return this.http.post(this.orderUrl, order, this.httpOptions);
+    return this.http.post(this.orderUrl, { order }, this.httpOptions);
   }
 
   // postOrder(order:IOrderListInterface):Observable<any> {

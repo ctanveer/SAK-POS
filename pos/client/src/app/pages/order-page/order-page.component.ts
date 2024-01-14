@@ -33,8 +33,8 @@ export class OrderPageComponent implements OnInit {
   menuList : IMenu | undefined;
   categories: ICategories[] = [];
   timeOfDays: string[] = [];
-  selectedTimeTab: string = 'Lunch';
-  selectedCategory: ICategories | undefined;
+  selectedTimeTab: string = '';
+  selectedCategory: ICategories | null = null;
   filteredMenu: IItem[] | undefined;
 
   orderCart: IItem[] = [];
@@ -62,10 +62,10 @@ export class OrderPageComponent implements OnInit {
     this.auth.getUser().subscribe(data => this.user = data.user);
     this.menuList = this.menu.getMenu();
     this.getTimeOfDays();
-    this.selectedTimeTab = this.timeOfDays[0];
+    //this.selectedTimeTab = this.timeOfDays[0];
     this.categories = this.menuList.categories;
-    this.selectedCategory = this.categories[0];
-    this.setFilteredMenu();
+    //this.selectedCategory = this.categories[0];
+    //this.setFilteredMenu();
     
     console.log('Menu:', this.menuList);
     console.log('Categories', this.categories);
@@ -95,6 +95,9 @@ export class OrderPageComponent implements OnInit {
 
   handleTimeTabChange(index: number) {
     this.selectedTimeTab = this.timeOfDays[index];
+    this.selectedCategory = this.categories[0];
+    console.log('Current Time Tab is: ', this.selectedTimeTab);
+    console.log('Current Category Tab is: ', this.selectedCategory)
     this.setFilteredMenu();
   }
 
@@ -106,9 +109,11 @@ export class OrderPageComponent implements OnInit {
   //does not WORK
   clearTabs() {
     console.log('at clear tabs func');
-    this.selectedTimeTab = this.timeOfDays[0];
-    this.selectedCategory = this.categories[0];
-    this.setFilteredMenu();
+    // this.selectedTimeTab = this.timeOfDays[0];
+    this.selectedTimeTab = '';
+    // this.selectedCategory = this.categories[0];
+    this.selectedCategory = null;
+    this.filteredMenu = undefined;
   }
 
   addToCart(item: IItem) {
@@ -172,28 +177,29 @@ export class OrderPageComponent implements OnInit {
 
   insertOptionalNotes() {
     if (!this.selectedCartItem) return;
-    if (this.selectedCartItem.item.optionalNotes && this.optionalNotes)
+    if (this.optionalNotes) {
       this.selectedCartItem.item.optionalNotes = this.optionalNotes;
-    //ADD ELSE STATEMENT HERE
+    }
   }
  
   //need to add tag to identify items which are already sent
   confirmAndSendOrder() {
-    console.log('order sent');
-    if (this.orderCart) {
-      console.log(this.orderCart);
-    }
+    // console.log('order sent');
+    // if (this.orderCart) {
+    //   console.log(this.orderCart);
+    // }
     let newOrder:IOrderListInterface = {
       orderId: this.orderId,
       categories: this.categories,
       orderTime: Date.now(),
-      orderType: 'inhouse',
+      orderType: 'in-house',
       vipCustomer: false,
       tableId: this.tableId,
       items: this.orderCart
     }
     //work pending here
-    this.orderService.createOrder(newOrder);
+    console.log('NEW ORDER IS: ', newOrder);
+    this.orderService.createOrder(newOrder).subscribe(order => console.log('Posted Order is:', order));
   }
 
   calculateTotal() {

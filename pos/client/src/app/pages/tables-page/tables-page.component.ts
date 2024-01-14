@@ -33,7 +33,7 @@ export class TablesPageComponent implements OnInit{
 
   generateOrder() {
     // Add order generation here.
-    this.router.navigate(['order'], { state: { orderId: '123', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
+    this.router.navigate(['order'], { state: { orderId: '234', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {

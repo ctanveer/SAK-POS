@@ -3,7 +3,7 @@ import { IOrder } from '../../interfaces/order.interface'
 import { ItemInterface } from '../../interfaces/item-interfaces/posOutput/item.interface';
 
 const OrderSchema = new Schema<IOrder>({
-    type: {type: String, required: true, default: 'inhouse'},
+    type: {type: String, required: true, default: 'in-house'},
     customerId: {type: Number},
     waiterId: {type: Number},
     bill: {type: Number, default: 0},
