@@ -17,7 +17,7 @@ const routes: Routes = [
   {path: '', component: PageContainerComponent, children: [
     {path: 'tables', component: TablesPageComponent, pathMatch: 'full'},
     {path: 'table-editor', component: EditorPageComponent, pathMatch: 'full'},
-    {path: 'order-history', component: OrderHistoryPageComponent, pathMatch: 'full'},
+    {path: 'order-history', component: OrderHistoryPageComponent, pathMatch: 'full'}
   ]},
   {path: '**', redirectTo: '/tables'}
 ];

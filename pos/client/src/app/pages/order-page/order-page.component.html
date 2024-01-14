@@ -9,14 +9,14 @@
       <nz-tabset 
         [nzTabBarExtraContent]="clearTemplate" 
         nzCentered
-        [nzTabBarGutter]="100" 
+        [nzTabBarGutter]="60"
         [nzAnimated]="false"
         (nzSelectedIndexChange)="handleTimeTabChange($event)"
       >
         <nz-tab *ngFor="let time of timeOfDays" [nzTitle]="time">
           <nz-tabset 
             nzCentered 
-            [nzTabBarGutter]="100"
+            [nzTabBarGutter]="60"
             (nzSelectedIndexChange)="handleCategoryTabChange($event)"
           >
             <nz-tab *ngFor="let category of categories" [nzTitle]="category.name">

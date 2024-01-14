@@ -27,7 +27,7 @@ export class OrderPageComponent implements OnInit {
     { itemId: 3, name: 'Chicken Pasta', price: 6.20, description: "the pasta here", image: '../../../assets/item-images/pasta-1.jpg' }
   ];
 
-  constructor ( private auth: AuthApiService, private menu: MenuService, private router: Router, private location: Location, private orderService: OrderService) {}
+  constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService) {}
 
   user : IUser | undefined;
   menuList : IMenu | undefined;
@@ -60,7 +60,7 @@ export class OrderPageComponent implements OnInit {
     console.log(this.tableId);
 
     this.auth.getUser().subscribe(data => this.user = data.user);
-    this.menuList = this.menu.getMenu();
+    this.menuList = this.menuService.getMenu();
     this.getTimeOfDays();
     //this.selectedTimeTab = this.timeOfDays[0];
     this.categories = this.menuList.categories;
