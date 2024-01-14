@@ -96,24 +96,12 @@ export class OrderPageComponent implements OnInit {
   handleTimeTabChange(index: number) {
     this.selectedTimeTab = this.timeOfDays[index];
     this.selectedCategory = this.categories[0];
-    console.log('Current Time Tab is: ', this.selectedTimeTab);
-    console.log('Current Category Tab is: ', this.selectedCategory)
     this.setFilteredMenu();
   }
 
   handleCategoryTabChange(index: number) {
     this.selectedCategory = this.categories[index];
     this.setFilteredMenu();
-  }
-
-  //does not WORK
-  clearTabs() {
-    console.log('at clear tabs func');
-    // this.selectedTimeTab = this.timeOfDays[0];
-    this.selectedTimeTab = '';
-    // this.selectedCategory = this.categories[0];
-    this.selectedCategory = null;
-    this.filteredMenu = undefined;
   }
 
   addToCart(item: IItem) {
@@ -135,8 +123,6 @@ export class OrderPageComponent implements OnInit {
     if(this.selectedCartItem) this.editorVisible = true;
     console.log('Cart item is: ', this.selectedCartItem);
   }
-
-  check() {}
 
   closeEditor() {
     this.editorVisible = false;
@@ -206,5 +192,8 @@ export class OrderPageComponent implements OnInit {
     return this.orderCart.reduce((total, item) => total + item.item.itemPrice, 0);
   }
 
+  getTimeOutDayIndex () {
+    return this.categories.findIndex(item => item.id === this.selectedCategory?.id)
+  }
 
 }
