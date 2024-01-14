@@ -7,17 +7,34 @@
       <!-- This would work, but menu-items-container is set as flex which is causing a issue -->
       
       <nz-tabset 
-        [nzTabBarExtraContent]="clearTemplate" 
         nzCentered
         [nzTabBarGutter]="100" 
         [nzAnimated]="false"
         (nzSelectedIndexChange)="handleTimeTabChange($event)"
       >
+
+      <nz-tab nzTitle="All Items">
+
+        <div class="menu-items-container">
+          @if (menuList) {
+            @for (item of menuList.items; track $index) {
+              <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+                <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+                <p><strong>{{item.item.itemName}}</strong></p>
+                <p>${{item.item.itemPrice}}</p>
+              </div>
+            }
+          }
+        </div>
+
+      </nz-tab>
         <nz-tab *ngFor="let time of timeOfDays" [nzTitle]="time">
           <nz-tabset 
             nzCentered 
             [nzTabBarGutter]="100"
             (nzSelectedIndexChange)="handleCategoryTabChange($event)"
+            [nzSelectedIndex]="getTimeOutDayIndex()"
+            
           >
             <nz-tab *ngFor="let category of categories" [nzTitle]="category.name">
               <div class="menu-items-container">
@@ -45,7 +62,7 @@
         </nz-tab>
       </nz-tabset>
       <ng-template #clearTemplate>
-        <button nz-button (click)="clearTabs()">Clear</button>
+        <!-- <button nz-button (click)="clearTabs()">Clear</button> -->
       </ng-template>
     </div>
 
