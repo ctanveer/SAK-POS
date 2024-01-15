@@ -87,7 +87,19 @@ const OrderSchema = new Schema<IOrder>({
     status: {type: String, required: true, default: 'ongoing', enum: ['ongoing', 'closed', 'void']},
     timeSpent: {type: Number, default: 0},
     items: {type: [itemSchema]}
-},{timestamps: true});
+},{
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  },
+  toJSON: {
+    transform: (doc, ret) => {
+      ret.createdAt = ret.createdAt && ret.createdAt.getTime();
+      ret.updatedAt = ret.updatedAt && ret.updatedAt.getTime();
+      return ret;
+    },
+  }
+});
 
 
 const Order = model<IOrder>('order', OrderSchema);

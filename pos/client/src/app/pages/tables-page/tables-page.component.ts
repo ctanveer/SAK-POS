@@ -24,7 +24,8 @@ export class TablesPageComponent implements OnInit{
   visible = false;
   selectedStatus: 'open' | 'occupied' | 'reserved' | 'closed' = 'open';
   createdOrder: IOrder | null = null;
-  createdTableLog: ITableLog | null = null;
+  // currentTableLog: ITableLog | null = null;
+  currentTableLog: any = null;
 
   constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private router: Router){};
 
@@ -42,10 +43,13 @@ export class TablesPageComponent implements OnInit{
   }
 
   proceedToOrder() {
-    
-
+    if (this.selectedTable) {
+      this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
+        this.currentTableLog = data;
+      })
+    }
     // Add order generation here.
-    //this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
+    this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {
@@ -105,8 +109,8 @@ export class TablesPageComponent implements OnInit{
           //orderId: this.createdOrder?._id
           //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
           this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tlog => {
-            this.createdTableLog = tlog;
-            console.log('Created Table Log is: ', this.createdTableLog);
+            this.currentTableLog = tlog;
+            console.log('Created Table Log is: ', this.currentTableLog);
           })
         } 
       }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { ITable } from '../models/table.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,10 @@ export class TablelogService {
 
   createTablelog(tableLog: any):Observable<any> {
     return this.http.post(this.tLogUrl, tableLog, this.httpOptions);
+  }
+
+  getTableLogByTableId(table: ITable) {
+    const url = `${this.tLogUrl}/${table._id}`;
+    return this.http.get(url, this.httpOptions);
   }
 }

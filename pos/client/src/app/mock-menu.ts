@@ -572,7 +572,7 @@ export const menu = {
                 itemPrice: 7.99,
                 itemCalories: 320,
                 itemImage: '',
-                timeOfDay: ['All Day', 'Lunch'],
+                timeOfDay: ['All Day', 'Breakfast'],
                 itemProfileTastyTags: ['Creamy', 'Appetizer'],
                 itemPortionSize: 'Small',
                 itemPreparationTime: 15,
