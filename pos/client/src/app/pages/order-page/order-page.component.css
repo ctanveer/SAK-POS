@@ -1,6 +1,6 @@
 .order-page-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: flex-start;
 }
 
@@ -14,7 +14,8 @@
     border: 2px solid #0c0c0c;
     border-radius: 5px;
     overflow: auto;
-    width: 65rem;
+    min-width: 50rem;
+    width: 65dvw;
 }
 
 .menu-items-container {
@@ -62,14 +63,13 @@
 }
 
 .order-cart-container {
-    /* flex-basis: 400px;  */
-    padding-left: 20px;
     margin-left: 10px;
     margin-top: 10px;
     border: 2px solid black;
     border-radius: 5px;
-    height: 33rem;
-    width: 28rem;
+    min-height: 33rem;
+    height: 80dvh;
+    min-width: 28rem;
     overflow: auto;
     position: relative;
 }
