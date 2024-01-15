@@ -52,8 +52,13 @@ export class OrderPageComponent implements OnInit {
     const state = this.location.getState() as { orderId: string, tableId: string } | undefined;
     if (!state || !state.orderId || !state.tableId) this.router.navigate(['table']);
     else {
+      
       this.orderId = state.orderId;
       this.tableId = state.tableId;
+      
+      console.log(this.orderId);
+      console.log(this.tableId);
+      
     }
 
     console.log(this.orderId);

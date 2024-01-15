@@ -1,7 +1,7 @@
 export interface ITableLog {
     _id?: string;
     // tableId: string;
-    tableId: object;
+    tableId: string;
     timeElapsed: number;
     orderId?: string;
     waiterId?: number;

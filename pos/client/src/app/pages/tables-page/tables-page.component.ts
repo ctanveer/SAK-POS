@@ -33,11 +33,11 @@ export class TablesPageComponent implements OnInit{
     this.auth.getUser().subscribe(data => {
       this.user = data.user;
       this.userId = this.user.employeeInformation.position.employeeId;
-      console.log('Current user is: ', this.user.employeeInformation.position.employeeId);
+      //console.log('Current user is: ', this.user.employeeInformation.position.employeeId);
     });
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
-      console.log(data);
+      //console.log(data);
     })
 
   }
@@ -46,10 +46,27 @@ export class TablesPageComponent implements OnInit{
     if (this.selectedTable) {
       this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
         this.currentTableLog = data;
+        console.log('Current Table log is: ', this.currentTableLog[0]);
+        if (this.currentTableLog[0].orderId) {
+          console.log('Order Id ALREADY EXISTS. Order Id is: ', this.currentTableLog[0].orderId._id);
+          this.router.navigate(['order'], { state: { orderId: this.currentTableLog[0].orderId ? this.currentTableLog[0].orderId._id : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});      
+        }
+        else{
+          this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
+            this.createdOrder = order;
+            console.log('Created Order is: ', this.createdOrder);
+            if (this.createdOrder) this.currentTableLog[0].orderId = this.createdOrder._id;
+            console.log('UPDATING Table Log, Table Log is: ', this.currentTableLog[0]);
+            this.tablelogService.updateTableLogById(this.currentTableLog[0]).subscribe(data => {
+              this.currentTableLog = data;
+              this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
+            })  
+          });
+        }
       })
     }
     // Add order generation here.
-    this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
+    // this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {

@@ -25,4 +25,9 @@ export class TablelogService {
     const url = `${this.tLogUrl}/${table._id}`;
     return this.http.get(url, this.httpOptions);
   }
+
+  updateTableLogById(tableLog: any) {
+    const url = `${this.tLogUrl}/${tableLog._id}`;
+    return this.http.put(url, tableLog, this.httpOptions);
+  }
 }
