@@ -13,7 +13,8 @@ const TableLogSchema = new Schema<ITableLog>({
     ref: 'order',
   },
   waiterId: {type: Number, default: null},
-  customerId: {type: Number, default: null}
+  customerId: {type: Number, default: null},
+  status: {type: String, required: true, default: 'ongoing', enum: ['ongoing', 'closed', 'void']},
 }, {timestamps: true})
 
 const TableLog = model<ITableLog>('table-log', TableLogSchema);

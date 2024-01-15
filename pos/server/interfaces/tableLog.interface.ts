@@ -6,4 +6,5 @@ export interface ITableLog {
     orderId?: Types.ObjectId;
     waiterId?: number;
     customerId?:number;
+    status: 'ongoing' | 'closed' | 'void';
 }
