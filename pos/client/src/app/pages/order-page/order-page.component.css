@@ -64,14 +64,17 @@
     margin-left: 10px;
     margin-top: 20px;
     border: 2px solid black;
-    height: 750px
+    height: 80dvh;
 }
 
-.order-items-container {
-    display: flex;
-    justify-content: space-between;
+.option-container {
+    margin-right: 8px;
 }
 
-.order-item-block {
+.selected-option {
+    border: solid #038851 2px;
+}
 
+.unselected-option {
+    border: solid #d3dce6 2px;
 }

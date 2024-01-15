@@ -93,6 +93,10 @@ pre {
     color: #05CC79;
 }
 
+.text-red {
+    color: #cc0505;
+}
+
 .text-black {
     color: #1c1c1c;
 }
@@ -199,6 +203,10 @@ pre {
 
 .self-stretch {
     align-self: stretch;
+}
+
+.grow {
+    flex-grow: 1;
 }
 
 
@@ -2419,3 +2427,6 @@ pre {
     align-content: space-evenly;
 }
 
+.overflow-y-auto {
+    overflow-y: auto;
+}
