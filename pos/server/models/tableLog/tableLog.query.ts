@@ -25,9 +25,11 @@ const updateTableLogById = async (
     tablelogObject: Partial<ITableLog>,
   ) => {
     const tablelog = await TableLog.findByIdAndUpdate(
-      { _id: id},
+      id,
       {
-        ...tablelogObject,
+        $set: {
+          ...tablelogObject,
+        }
       },
       { new: true },
     );
