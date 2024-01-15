@@ -23,7 +23,7 @@
           @if (menuList) {
             @for (item of menuList.items; track $index) {
               <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-                <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+                <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md" />
                 <p><strong>{{item.item.itemName}}</strong></p>
                 <p>${{item.item.itemPrice}}</p>
               </div>
@@ -45,7 +45,7 @@
                 @if (filteredMenu) {
                   @for (item of filteredMenu; track $index) {
                     <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-                      <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+                      <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
                       <p><strong>{{item.item.itemName}}</strong></p>
                       <p>${{item.item.itemPrice}}</p>
                     </div>
@@ -56,53 +56,54 @@
           </nz-tabset>
         </nz-tab>
       </nz-tabset>
-      <ng-template #clearTemplate>
-        <!-- <button nz-button (click)="clearTabs()">Clear</button> -->
-      </ng-template>
     </div>
 
-    <div class="order-cart-container">
-      <div>
-        <h2 class="pt-2">Order Summary</h2>
-        @for (cartItem of orderCart; track $index) {
-          <div class="order-item-container border mr-4 mt-2">
-            <div class="w-full">
-              <div class="flex justify-between mr-8">
-                <div class="pt-1">{{cartItem.item.itemQuantity}} x <strong>{{cartItem.item.itemName}}</strong></div>
-                <div class="pt-1" >${{cartItem.item.itemPrice}}</div>
-              </div>
-              <div>
+    <div class="order-cart-container flex flex-col">
+      <h3 class="px-2 pt-2 self-center">Order Summary</h3>
+        <div class="grow overflow-y-auto">
+          @for (cartItem of orderCart; track $index) {
+            <div class="flex justify-between mr-2 mt-5">
+              <div class="grow">
+                <div class="w-full flex justify-between">
+                  <div><strong>{{cartItem.item.itemQuantity}} × {{cartItem.item.itemName}}</strong></div>
+                  <div class="mx-5">${{cartItem.item.itemPrice}}</div>
+                </div>
+                
                 @if (cartItem.item.chosenOptions) {
                   @for (option of cartItem.item.chosenOptions.add; track $index) {
-                    <p class="ml-3">Add: {{option.ingredientName}}</p>
+                    <div class="w-full flex justify-between">
+                      <div class="mx-5">Add: {{option.ingredientName}}</div>
+                      <div class="mx-5 text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                    </div>
                   }
-          
+
                   @for (option of cartItem.item.chosenOptions.no; track $index) {
-                    <p class="ml-3">No: {{option.ingredientName}}</p>
+                    <div class="w-full flex justify-between">
+                      <div class="mx-5">No: {{option.ingredientName}}</div>
+                      <div class="mx-5 text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                    </div>
                   }
-                }
-                @if (cartItem.item.optionalNotes) {
-                  <p class="notes ml-3">Notes: {{cartItem.item.optionalNotes}}</p>
                 }
               </div>
+
+
+              <div>
+                <button class="mr-2" nz-button nzShape="circle" nzSize="small" (click)="editCartItem(cartItem)">
+                  <span nz-icon nzType="edit" nzTheme="outline"></span>
+                </button>
+                <button nz-button nzShape="circle" nzSize="small" nzDanger (click)="removeItemFromCart(cartItem)">
+                  <span nz-icon nzType="close" nzTheme="outline"></span>
+                </button>
+              </div>
             </div>
-            
-            <div class="cart-item-buttons-container">
-              <button nz-button nzShape="circle" (click)="editCartItem(cartItem)">
-                <span nz-icon nzType="edit" nzTheme="outline"></span>
-              </button>
-              <button nz-button nzDanger nzShape="circle" (click)="removeItemFromCart(cartItem)">
-                <span nz-icon nzType="close" nzTheme="outline"></span>
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-      
-      <div class="order-send-btn">
-        <h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
-        <button nz-button (click)="confirmAndSendOrder()">Send Order</button>
-      </div>
+
+          }
+        </div>
+
+        <div class="w-full flex justify-between p-5">
+          <h3>Total: ${{ calculateTotal() }}</h3>
+          <button nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
+        </div>
     </div>
 </div>
 
@@ -144,15 +145,25 @@
       <button nz-button class="px-16" style="margin-right: 8px;" (click)="selectAddNoOtion('Add')">Add</button>
       <button nz-button class="px-16" style="margin-right: 8px;" (click)="selectAddNoOtion('No')">No</button>
       
-      <div>
+      <div class="flex">
         @if (selectedOption === 'Add') {
           @for(option of selectedCartItem.item.options.add; track $index) {
-            <button nz-button class="px-12 py-8 my-4 text-align" style="margin-right: 8px;" (click)="insertToAddOption(option)">{{option.ingredientName}}</button>
+              <div
+                [ngClass]="{ 'px-12 py-8 my-4 text-align option-container': true, 'selected-option': isAddOptionSelected(option), 'unselected-option': !isAddOptionSelected(option) }"
+                (click)="insertToAddOption(option)"
+              >
+                {{option.ingredientName}}
+              </div>
           }
         } 
         @if (selectedOption === 'No') {
           @for(option of selectedCartItem.item.options.no; track $index) {
-            <button nz-button class="px-12 py-8 my-4 text-align" style="margin-right: 8px;" (click)="insertToNoOption(option)">{{option.ingredientName}}</button>
+            <div
+            [ngClass]="{ 'px-12 py-8 my-4 text-align option-container': true, 'selected-option': isNoOptionSelected(option), 'unselected-option': !isNoOptionSelected(option) }"
+            (click)="insertToNoOption(option)"
+          >
+            {{option.ingredientName}}
+          </div>
           }
         }
       </div>
@@ -170,22 +181,4 @@
       </div>
     </ng-template>
   </nz-drawer>
-
-<!-- <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-  <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
-  <p><strong>{{cartItem.item.itemName}}</strong></p>
-  <p>${{cartItem.item.itemPrice}}</p>
-</div> -->
-
-
-
-<!-- <h3 class="px-2 pt-2">Order Summary</h3>
-<ul>
-  @for (cartItem of orderCart; track $index) {
-    <li>
-      {{ cartItem.item.itemName }} - {{ cartItem.item.itemPrice }}
-    </li>
-  }
-</ul>
--->
 

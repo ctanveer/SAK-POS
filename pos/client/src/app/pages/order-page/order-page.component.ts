@@ -62,10 +62,7 @@ export class OrderPageComponent implements OnInit {
     this.auth.getUser().subscribe(data => this.user = data.user);
     this.menuList = this.menuService.getMenu();
     this.getTimeOfDays();
-    //this.selectedTimeTab = this.timeOfDays[0];
     this.categories = this.menuList.categories;
-    //this.selectedCategory = this.categories[0];
-    //this.setFilteredMenu();
     
     console.log('Menu:', this.menuList);
     console.log('Categories', this.categories);
@@ -105,10 +102,9 @@ export class OrderPageComponent implements OnInit {
   }
 
   addToCart(item: IItem) {
-    console.log('Item is:', item);
-    item.item.itemQuantity = 1;
-    this.orderCart.push(item);
-    console.log(item.item.options.add)
+    const copy : IItem = JSON.parse(JSON.stringify(item));
+    copy.item.itemQuantity = 1;
+    this.orderCart.push(copy);
   }
 
   removeItemFromCart(item: IItem) {
@@ -121,7 +117,6 @@ export class OrderPageComponent implements OnInit {
   editCartItem(item: IItem) {
     this.selectedCartItem = item;
     if(this.selectedCartItem) this.editorVisible = true;
-    console.log('Cart item is: ', this.selectedCartItem);
   }
 
   closeEditor() {
@@ -139,26 +134,32 @@ export class OrderPageComponent implements OnInit {
     if (option === 'Add') this.selectedOption = 'Add';
     else if (option === 'No') this.selectedOption = 'No';
     else this.selectedOption = null;
-    console.log(this.selectedOption);
-    
   }
 
   insertToAddOption(option: IAddOption) {
     if (!this.selectedCartItem) return;
-    if (this.selectedCartItem.item.chosenOptions)
-      this.selectedCartItem.item.chosenOptions?.add.push(option);
-    else 
+
+    if (this.selectedCartItem.item.chosenOptions) {
+      if (!this.isAddOptionSelected(option))
+        this.selectedCartItem.item.chosenOptions.add.push(option);
+      else 
+        this.selectedCartItem.item.chosenOptions.add = this.selectedCartItem.item.chosenOptions.add.filter(item => item.ingredient.id !== option.ingredient.id);
+    } else {
       this.selectedCartItem.item.chosenOptions = {add: [option], no: []}
-    console.log(this.selectedCartItem?.item);
+    }
   }
 
   insertToNoOption(option: INoOption) {
     if (!this.selectedCartItem) return;
-    if (this.selectedCartItem.item.chosenOptions)
-      this.selectedCartItem.item.chosenOptions?.no.push(option);
-    else 
+
+    if (this.selectedCartItem.item.chosenOptions) {
+      if (!this.isNoOptionSelected(option))
+        this.selectedCartItem.item.chosenOptions.no.push(option);
+      else 
+        this.selectedCartItem.item.chosenOptions.no = this.selectedCartItem.item.chosenOptions.no.filter(item => item.ingredient.id !== option.ingredient.id);
+    } else {
       this.selectedCartItem.item.chosenOptions = {add: [], no: [option]}
-    console.log(this.selectedCartItem?.item);
+    }
   }
 
   insertOptionalNotes() {
@@ -170,10 +171,6 @@ export class OrderPageComponent implements OnInit {
  
   //need to add tag to identify items which are already sent
   confirmAndSendOrder() {
-    // console.log('order sent');
-    // if (this.orderCart) {
-    //   console.log(this.orderCart);
-    // }
     let newOrder:IOrderListInterface = {
       orderId: this.orderId,
       categories: this.categories,
@@ -189,11 +186,29 @@ export class OrderPageComponent implements OnInit {
   }
 
   calculateTotal() {
-    return this.orderCart.reduce((total, item) => total + item.item.itemPrice, 0);
+    return this.orderCart.reduce((total, cartItem) => {
+      const basePrice = cartItem.item.itemPrice;
+      const addOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
+      const noOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
+
+      return total + ((basePrice + addOptionPrice - noOptionPrice) * (cartItem.item.itemQuantity ? cartItem.item.itemQuantity : 1));
+    }, 0);
   }
 
   getTimeOutDayIndex () {
     return this.categories.findIndex(item => item.id === this.selectedCategory?.id)
+  }
+
+  isAddOptionSelected (option: IAddOption) {
+    if (!this.selectedCartItem) return false;
+    if (!this.selectedCartItem.item.chosenOptions) return false;
+    return this.selectedCartItem.item.chosenOptions.add.findIndex(item => item.ingredient.id === option.ingredient.id) !== -1;
+  }
+
+  isNoOptionSelected (option: IAddOption) {
+    if (!this.selectedCartItem) return false;
+    if (!this.selectedCartItem.item.chosenOptions) return false;
+    return this.selectedCartItem.item.chosenOptions.no.findIndex(item => item.ingredient.id === option.ingredient.id) !== -1;
   }
 
 }

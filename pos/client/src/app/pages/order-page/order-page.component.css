@@ -112,4 +112,17 @@
 .order-item-block {
     position: absolute;
     bottom: 0;
+    height: 80dvh;
+}
+
+.option-container {
+    margin-right: 8px;
+}
+
+.selected-option {
+    border: solid #038851 2px;
+}
+
+.unselected-option {
+    border: solid #d3dce6 2px;
 }
