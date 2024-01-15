@@ -64,7 +64,6 @@
     <div class="order-cart-container">
       <div>
         <h2 class="pt-2">Order Summary</h2>
-        <!-- <div class="order-items-container"> -->
         @for (cartItem of orderCart; track $index) {
           <div class="order-item-container border mr-4 mt-2">
             <div class="w-full">
@@ -98,10 +97,10 @@
             </div>
           </div>
         }
-        <h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
       </div>
       
       <div class="order-send-btn">
+        <h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
         <button nz-button (click)="confirmAndSendOrder()">Send Order</button>
       </div>
     </div>

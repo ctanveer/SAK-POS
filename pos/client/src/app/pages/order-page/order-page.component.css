@@ -74,6 +74,11 @@
     position: relative;
 }
 
+/* .all-order-items-container {
+    overflow:auto;
+    position: relative;
+} */
+
 .order-item-container {
     display: flex;
     justify-content: space-between;

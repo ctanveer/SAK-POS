@@ -41,9 +41,11 @@ export class TablesPageComponent implements OnInit{
 
   }
 
-  generateOrder() {
+  proceedToOrder() {
+    
+
     // Add order generation here.
-    this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
+    //this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {
@@ -81,26 +83,32 @@ export class TablesPageComponent implements OnInit{
   changeTableStatus() {
     console.log('Selected table is: ', this.selectedTable);
     if (this.selectedTable) {
-      if (this.selectedTable.status === 'open' && this.selectedStatus === 'occupied') {
-        this.selectedTable.status = this.selectedStatus;
-        this.tableService.updateTable(this.selectedTable).subscribe(data => {
-          let index = this.tables.findIndex(table => table._id === data._id);
-          if (index !== -1) {
-            this.tables[index] = data;
-          }
-          console.log('Current table is: ', this.tables[index]);
-        });
-
-        this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
-          this.createdOrder = order;
-          console.log('Created Order is: ', this.createdOrder);
-        });
-        
-        //issue here
-        this.tablelogService.createTablelog({tableId: this.selectedTable._id, orderId: this.createdOrder?._id, waiterId: this.userId}).subscribe(tlog => {
-          this.createdTableLog = tlog;
-          console.log('Created Table Log is: ', this.createdTableLog);
-        })
+      //open OR reserved --> occupied
+      if (this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') {
+        if (this.selectedStatus === 'occupied') {
+          this.selectedTable.status = this.selectedStatus;
+          this.tableService.updateTable(this.selectedTable).subscribe(data => {
+            let index = this.tables.findIndex(table => table._id === data._id);
+            if (index !== -1) {
+              this.tables[index] = data;
+            }
+            console.log('Current table is: ', this.tables[index]);
+          });
+  
+          /*
+          this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
+            this.createdOrder = order;
+            console.log('Created Order is: ', this.createdOrder);
+          });
+          */
+          
+          //orderId: this.createdOrder?._id
+          //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
+          this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tlog => {
+            this.createdTableLog = tlog;
+            console.log('Created Table Log is: ', this.createdTableLog);
+          })
+        } 
       }
       else {
         this.selectedTable.status = this.selectedStatus;

@@ -37,21 +37,49 @@
               <nz-form-control>
                 <nz-select name='status-type' nzPlaceHolder="Please select status" [(ngModel)]="selectedStatus" >
                     @for (type of statusTypes; track $index) {
-                        <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                        @if (selectedStatus === 'reserved') {
+                            @if (type === 'closed') {
+                                <nz-option [nzLabel]="type" [nzValue]="type" [nzDisabled]="true"></nz-option>
+                            }
+                            @else {
+                                <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                            }
+                        } 
+                        @else if (selectedStatus === 'closed') {
+                            @if (type === 'occupied' || type === 'reserved') {
+                                <nz-option [nzLabel]="type" [nzValue]="type" [nzDisabled]="true"></nz-option>
+                            }
+                            @else {
+                                <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                            }
+                        }
+                        @else if (selectedStatus === 'occupied') {
+                            @if (type === 'reserved' || type === 'closed') {
+                                <nz-option [nzLabel]="type" [nzValue]="type" [nzDisabled]="true"></nz-option>
+                            }
+                            @else {
+                                <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                            }
+                        } 
+                        @else {
+                            <nz-option [nzLabel]="type" [nzValue]="type"></nz-option>
+                        }
                     }
                 </nz-select>
             </nz-form-control>
-            <button nz-button nzType="default" (click)="changeTableStatus()">Save</button>
+            <button nz-button nzType="default" (click)="changeTableStatus()">Update Status</button>
             </nz-form-item>
         </div>
 
         <div class="flex justify-center">
             <img [src]="getSelectedTableImage()" alt="Selected table" />
         </div>
-
-        <div>
-            <button (click)="generateOrder()">Order</button>
-        </div>
+        
+        @if (selectedTable.status === 'occupied') {
+            <div>
+                <button (click)="proceedToOrder()">Order</button>
+            </div>
+        }
 
      
     </ng-container>
