@@ -5,11 +5,7 @@
 }
 </h3>
 <div class="order-page-container px-2">
-    <div class="full-menu-container">
-      <!-- class="menu-item" -->
-
-      <!-- This would work, but menu-items-container is set as flex which is causing a issue -->
-      
+    <div class="full-menu-container">      
       <nz-tabset 
         nzCentered
         [nzTabBarGutter]="60"
@@ -71,21 +67,24 @@
                 
                 @if (cartItem.item.chosenOptions) {
                   @for (option of cartItem.item.chosenOptions.add; track $index) {
-                    <div class="w-full flex justify-between">
-                      <div class="mx-5">Add: {{option.ingredientName}}</div>
+                    <div class="w-full flex justify-between text-green">
+                      <div class="mx-5">+ {{option.ingredientName}}</div>
                       <div class="mx-5 text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
                     </div>
                   }
 
                   @for (option of cartItem.item.chosenOptions.no; track $index) {
-                    <div class="w-full flex justify-between">
-                      <div class="mx-5">No: {{option.ingredientName}}</div>
+                    <div class="w-full flex justify-between text-red">
+                      <div class="mx-5">- {{option.ingredientName}}</div>
                       <div class="mx-5 text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
                     </div>
                   }
                 }
-              </div>
 
+                @if (cartItem.item.optionalNotes) {
+                  <i class="mx-5">Notes: {{cartItem.item.optionalNotes}}</i>
+                }
+              </div>
 
               <div>
                 <button class="mr-2" nz-button nzShape="circle" nzSize="small" (click)="editCartItem(cartItem)">
@@ -120,9 +119,10 @@
     <ng-container *nzDrawerContent>
       <nz-descriptions [nzColumn]="2" nzTitle="Item Info">
         <nz-descriptions-item nzTitle="Item Name" [nzSpan]="1">{{ selectedCartItem.item.itemName }}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Id" [nzSpan]="1">{{ selectedCartItem.item.itemId}}</nz-descriptions-item>
-        <nz-descriptions-item nzTitle="Price" [nzSpan]="1">${{ selectedCartItem.item.itemPrice }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="ID" [nzSpan]="1">{{ selectedCartItem.item.itemId}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Base Price" [nzSpan]="1">${{ selectedCartItem.item.itemPrice }}</nz-descriptions-item>
         <nz-descriptions-item nzTitle="Portion Size" [nzSpan]="1">{{ selectedCartItem.item.itemPortionSize }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Price" [nzSpan]="1">${{ calculateSelectedItemPrice() }}</nz-descriptions-item>
       </nz-descriptions>
       <nz-divider></nz-divider>
       <form>
@@ -142,41 +142,48 @@
         </div>
       </form>
       <h3>Customize Add-ons</h3>
-      <button nz-button class="px-16" style="margin-right: 8px;" (click)="selectAddNoOtion('Add')">Add</button>
-      <button nz-button class="px-16" style="margin-right: 8px;" (click)="selectAddNoOtion('No')">No</button>
-      
-      <div class="flex">
-        @if (selectedOption === 'Add') {
-          @for(option of selectedCartItem.item.options.add; track $index) {
+
+      <nz-tabset>
+        <nz-tab nzTitle="Add">
+          <div class="flex">
+            @for(option of selectedCartItem.item.options.add; track $index) {
               <div
-                [ngClass]="{ 'px-12 py-8 my-4 text-align option-container': true, 'selected-option': isAddOptionSelected(option), 'unselected-option': !isAddOptionSelected(option) }"
+                [ngClass]="{ 'px-12 py-8 my-4 text-center option-container': true, 'selected-option': isAddOptionSelected(option), 'unselected-option': !isAddOptionSelected(option) }"
                 (click)="insertToAddOption(option)"
               >
-                {{option.ingredientName}}
+                <div>{{option.ingredientName}}</div>
+                <div class="text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
               </div>
           }
-        } 
-        @if (selectedOption === 'No') {
+          </div>
+        </nz-tab>
+        <nz-tab nzTitle="No">
+          <div class="flex">
           @for(option of selectedCartItem.item.options.no; track $index) {
             <div
-            [ngClass]="{ 'px-12 py-8 my-4 text-align option-container': true, 'selected-option': isNoOptionSelected(option), 'unselected-option': !isNoOptionSelected(option) }"
+            [ngClass]="{ 'px-12 py-8 my-4 text-center option-container': true, 'selected-option': isNoOptionSelected(option), 'unselected-option': !isNoOptionSelected(option) }"
             (click)="insertToNoOption(option)"
           >
-            {{option.ingredientName}}
+            <div>{{option.ingredientName}}</div>
+            <div class="text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
           </div>
           }
-        }
-      </div>
+          </div>
+        </nz-tab>
+      </nz-tabset>
 
-      <h3 class="mt-4">Optional Notes</h3>
-      <input nz-input placeholder="Add notes here" [(ngModel)]="optionalNotes" type="string" />
-      <button nz-button class="px-16" style="margin-right: 8px;" (click)="insertOptionalNotes()">Save Note</button>
+      @if (selectedCartItem.item.optionalNotes !== undefined) {
+        <div>
+          <h3 class="mt-4">Optional Notes</h3>
+          <textarea nz-input placeholder="Add notes here" [(ngModel)]="selectedCartItem.item.optionalNotes" [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
+        </div>
+      }
+
     </ng-container>
 
 
     <ng-template #footerTpl>
       <div style="float: right">
-        <button nz-button style="margin-right: 8px;" (click)="closeEditor()">Cancel</button>
         <button nz-button nzType="primary" (click)="closeEditor()">Save</button>
       </div>
     </ng-template>

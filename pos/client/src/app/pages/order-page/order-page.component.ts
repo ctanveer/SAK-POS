@@ -104,6 +104,7 @@ export class OrderPageComponent implements OnInit {
   addToCart(item: IItem) {
     const copy : IItem = JSON.parse(JSON.stringify(item));
     copy.item.itemQuantity = 1;
+    copy.item.optionalNotes = '';
     this.orderCart.push(copy);
   }
 
@@ -211,4 +212,12 @@ export class OrderPageComponent implements OnInit {
     return this.selectedCartItem.item.chosenOptions.no.findIndex(item => item.ingredient.id === option.ingredient.id) !== -1;
   }
 
+  calculateSelectedItemPrice() {
+    if (!this.selectedCartItem) return 0;
+    const basePrice = this.selectedCartItem.item.itemPrice;
+      const addOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
+      const noOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
+
+    return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1));
+  }
 }
