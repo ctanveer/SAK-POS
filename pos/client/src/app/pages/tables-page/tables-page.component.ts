@@ -54,7 +54,7 @@ export class TablesPageComponent implements OnInit{
         else{
           this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
             this.createdOrder = order;
-            console.log('Created Order is: ', this.createdOrder);
+            console.log('NEWLY Created Order is: ', this.createdOrder);
             if (this.createdOrder) this.currentTableLog[0].orderId = this.createdOrder._id;
             console.log('UPDATING Table Log, Table Log is: ', this.currentTableLog[0]);
             this.tablelogService.updateTableLogById(this.currentTableLog[0]).subscribe(data => {
@@ -101,6 +101,20 @@ export class TablesPageComponent implements OnInit{
     this.open();
   }
 
+  tableStatusHelper(currentStatus: string, newStatus: string) {
+    if (this.selectedTable) {
+      this.selectedTable.status = this.selectedStatus;
+      this.tableService.updateTable(this.selectedTable).subscribe(data => {
+        let index = this.tables.findIndex(table => table._id === data._id);
+        if (index !== -1) {
+          this.tables[index] = data;
+        }
+        console.log('Current table is: ', this.tables[index]);
+      });
+    }    
+  }
+
+  /*
   changeTableStatus() {
     console.log('Selected table is: ', this.selectedTable);
     if (this.selectedTable) {
@@ -116,21 +130,43 @@ export class TablesPageComponent implements OnInit{
             console.log('Current table is: ', this.tables[index]);
           });
   
-          /*
-          this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
-            this.createdOrder = order;
-            console.log('Created Order is: ', this.createdOrder);
-          });
-          */
-          
-          //orderId: this.createdOrder?._id
           //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
-          this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tlog => {
-            this.currentTableLog = tlog;
+          this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
+            this.currentTableLog = tableLog;
             console.log('Created Table Log is: ', this.currentTableLog);
           })
-        } 
+        }
+      } 
+      // else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'open' || this.selectedStatus === 'closed')) {
+
+      // }
+      else {
+        this.selectedTable.status = this.selectedStatus;
       }
+    }
+  }
+  */
+
+  changeTableStatus() {
+    console.log('Selected table is: ', this.selectedTable);
+    if (this.selectedTable) {
+      //open OR reserved --> occupied
+      if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') && this.selectedStatus === 'occupied') { 
+          this.tableStatusHelper(this.selectedTable.status, 'occupied');
+  
+          //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
+          this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
+            this.currentTableLog = tableLog;
+            console.log('Created Table Log is: ', this.currentTableLog);
+          })
+        
+      } 
+      else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'closed' || this.selectedStatus === 'open')) {
+        this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
+      }
+      // else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'open' || this.selectedStatus === 'closed')) {
+
+      // }
       else {
         this.selectedTable.status = this.selectedStatus;
       }
