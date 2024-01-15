@@ -6,6 +6,8 @@ import { TableService } from '../../services/table.service';
 import { OrderService } from '../../services/order.service';
 import { TablelogService } from '../../services/tablelog.service';
 import { Router } from '@angular/router';
+import { AuthApiService } from '../../services/auth-api/auth-api.service';
+import { IUser } from '../../models/user.model';
 
 @Component({
   selector: 'app-tables-page',
@@ -13,6 +15,9 @@ import { Router } from '@angular/router';
   styleUrl: './tables-page.component.css'
 })
 export class TablesPageComponent implements OnInit{
+  
+  user: IUser | undefined;
+  userId: number | undefined;
   tables:ITable[] = [];
   selectedTable:ITable | null = null;
   statusTypes = ['open', 'occupied', 'reserved', 'closed'];
@@ -21,9 +26,14 @@ export class TablesPageComponent implements OnInit{
   createdOrder: IOrder | null = null;
   createdTableLog: ITableLog | null = null;
 
-  constructor(private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private router: Router){};
+  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private router: Router){};
 
   ngOnInit(): void {
+    this.auth.getUser().subscribe(data => {
+      this.user = data.user;
+      this.userId = this.user.employeeInformation.position.employeeId;
+      console.log('Current user is: ', this.user.employeeInformation.position.employeeId);
+    });
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
       console.log(data);
@@ -33,7 +43,7 @@ export class TablesPageComponent implements OnInit{
 
   generateOrder() {
     // Add order generation here.
-    this.router.navigate(['order'], { state: { orderId: '234', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
+    this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {
@@ -69,7 +79,7 @@ export class TablesPageComponent implements OnInit{
   }
 
   changeTableStatus() {
-    console.log(this.selectedTable);
+    console.log('Selected table is: ', this.selectedTable);
     if (this.selectedTable) {
       if (this.selectedTable.status === 'open' && this.selectedStatus === 'occupied') {
         this.selectedTable.status = this.selectedStatus;
@@ -77,16 +87,19 @@ export class TablesPageComponent implements OnInit{
           let index = this.tables.findIndex(table => table._id === data._id);
           if (index !== -1) {
             this.tables[index] = data;
-          } 
+          }
+          console.log('Current table is: ', this.tables[index]);
         });
 
-        this.orderService.createOrder({waiterId: 10}).subscribe(order => {
+        this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
           this.createdOrder = order;
+          console.log('Created Order is: ', this.createdOrder);
         });
         
         //issue here
-        this.tablelogService.createTablelog({tableId: this.selectedTable._id, orderId: this.createdOrder?._id, waiterId: 10}).subscribe(tlog => {
+        this.tablelogService.createTablelog({tableId: this.selectedTable._id, orderId: this.createdOrder?._id, waiterId: this.userId}).subscribe(tlog => {
           this.createdTableLog = tlog;
+          console.log('Created Table Log is: ', this.createdTableLog);
         })
       }
       else {

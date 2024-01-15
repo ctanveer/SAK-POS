@@ -1,6 +1,10 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="px-2">Order Management</h2>
-<div class="order-page-container p-2">
+<h2 class="px-2 pt-2">Order Management</h2>
+<h3 class="px-2">@if (orderId) {
+  Order ID #{{orderId}}
+}
+</h3>
+<div class="order-page-container px-2">
     <div class="full-menu-container">
       <!-- class="menu-item" -->
 
@@ -47,15 +51,6 @@
                     </div>
                   }
                 }
-                <!-- @if (!filteredMenu && menuList) {
-                  @for (item of menuList.items; track $index) {
-                    <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-                      <img src="../../../assets/item-images/burger-1.jpg" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
-                      <p><strong>{{item.item.itemName}}</strong></p>
-                      <p>${{item.item.itemPrice}}</p>
-                    </div>
-                  }
-                } -->
               </div>
             </nz-tab>
           </nz-tabset>
@@ -67,23 +62,48 @@
     </div>
 
     <div class="order-cart-container">
-      <h3 class="px-2 pt-2">Order Summary</h3>
-      <!-- <div class="order-items-container"> -->
-      @for (cartItem of orderCart; track $index) {
-        <div class="order-items-container mr-2">
-          <div class="pt-1"><strong>{{cartItem.item.itemName}}</strong></div>
-          <div class="pt-1">${{cartItem.item.itemPrice}}</div>
-          <button nz-button nzShape="circle" (click)="editCartItem(cartItem)">
-            <span nz-icon nzType="edit" nzTheme="outline"></span>
-          </button>
-          <button nz-button nzShape="circle" (click)="removeItemFromCart(cartItem)">
-            <span nz-icon nzType="close" nzTheme="outline"></span>
-          </button>
-        </div>
-      }
-      <h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
-
-      <button nz-button (click)="confirmAndSendOrder()">Send Order</button>
+      <div>
+        <h2 class="pt-2">Order Summary</h2>
+        <!-- <div class="order-items-container"> -->
+        @for (cartItem of orderCart; track $index) {
+          <div class="order-item-container border mr-4 mt-2">
+            <div class="w-full">
+              <div class="flex justify-between mr-8">
+                <div class="pt-1">{{cartItem.item.itemQuantity}} x <strong>{{cartItem.item.itemName}}</strong></div>
+                <div class="pt-1" >${{cartItem.item.itemPrice}}</div>
+              </div>
+              <div>
+                @if (cartItem.item.chosenOptions) {
+                  @for (option of cartItem.item.chosenOptions.add; track $index) {
+                    <p class="ml-3">Add: {{option.ingredientName}}</p>
+                  }
+          
+                  @for (option of cartItem.item.chosenOptions.no; track $index) {
+                    <p class="ml-3">No: {{option.ingredientName}}</p>
+                  }
+                }
+                @if (cartItem.item.optionalNotes) {
+                  <p class="notes ml-3">Notes: {{cartItem.item.optionalNotes}}</p>
+                }
+              </div>
+            </div>
+            
+            <div class="cart-item-buttons-container">
+              <button nz-button nzShape="circle" (click)="editCartItem(cartItem)">
+                <span nz-icon nzType="edit" nzTheme="outline"></span>
+              </button>
+              <button nz-button nzDanger nzShape="circle" (click)="removeItemFromCart(cartItem)">
+                <span nz-icon nzType="close" nzTheme="outline"></span>
+              </button>
+            </div>
+          </div>
+        }
+        <h3 class="pt-12">Total: {{ calculateTotal() }}</h3>
+      </div>
+      
+      <div class="order-send-btn">
+        <button nz-button (click)="confirmAndSendOrder()">Send Order</button>
+      </div>
     </div>
 </div>
 

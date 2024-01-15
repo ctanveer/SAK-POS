@@ -10,5 +10,5 @@ export interface IOrder {
     status: string;
     timeSpent: number;
     // items: string[];
-    items: ItemInterface[];
+    items?: ItemInterface[];
 }
