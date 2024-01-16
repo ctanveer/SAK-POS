@@ -6,13 +6,15 @@ import {
     updateOrderWithCustomerIdController,
     deleteOrderByIdController,
     sendOrderToKDS,
-    getAllRestaurantOrdersController
+    getAllRestaurantOrdersController,
+    updateOrderStatus
 } from '../controllers/order.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
 router.get('/all', authMiddleware, getAllRestaurantOrdersController);
+router.put('/status', authMiddleware, updateOrderStatus);
 // router.get('/:id', getOrderByIdController);
 router.post('/', authMiddleware, createOrderController);
 // router.put('/:id', updateOrderByIdController);
