@@ -7,8 +7,12 @@ const getAllTableLogs = async () => {
 };
 
 const getTableLogsByTableId = async (id: string) => {
-    const tablelogs = await TableLog.find({tableId: id}).populate('orderId').exec()
-    return tablelogs;
+    const tablelog = await TableLog.find({tableId: id}).
+    sort({createdAt: -1}).
+    limit(1).
+    populate('orderId').
+    exec()
+    return tablelog;
 };
 
 const createTableLog = async (tablelogObject: Partial<ITableLog>) => {
@@ -21,9 +25,11 @@ const updateTableLogById = async (
     tablelogObject: Partial<ITableLog>,
   ) => {
     const tablelog = await TableLog.findByIdAndUpdate(
-      { _id: id},
+      id,
       {
-        ...tablelogObject,
+        $set: {
+          ...tablelogObject,
+        }
       },
       { new: true },
     );

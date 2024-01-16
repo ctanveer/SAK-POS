@@ -15,7 +15,20 @@ const TableLogSchema = new Schema<ITableLog>({
   waiterId: {type: Number, default: null},
   customerId: {type: Number, default: null},
   status: {type: String, required: true, default: 'ongoing', enum: ['ongoing', 'closed', 'void']},
-}, {timestamps: true})
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  },
+  toJSON: {
+    transform: (doc, ret) => {
+      ret.createdAt = ret.createdAt && ret.createdAt.getTime();
+      ret.updatedAt = ret.updatedAt && ret.updatedAt.getTime();
+      return ret;
+    },
+  }
+}
+)
 
 const TableLog = model<ITableLog>('table-log', TableLogSchema);
 

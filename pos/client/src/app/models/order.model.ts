@@ -10,6 +10,6 @@ export interface IOrder {
     status: string;
     timeSpent: number;
     item: IItem[];
-    createdAt: string;
-    updatedAt: string;
+    createdAt: number;
+    updatedAt: number;
 }
