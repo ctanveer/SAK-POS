@@ -5,14 +5,14 @@ import {
     updateOrderByIdController,
     updateOrderWithCustomerIdController,
     deleteOrderByIdController,
-    sendOrderToKDS
+    sendOrderToKDS,
+    getAllRestaurantOrdersController
 } from '../controllers/order.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
-import { getAllOrdersByRestaurantId } from '../models/order/order.query';
 
 const router = express.Router();
 
-router.get('/all', authMiddleware, getAllOrdersByRestaurantId);
+router.get('/all', authMiddleware, getAllRestaurantOrdersController);
 // router.get('/:id', getOrderByIdController);
 router.post('/', authMiddleware, createOrderController);
 // router.put('/:id', updateOrderByIdController);
