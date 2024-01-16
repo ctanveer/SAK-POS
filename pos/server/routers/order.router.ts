@@ -12,7 +12,7 @@ import { getAllOrdersByRestaurantId } from '../models/order/order.query';
 
 const router = express.Router();
 
-router.get('/', authMiddleware, getAllOrdersByRestaurantId);
+router.get('/all', authMiddleware, getAllOrdersByRestaurantId);
 router.get('/:id', getOrderByIdController);
 router.post('/', authMiddleware, createOrderController);
 router.put('/:id', updateOrderByIdController);
