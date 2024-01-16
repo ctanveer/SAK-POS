@@ -12,7 +12,7 @@ export class PageContainerComponent implements OnInit {
 
   constructor (private router: Router, private route: ActivatedRoute, private auth: AuthApiService) {}
 
-  paths = ['tables','table-editor','order-history'];
+  paths = ['tables','table-editor','reservations', 'order-history'];
   currentPath : string = '/tables';
 
   user : IUser | undefined;

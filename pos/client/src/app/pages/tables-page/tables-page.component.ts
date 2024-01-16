@@ -8,6 +8,8 @@ import { TablelogService } from '../../services/tablelog.service';
 import { Router } from '@angular/router';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
+import { ReservationService } from '../../services/reservation.service';
+import { IReservation } from '../../models/reservation.model';
 
 @Component({
   selector: 'app-tables-page',
@@ -26,8 +28,9 @@ export class TablesPageComponent implements OnInit{
   createdOrder: IOrder | null = null;
   // currentTableLog: ITableLog | null = null;
   currentTableLog: any = null;
+  reservationList: IReservation[] | null = null; 
 
-  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private router: Router){};
+  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private router: Router){};
 
   ngOnInit(): void {
     this.auth.getUser().subscribe(data => {
@@ -38,7 +41,9 @@ export class TablesPageComponent implements OnInit{
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
       //console.log(data);
-    })
+    });
+    this.reservationList = this.reservationService.getReservations();
+    
 
   }
 
@@ -79,7 +84,6 @@ export class TablesPageComponent implements OnInit{
       })
     }
     // Add order generation here.
-    // this.router.navigate(['order'], { state: { orderId: this.createdOrder ? this.createdOrder._id! : '1', tableId: this.selectedTable ? this.selectedTable._id! : '1'}});
   }
 
   getTableImage (table: ITable) {

@@ -8,6 +8,7 @@ import { EditorPageComponent } from './pages/editor-page/editor-page.component';
 import { OrderHistoryPageComponent } from './pages/order-history-page/order-history-page.component';
 import { AuthRedirectPageComponent } from './pages/auth-redirect-page/auth-redirect-page.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
 
 const routes: Routes = [
   {path: 'homepage', component: HomepageComponent, pathMatch: 'full'},
@@ -17,7 +18,9 @@ const routes: Routes = [
   {path: '', component: PageContainerComponent, children: [
     {path: 'tables', component: TablesPageComponent, pathMatch: 'full'},
     {path: 'table-editor', component: EditorPageComponent, pathMatch: 'full'},
-    {path: 'order-history', component: OrderHistoryPageComponent, pathMatch: 'full'}
+    {path: 'order-history', component: OrderHistoryPageComponent, pathMatch: 'full'},
+    {path: 'reservations', component: ReservationPageComponent, pathMatch: 'full'},
+    {path: '**', redirectTo: '/tables'}
   ]},
   {path: '**', redirectTo: '/tables'}
 ];
