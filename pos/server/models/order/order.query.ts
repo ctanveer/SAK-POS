@@ -7,8 +7,12 @@ const getAllOrders = async () => {
 };
 
 const getOrderById = async (id: string) => {
-    const order = await Order.findById(id)
-    return order;
+    try {
+        const order = await Order.findById(id)
+        return order;
+    } catch (error) {
+        throw new Error((error as Error).message);
+    }
 };
 
 const createOrder = async (orderObject: IOrder) => {
@@ -21,9 +25,9 @@ const updateOrderById = async (
     orderObject: Partial<IOrder>,
  ) => {
     const order = await Order.findByIdAndUpdate(
-        { _id: orderId },
+        orderId,
         {
-            ...orderObject,
+            $set: {...orderObject},
         },
         { new: true },
     );
