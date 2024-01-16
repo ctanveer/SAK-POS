@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { IOrderListInterface } from '../../models/item-interfaces/posOutput/orderList.model';
 import { OrderService } from '../../services/order.service';
+import { ToastMessageService } from '../../services/toast-message/toast-message.service';
 
 @Component({
   selector: 'app-order-page',
@@ -27,7 +28,7 @@ export class OrderPageComponent implements OnInit {
     { itemId: 3, name: 'Chicken Pasta', price: 6.20, description: "the pasta here", image: '../../../assets/item-images/pasta-1.jpg' }
   ];
 
-  constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService) {}
+  constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService) {}
 
   user : IUser | undefined;
   menuList : IMenu | undefined;
@@ -36,6 +37,8 @@ export class OrderPageComponent implements OnInit {
   selectedTimeTab: string = '';
   selectedCategory: ICategories | null = null;
   filteredMenu: IItem[] | undefined;
+
+  orderState: string = "new";
 
   orderCart: IItem[] = [];
   selectedCartItem: IItem | null = null;
@@ -49,40 +52,30 @@ export class OrderPageComponent implements OnInit {
 
 
   ngOnInit(): void {
-    const state = this.location.getState() as { orderId: string, tableId: string } | undefined;
+    const state = this.location.getState() as { orderId: string, tableId: string, order: { items: IItem[] } | null, status: 'update' | 'new' } | undefined;
     if (!state || !state.orderId || !state.tableId) this.router.navigate(['table']);
     else {
-      
+      console.log(state)
       this.orderId = state.orderId;
       this.tableId = state.tableId;
-      
-      console.log(this.orderId);
-      console.log(this.tableId);
-      
-    }
 
-    console.log(this.orderId);
-    console.log(this.tableId);
+      if (state.order) this.orderCart = [...state.order.items];
+      this.orderState = state.status;
+    }
 
     this.auth.getUser().subscribe(data => this.user = data.user);
     this.menuList = this.menuService.getMenu();
     this.getTimeOfDays();
-    this.categories = this.menuList.categories;
-    
-    console.log('Menu:', this.menuList);
-    console.log('Categories', this.categories);
-    console.log('Time of Days are: ', this.timeOfDays);
-    console.log('item name is: ', this.menuList.items[0].item.itemName);
-    
+    this.categories = this.menuList.categories;  
   }
 
   getTimeOfDays() {
     let tempArr = []
     if (this.menuList) {
-      for (let i = 0; i < this.menuList.items.length; i++) {
-        let timeList = this.menuList.items[i].item.timeOfDay;
-        for (let j = 0; j < timeList.length; j++) {
-          tempArr.push(timeList[j])
+      for (const element of this.menuList.items) {
+        let timeList = element.item.timeOfDay;
+        for (const item of timeList) {
+          tempArr.push(item);
         }
       }
     }
@@ -188,7 +181,11 @@ export class OrderPageComponent implements OnInit {
     }
     //work pending here
     console.log('NEW ORDER IS: ', newOrder);
-    this.orderService.createOrder(newOrder).subscribe(order => console.log('Posted Order is:', order));
+    this.orderService.createOrder(newOrder).subscribe(order => {
+      console.log('Posted Order is:', order);
+      this.toast.setMessage('Order sent.', 'success');
+      this.router.navigateByUrl('/tables');
+    });
   }
 
   calculateTotal() {
@@ -198,7 +195,7 @@ export class OrderPageComponent implements OnInit {
       const noOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
 
       return total + ((basePrice + addOptionPrice - noOptionPrice) * (cartItem.item.itemQuantity ? cartItem.item.itemQuantity : 1));
-    }, 0);
+    }, 0).toFixed(2);
   }
 
   getTimeOutDayIndex () {
@@ -223,6 +220,6 @@ export class OrderPageComponent implements OnInit {
       const addOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
       const noOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
 
-    return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1));
+    return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1)).toFixed(2);
   }
 }

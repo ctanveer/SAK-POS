@@ -32,14 +32,14 @@ const itemSchema = new Schema<ItemInterface>({
         type: {
           add: [
             {
-              ingredientId: { type: Number, required: true },
+              quantity: { type: Number, required: true },
               ingredientName: { type: String, required: true },
               ingredient: ingredientSchema,
             },
           ],
           no: [
             {
-              ingredientId: { type: Number, required: true },
+              quantity: { type: Number, required: true },
               ingredientName: { type: String, required: true },
               ingredient: ingredientSchema,
             },
@@ -51,14 +51,14 @@ const itemSchema = new Schema<ItemInterface>({
         type: {
           add: [
             {
-              ingredientId: { type: Number, required: true },
+              quantity: { type: Number, required: true },
               ingredientName: { type: String, required: true },
               ingredient: ingredientSchema,
             },
           ],
           no: [
             {
-              ingredientId: { type: Number, required: true },
+              quantity: { type: Number, required: true },
               ingredientName: { type: String, required: true },
               ingredient: ingredientSchema,
             },
