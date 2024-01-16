@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ITable } from '../../models/table.model';
 import { IOrder } from '../../models/order.model';
 import { ITableLog } from '../../models/tablelog.model';
@@ -10,6 +10,7 @@ import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { ReservationService } from '../../services/reservation.service';
 import { IReservation } from '../../models/reservation.model';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-tables-page',
@@ -20,7 +21,7 @@ export class TablesPageComponent implements OnInit{
   
   user: IUser | undefined;
   userId: number | undefined;
-  tables:ITable[] = [];
+  tables: ITable[] = [];
   selectedTable:ITable | null = null;
   statusTypes = ['open', 'occupied', 'reserved', 'closed'];
   visible = false;
@@ -32,6 +33,8 @@ export class TablesPageComponent implements OnInit{
 
   constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private router: Router){};
 
+  private intervalId: any;
+
   ngOnInit(): void {
     this.auth.getUser().subscribe(data => {
       this.user = data.user;
@@ -41,10 +44,72 @@ export class TablesPageComponent implements OnInit{
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
       //console.log(data);
+      this.reservationList = this.reservationService.getReservations();
+      console.log('Current time is', Date.now());
+      this.reservationChecker();
     });
-    this.reservationList = this.reservationService.getReservations();
-    
 
+    //setTimeout(()=>{}, 10000);
+    //this.intervalId = setInterval(this.reservationChecker, 120000);
+    interval(120000).subscribe(() => {
+      this.reservationChecker();
+    })
+  }
+
+  // ngOnDestroy(): void {
+  //   clearInterval(this.intervalId);
+  // }
+
+  reservationChecker() {
+    const currentTime = Date.now();
+    console.log('NOW is: ', currentTime);
+    console.log('Tables are: ', this.tables);
+    if (this.reservationList) {
+      console.log('Reservation list: ', this.reservationList);
+      for (let i = 0; i < this.reservationList.length; i++) {
+        let reservation = this.reservationList[i];
+        console.log('Current reservation object is: ', reservation);
+        let tableIndex = this.tables.findIndex(table => {
+          console.log('inside index finder');
+          return table._id === reservation.tableId;
+        });
+        if (tableIndex !== -1) {
+          console.log('Table Index found,', tableIndex);
+          if (this.tables[tableIndex].status === 'open' && reservation.status === 'reserved') {
+            //15 mins ahead of current time
+            console.log('Checking table: ', this.tables[tableIndex].name);
+            const futureTime = currentTime.valueOf() + 900000
+            console.log('Time after adding 15 mins is: ', futureTime);
+            //if (reservation.reservationTime.startTime <= futureTime) {
+            //ISSUE HERE
+            if ((currentTime >= reservation.reservationTime.startTime - 900000) && 
+            (currentTime <= reservation.reservationTime.startTime)) {
+              this.tables[tableIndex].status = 'reserved';
+              console.log('Status of table: ', this.tables[tableIndex].status);
+              this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
+                this.tables[tableIndex] = table;
+              });
+            }
+          }
+          else if (this.tables[tableIndex].status === 'reserved' && reservation.status === 'reserved') {
+            if (currentTime.valueOf() > (reservation.reservationTime.startTime + 600000)) {
+              this.tables[tableIndex].status = 'open';
+              this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
+                this.tables[tableIndex] = table;
+            });
+              reservation.status = 'no-show';
+              this.reservationService.updateReservation(reservation);
+            }
+          }
+          else if (this.tables[tableIndex].status === 'reserved' && reservation.status === 'cancelled') {
+            this.tables[tableIndex].status = 'open';
+            this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
+              this.tables[tableIndex] = table;
+          });
+          }
+        }
+      }
+    }
   }
 
   proceedToOrder() {
@@ -169,8 +234,8 @@ export class TablesPageComponent implements OnInit{
     if (this.selectedTable) {
       //open OR reserved --> occupied
       if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') && this.selectedStatus === 'occupied') { 
+          
           this.tableStatusHelper(this.selectedTable.status, 'occupied');
-  
           //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
           this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
             this.currentTableLog = tableLog;

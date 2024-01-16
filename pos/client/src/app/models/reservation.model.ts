@@ -1,4 +1,5 @@
 export interface IReservation {
+    restaurantId: number;
     reservationId: string;
     reservationTime: {
         startTime: number;

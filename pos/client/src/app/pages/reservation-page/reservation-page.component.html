@@ -1,1 +1,31 @@
-<p>reservation-page works!</p>
+<h2>Reservation List for</h2>
+@if (reservationList) {
+    <nz-table #basicTable [nzData]="reservationList">
+        <thead>
+          <tr>
+            <th>Reservation ID</th>
+            <th>Customer ID</th>
+            <th>Table Name</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Current Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.reservationId }}</td>
+            <td>{{ data.customerId }}</td>
+            <td>{{ getTableName(data.tableId) }}</td>
+            <td>{{ dateFormatter(data.reservationTime.startTime) }}</td>
+            <td>{{ dateFormatter(data.reservationTime.endTime) }}</td>
+            <td>{{ data.status }}</td>
+            <td>
+              <a (click)="handleStatusChange(data)">Action 一 No-Show</a>
+              <!-- <nz-divider nzType="vertical"></nz-divider>
+              <a>Delete</a> -->
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+}
