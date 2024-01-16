@@ -10,6 +10,7 @@ import {
 } from '../models/order/order.query';
 import { AuthRequest } from '../interfaces/authRequest.interface';
 import { postOrderToKDS } from '../services/skeleton.service';
+import { getDataFromStatus } from '../utils/status.helper';
 
 export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Response) => {
     try {
@@ -23,6 +24,39 @@ export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Re
         res.json({ error: error.message });
     }
 };
+
+export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const { orderId, status } = req.body;
+
+    if (
+      !orderId ||
+      (status !== "pending" &&
+      status !== "preparing" &&
+      status !== "ready" &&
+      status !== "complete")
+    ) return res.status(400).send({ message: "Invalid fields." });
+
+    const order = await getOrderById(orderId);
+
+    if (!order) return res.status(404).json({ error: "Order not found." });
+    else if (order.restaurantId !== user.employeeInformation.restaurantId)
+      return res.status(403).json({ error: "Order not from your restaurant." });
+    else {
+      const newData = getDataFromStatus(status);
+      const updatedOrder = await updateOrderById(orderId, newData);
+
+      res.status(200).json(updatedOrder);
+    }
+
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+}
 
 export const getOrderByIdController = async (req: Request, res: Response) => {
     try {
