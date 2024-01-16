@@ -38,6 +38,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
+import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
 
 registerLocaleData(en);
 
@@ -54,7 +55,8 @@ registerLocaleData(en);
     OrderHistoryPageComponent,
     AuthRedirectPageComponent,
     SplashLogoComponent,
-    OrderPageComponent
+    OrderPageComponent,
+    ReservationPageComponent
   ],
   imports: [
     BrowserModule,
