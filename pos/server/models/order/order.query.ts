@@ -6,6 +6,16 @@ const getAllOrders = async () => {
     return orders;
 };
 
+const getAllOrdersByRestaurantId = async (restaurantId: number) => {
+    try {
+        const orders = await Order.find({ restaurantId });
+        return orders;
+    } catch (error) {
+        console.log(error);
+        throw new Error('Error getting orders from DB.');
+    }
+}
+
 const getOrderById = async (id: string) => {
     try {
         const order = await Order.findById(id)
@@ -58,5 +68,6 @@ export {
     createOrder,
     updateOrderById,
     deleteOrderById,
-    updateOrderWithCustomerId
+    updateOrderWithCustomerId,
+    getAllOrdersByRestaurantId
 }

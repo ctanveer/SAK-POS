@@ -2,6 +2,7 @@ import {Schema, model, Types} from 'mongoose'
 import { IOrder } from '../../interfaces/order.interface'
 import { ItemInterface } from '../../interfaces/item-interfaces/posOutput/item.interface';
 import { IngredientInterface } from '../../interfaces/item-interfaces/ingredient.interface'
+import { IUser } from '../../interfaces/user.interface';
 
 const ingredientSchema = new Schema<IngredientInterface>({
     id: { type: Number, required: true },
@@ -78,15 +79,44 @@ const itemSchema = new Schema<ItemInterface>({
     },
 });
 
+
+const chefSchema = new Schema<IUser>({
+  positionId: { type: Number },
+  employeeInformation: {
+    id: { type: Number, required: true },
+    restaurantId: { type: Number, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    experience: { type: [String], required: true },
+    phoneNumber: { type: String, required: true },
+    address: { type: String, required: true },
+    skillTags: { type: [String], required: true },
+    hourlyRate: { type: Number, required: true },
+    efficiency: { type: String },
+    createdAt: { type: Date },
+    updatedAt: { type: Date },
+    applicantId: Number
+  }
+})
+
 const OrderSchema = new Schema<IOrder>({
-    type: {type: String, required: true, default: 'in-house'},
-    customerId: {type: Number},
-    waiterId: {type: Number},
-    bill: {type: Number, default: 0},
-    unit: {type: String, default: 'USD'},
-    status: {type: String, required: true, default: 'ongoing', enum: ['ongoing', 'closed', 'void']},
-    timeSpent: {type: Number, default: 0},
-    items: {type: [itemSchema]}
+  restaurantId: { type: Number, required: true },
+  type: {type: String, enum: ['in-house', 'delivery'], required: true, default: 'in-house'},
+  customerId: {type: Number},
+  waiterId: {type: Number},
+  bill: {type: Number, default: 0},
+  unit: {type: String, default: 'USD'},
+  status: {type: String, required: true, default: 'pending', enum: ['pending', 'preparing', 'ready', 'served', 'cancel']},
+  vipCustomer: { type: Boolean, required: true, default: false },
+  items: {type: [itemSchema]},
+  orderPosted: { type: Date },
+  orderUpdatedAt: { type: Date },
+  preparingTimestamp: { type: Date },
+  readyTimestamp: { type: Date },
+  servedTimestamp: { type: Date },
+  deliveryTimestamp: { type: Date },
+  cancelTimestamp: { type: Date },
+  chef: chefSchema
 },{
   timestamps: {
     createdAt: 'createdAt',

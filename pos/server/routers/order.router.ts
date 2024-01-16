@@ -1,6 +1,5 @@
 import express from 'express'
 import {
-    getAllOrdersController,
     getOrderByIdController,
     createOrderController,
     updateOrderByIdController,
@@ -9,12 +8,13 @@ import {
     sendOrderToKDS
 } from '../controllers/order.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
+import { getAllOrdersByRestaurantId } from '../models/order/order.query';
 
 const router = express.Router();
 
-router.get('/', getAllOrdersController);
+router.get('/', authMiddleware, getAllOrdersByRestaurantId);
 router.get('/:id', getOrderByIdController);
-router.post('/', createOrderController);
+router.post('/', authMiddleware, createOrderController);
 router.put('/:id', updateOrderByIdController);
 router.put('/:orderId/add-customerid/:customerId', updateOrderWithCustomerIdController);
 router.delete('/:id', deleteOrderByIdController);
