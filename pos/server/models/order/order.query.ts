@@ -1,5 +1,6 @@
 import Order from "./order.model";
 import { IOrder } from "../../interfaces/order.interface";
+import { Types } from "mongoose";
 
 const getAllOrders = async () => {
     const orders = await Order.find();
@@ -16,7 +17,7 @@ const getAllOrdersByRestaurantId = async (restaurantId: number) => {
     }
 }
 
-const getOrderById = async (id: string) => {
+const getOrderById = async (id: string | Types.ObjectId) => {
     try {
         const order = await Order.findById(id)
         return order;

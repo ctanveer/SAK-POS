@@ -10,6 +10,8 @@ import {
 import { AuthRequest } from '../interfaces/authRequest.interface';
 import { postOrderToKDS } from '../services/skeleton.service';
 import { getDataFromStatus } from '../utils/status.helper';
+import { getLatestOngoingOrderForTable, updateTableLogById } from '../models/tableLog/tableLog.query';
+import mongoose from 'mongoose';
 
 export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Response) => {
     try {
@@ -20,7 +22,7 @@ export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Re
       res.status(200).send({ data: orders });
     } catch (error: any) {
         res.status(500);
-        res.json({ error: error.message });
+        res.json({ message: error.message });
     }
 };
 
@@ -53,7 +55,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
 
   } catch (error: any) {
     res.status(500);
-    res.json({ error: error.message });
+    res.json({ message: error.message });
   }
 };
 
@@ -65,7 +67,7 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
     if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
 
     const { orderId } = req.params;
-    const { items } = req.body;
+    const { items, bill } = req.body;
 
     const order = await getOrderById(orderId);
 
@@ -75,6 +77,7 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
     else {
       const newData = {
         items,
+        bill,
         ...(order.orderPosted ? { orderUpdatedAt: new Date() } : { orderPosted: new Date() })
       }
 
@@ -85,9 +88,47 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
     
   } catch (error: any) {
     res.status(500);
-    res.json({ error: error.message });
+    res.json({ message: error.message });
   }
 };
+
+
+export const generateOrderForTable = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const id = req.params.id;
+    const latestOngoingOrder = await getLatestOngoingOrderForTable(id);
+
+    if (latestOngoingOrder && latestOngoingOrder.orderId) {
+      const order = await getOrderById(latestOngoingOrder.orderId);
+      res.send(order);
+    } else if (latestOngoingOrder) {
+      const data = {
+        restaurantId: user.employeeInformation.restaurantId,
+        type: 'in-house',
+        waiterId: user.employeeInformation.id,
+        bill: 0,
+        unit: 'USD',
+        status: 'pending',
+        items: [],
+        createdAt: new Date(),
+        vipCustomer: false
+      }
+
+      const newOrder = await createOrder(data);
+      await updateTableLogById(latestOngoingOrder._id, { orderId: new mongoose.Types.ObjectId(newOrder._id) });
+      res.status(201).send(newOrder);
+    } else {
+      res.status(400).send({ message: 'Table is currently not occupied.' });
+    }
+
+  } catch (error: any) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+}
 
 export const getOrderByIdController = async (req: Request, res: Response) => {
     try {
@@ -96,7 +137,7 @@ export const getOrderByIdController = async (req: Request, res: Response) => {
       res.json(order);
     } catch (error: any) {
       res.status(500);
-      res.json({ error: error.message });
+      res.json({ message: error.message });
     }
 };
 
@@ -112,7 +153,7 @@ export const createOrderController = async (req: AuthRequest, res: Response) => 
       res.json(order);
     } catch (error: any) {
       res.status(500);
-      res.json({ error: error.message });
+      res.json({ message: error.message });
     }
 };
 
@@ -124,7 +165,7 @@ export const updateOrderByIdController = async (req: Request, res: Response) => 
         res.json(order);
     } catch (error: any) {
         res.status(500);
-        res.json({error: error.message});
+        res.json({message: error.message});
     }
 }
 
@@ -135,7 +176,7 @@ export const updateOrderWithCustomerIdController = async (req: Request, res: Res
     res.json(order)
   } catch (error: any) {
     res.status(500);
-    res.json({error: error.message});
+    res.json({message: error.message});
   }
 }
 
@@ -146,7 +187,7 @@ export const deleteOrderByIdController = async (req: Request, res: Response) => 
       res.json(response);
     } catch (error: any) {
       res.status(500);
-      res.json({ error: error.message });
+      res.json({ message: error.message });
     }
 };
 
@@ -172,6 +213,6 @@ export const sendOrderToKDS = async (req: AuthRequest, res: Response) => {
 
   } catch (error: any) {
     res.status(500);
-    res.json({ error: error.message });
+    res.json({ message: error.message });
   }
 }
