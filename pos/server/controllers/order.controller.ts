@@ -1,6 +1,5 @@
 import {Request, Response} from 'express';
 import {
-    getAllOrders,
     getOrderById,
     createOrder,
     updateOrderById,
@@ -56,7 +55,39 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
     res.status(500);
     res.json({ error: error.message });
   }
-}
+};
+
+
+export const updateOrderItems = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    const token = req.token;
+    if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const { orderId } = req.params;
+    const { items } = req.body;
+
+    const order = await getOrderById(orderId);
+
+    if (!order) return res.status(404).json({ error: "Order not found." });
+    else if (order.restaurantId !== user.employeeInformation.restaurantId)
+      return res.status(403).json({ error: "Order not from your restaurant." });
+    else {
+      const newData = {
+        items,
+        ...(order.orderPosted ? { orderUpdatedAt: new Date() } : { orderPosted: new Date() })
+      }
+
+      const updatedOrder = await updateOrderById(orderId, newData);
+      if (updatedOrder) await postOrderToKDS(updatedOrder, token);
+      res.send(updatedOrder);
+    }
+    
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+};
 
 export const getOrderByIdController = async (req: Request, res: Response) => {
     try {

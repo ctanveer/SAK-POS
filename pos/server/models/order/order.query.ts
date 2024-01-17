@@ -8,7 +8,7 @@ const getAllOrders = async () => {
 
 const getAllOrdersByRestaurantId = async (restaurantId: number) => {
     try {
-        const orders = await Order.find({ restaurantId });
+        const orders = await Order.find({ restaurantId, orderPosted: { $exists: true } });
         return orders;
     } catch (error) {
         console.log(error);
