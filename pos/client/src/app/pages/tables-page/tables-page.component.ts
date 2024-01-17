@@ -63,32 +63,22 @@ export class TablesPageComponent implements OnInit{
   reservationChecker() {
     const currentTime = Date.now();
     console.log('NOW is: ', currentTime);
-    console.log('Tables are: ', this.tables);
     if (this.reservationList) {
-      console.log('Reservation list: ', this.reservationList);
       for (let i = 0; i < this.reservationList.length; i++) {
         let reservation = this.reservationList[i];
         console.log('Current reservation object is: ', reservation);
         let tableIndex = this.tables.findIndex(table => {
-          console.log('inside index finder');
           return table._id === reservation.tableId;
         });
         if (tableIndex !== -1) {
-          console.log('Table Index found,', tableIndex);
           if (this.tables[tableIndex].status === 'open' && reservation.status === 'reserved') {
-            //15 mins ahead of current time
-            console.log('Checking table: ', this.tables[tableIndex].name);
-            const futureTime = currentTime.valueOf() + 900000
-            console.log('Time after adding 15 mins is: ', futureTime);
-            //if (reservation.reservationTime.startTime <= futureTime) {
-            //ISSUE HERE -- Adding 15 mins to currentTime
+            //Adding 15 mins to currentTime
             if ((currentTime + 900000 >= reservation.reservationTime.startTime) && 
             (currentTime <= reservation.reservationTime.endTime)) {
               this.tables[tableIndex].status = 'reserved';
-              //console.log('Status of table: ', this.tables[tableIndex].status);
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
-                console.log(`${this.tables[tableIndex].name} status changed from open to reserved, as current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+                console.log(`${this.tables[tableIndex].name} status changed from open to reserved. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
               });
             }
           }
@@ -98,7 +88,7 @@ export class TablesPageComponent implements OnInit{
               this.tables[tableIndex].status = 'open';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
-                console.log(`${this.tables[tableIndex].name} status changed from reserved to open, as current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+                console.log(`Customer No-show ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
             });
               reservation.status = 'no-show';
               this.reservationService.updateReservation(reservation);
@@ -108,7 +98,7 @@ export class TablesPageComponent implements OnInit{
             this.tables[tableIndex].status = 'open';
             this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
               this.tables[tableIndex] = table;
-              console.log(`Inside 3rd block as ${this.tables[tableIndex].name} status changed from reserved to open, as current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+              console.log(`Reservation Cancelled. ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
 
           });
           }
