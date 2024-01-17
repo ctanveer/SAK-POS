@@ -9,7 +9,8 @@ export async function authMiddleware (req: AuthRequest, res: Response, next: Nex
 
     const check = await getUserFromToken(authHeaders);
     if (check) {
-      req.user = check.user
+      req.user = check.user;
+      req.token = authHeaders;
       next();
     } else res.status(403).send({ message: 'Forbidden.' });
   } catch (error) {

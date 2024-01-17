@@ -1,7 +1,9 @@
+import { Types } from 'mongoose';
 import { ItemInterface } from './item-interfaces/posOutput/item.interface';
 import { IUser } from './user.interface';
 
 export interface IOrder {
+    _id?: Types.ObjectId | string;
     restaurantId: number;
     type: string;
     customerId?: number;
