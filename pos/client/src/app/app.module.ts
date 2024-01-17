@@ -39,6 +39,7 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 registerLocaleData(en);
 
@@ -79,7 +80,8 @@ registerLocaleData(en);
     NzInputModule,
     NzCardModule,
     NzTabsModule,
-    NzDropDownModule
+    NzDropDownModule,
+    NzTableModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
