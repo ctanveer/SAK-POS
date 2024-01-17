@@ -13,6 +13,12 @@ const getLatestOngoingOrderForTable = async (id: string) => {
     return tablelog;
 };
 
+const getTableLogsByTableId =  async (id: string | Types.ObjectId) => {
+  const tablelog = await TableLog.findOne({ tableId: id }).
+  sort({createdAt: -1})
+  return tablelog;
+}
+
 const createTableLog = async (tablelogObject: Partial<ITableLog>) => {
     const tablelog = await TableLog.create({...tablelogObject});
     return tablelog;
@@ -45,5 +51,6 @@ export {
     getLatestOngoingOrderForTable,
     createTableLog,
     updateTableLogById,
-    deleteTableLogById
+    deleteTableLogById,
+    getTableLogsByTableId
 }
