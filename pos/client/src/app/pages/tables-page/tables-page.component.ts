@@ -93,7 +93,8 @@ export class TablesPageComponent implements OnInit{
             }
           }
           else if (this.tables[tableIndex].status === 'reserved' && reservation.status === 'reserved') {
-            if (currentTime.valueOf() > (reservation.reservationTime.startTime + 600000)) {
+            if (currentTime.valueOf() > (reservation.reservationTime.startTime + 600000) &&
+            (currentTime <= reservation.reservationTime.endTime)) {
               this.tables[tableIndex].status = 'open';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
