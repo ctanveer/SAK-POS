@@ -24,7 +24,7 @@ export async function getUserFromToken (token: string) {
 
 export async function postOrderToKDS (order: IOrder, token: string) {
   try {
-    const res = await axios.post<any>(config.SKELETON_URL + '/process-order/new', { order }, { headers: { 'Authorization': token }});
+    const res = await axios.post<any>(config.SKELETON_URL + '/order/incoming', { order }, { headers: { 'Authorization': token }});
     return res.data;
   } catch (error) {
     console.log(error);
