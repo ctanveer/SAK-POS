@@ -9,12 +9,14 @@ import { OrderHistoryPageComponent } from './pages/order-history-page/order-hist
 import { AuthRedirectPageComponent } from './pages/auth-redirect-page/auth-redirect-page.component';
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
+import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
 
 const routes: Routes = [
   {path: 'homepage', component: HomepageComponent, pathMatch: 'full'},
   {path: 'editor', component: TableEditorComponent, pathMatch: 'full'},
   {path: 'auth-redirect', component: AuthRedirectPageComponent, pathMatch: 'full'},
   {path: 'order', component: OrderPageComponent, pathMatch: 'full'},
+  {path: 'payment', component: PaymentPageComponent, pathMatch: 'full'},
   {path: '', component: PageContainerComponent, children: [
     {path: 'tables', component: TablesPageComponent, pathMatch: 'full'},
     {path: 'table-editor', component: EditorPageComponent, pathMatch: 'full'},

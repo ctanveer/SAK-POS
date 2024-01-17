@@ -76,12 +76,10 @@
         </div>
         
         @if (selectedTable.status === 'occupied') {
-            <div>
-                <button (click)="proceedToOrder()">Order</button>
+            <div class="mt-10">
+                <button nz-button nzType="primary" (click)="proceedToOrder()">ORDER</button>
             </div>
         }
-
-     
     </ng-container>
 
     <ng-template #footerTpl>
