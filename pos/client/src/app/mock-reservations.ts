@@ -3,8 +3,8 @@ export const reservationsList = [
         restaurantId: 1,
         reservationId: 'abc1',
         reservationTime: {
-            startTime: 1705437015668,
-            endTime: 1705438815668
+            startTime: 1705464023448,
+            endTime: 1705466723448
         },
         customerId: 22,
         tableId: '6598cc45149d88655d04ff27',
@@ -14,8 +14,8 @@ export const reservationsList = [
         restaurantId: 1,
         reservationId: 'cba2',
         reservationTime: {
-            startTime: 1705435683654,
-            endTime: 1705438203654
+            startTime: 1705464620966,
+            endTime: 1705467020966
         },
         customerId: 20,
         tableId: '6598cc67149d88655d04ff29',

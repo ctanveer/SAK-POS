@@ -81,13 +81,14 @@ export class TablesPageComponent implements OnInit{
             const futureTime = currentTime.valueOf() + 900000
             console.log('Time after adding 15 mins is: ', futureTime);
             //if (reservation.reservationTime.startTime <= futureTime) {
-            //ISSUE HERE
-            if ((currentTime >= reservation.reservationTime.startTime - 900000) && 
-            (currentTime <= reservation.reservationTime.startTime)) {
+            //ISSUE HERE -- Adding 15 mins to currentTime
+            if ((currentTime + 900000 >= reservation.reservationTime.startTime) && 
+            (currentTime <= reservation.reservationTime.endTime)) {
               this.tables[tableIndex].status = 'reserved';
-              console.log('Status of table: ', this.tables[tableIndex].status);
+              //console.log('Status of table: ', this.tables[tableIndex].status);
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
+                console.log(`${this.tables[tableIndex].name} status changed from open to reserved, as current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
               });
             }
           }
@@ -96,6 +97,7 @@ export class TablesPageComponent implements OnInit{
               this.tables[tableIndex].status = 'open';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
+                console.log(`${this.tables[tableIndex].name} status changed from reserved to open, as current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
             });
               reservation.status = 'no-show';
               this.reservationService.updateReservation(reservation);
@@ -105,6 +107,8 @@ export class TablesPageComponent implements OnInit{
             this.tables[tableIndex].status = 'open';
             this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
               this.tables[tableIndex] = table;
+              console.log(`Inside 3rd block as ${this.tables[tableIndex].name} status changed from reserved to open, as current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+
           });
           }
         }
