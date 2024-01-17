@@ -1,7 +1,7 @@
 import axios from "axios";
 import { config } from "../config";
 import { IUser } from "../interfaces/user.interface";
-import { OrderListInterface } from "../interfaces/item-interfaces/posOutput/orderList.interface";
+import { IOrder } from "../interfaces/order.interface";
 
 export async function getTokenFromCode (code: string) {
   try {
@@ -22,9 +22,9 @@ export async function getUserFromToken (token: string) {
 } 
 
 
-export async function postOrderToKDS (order: OrderListInterface, token: string) {
+export async function postOrderToKDS (order: IOrder, token: string) {
   try {
-    const res = await axios.post<any>(config.SKELETON_URL + '/process-order/new', { order }, { headers: { 'Authorization': token }});
+    const res = await axios.post<any>(config.SKELETON_URL + '/order/incoming', { order }, { headers: { 'Authorization': token }});
     return res.data;
   } catch (error) {
     console.log(error);

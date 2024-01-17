@@ -1,15 +1,25 @@
-import { IItem } from "./item-interfaces/posOutput/item.model";
+
+import { IItem } from './item-interfaces/posOutput/item.model';
+import { IUser } from './user.model';
 
 export interface IOrder {
-    _id?: string;
+    _id: string;
+    restaurantId: number;
     type: string;
-    waiterId?:number;
     customerId?: number;
-    bill:number;
+    waiterId?: number;
+    bill: number;
     unit: string;
     status: string;
-    timeSpent: number;
-    item: IItem[];
-    createdAt: number;
-    updatedAt: number;
+    vipCustomer: boolean;
+    items?: IItem[];
+    createdAt: Date;
+    orderPosted?: Date;
+    orderUpdatedAt?: Date;
+    preparingTimestamp?: Date;
+    readyTimestamp?: Date;
+    servedTimestamp?: Date;
+    chef?: IUser;
+    deliveryTimestamp?: Date;
+    cancelTimestamp?: Date;
 }
