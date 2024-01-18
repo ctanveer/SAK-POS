@@ -7,5 +7,5 @@ export interface IReservation {
     };
     customerId: number;
     tableId: string;
-    status: string;
+    status: string; // reserved, arrived, 
 }

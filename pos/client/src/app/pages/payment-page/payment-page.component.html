@@ -2,24 +2,100 @@
 <h2 class="px-3 pt-2">Payment Management</h2>
 
 <div class="page-container">
+  <h3 class="ml-1">OrderID #{{orderId}}</h3>
     <div class="payment-split-block border">
-        
+      <div class="flex">
+        @if (splitBillArr) {
+          @for(splitObj of splitBillArr; track $index) {
+            <div class="single-split-item border rounded-sm mx-3 my-2 p-2 text-xs">
+              <p>OrderId <strong>#{{ splitObj.orderId }}</strong></p>
+              <p>ID: {{ splitObj.splitId }}</p>
+              <p>Total: {{ splitObj.total }}</p>
+              <p>Paid: {{ splitObj.paid }}</p>
+              <p>Mode  of Payment: {{ splitObj.pmtMode }}</p>
+            </div>
+          }
+        }
+        </div>
     </div>
+    
     <div class="items-cart-block border">
+      @for(cartItem of orderCart; track $index) {
+        <div class="flex justify-between mx-3 my-2">
+          <div class="grow border rounded-md pl-1 py-1">
+            <div class="w-full flex justify-between">
+              <div><strong>{{cartItem.item.itemQuantity}} × {{cartItem.item.itemName}}</strong></div>
+              <div class="mx-5">${{cartItem.item.itemPrice}}</div>
+            </div>
+            
+            @if (cartItem.item.chosenOptions) {
+              @for (option of cartItem.item.chosenOptions.add; track $index) {
+                <div class="w-full flex justify-between text-green">
+                  <div class="mx-5">+ {{option.ingredientName}}</div>
+                  <div class="mx-5 text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                </div>
+              }
 
+              @for (option of cartItem.item.chosenOptions.no; track $index) {
+                <div class="w-full flex justify-between text-red">
+                  <div class="mx-5">- {{option.ingredientName}}</div>
+                  <div class="mx-5 text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+        <!-- <nz-divider></nz-divider> -->
+      }
+    </div>
+    <div class="bill-display-block">
+      <div class="w-full flex justify-between pl-4 py-1 text-lg">
+        <div><strong>Total Bill</strong></div>
+        <div class="mx-5">${{bill}}</div>
+      </div>
     </div>
     <div class="button-components border">
-
+      <div class="w-full flex justify-between">
+        <div>
+          <button class="mx-4 my-2" nz-button nzType="primary" (click)="showSplitModal()" [disabled]="!isTipAdded">Split Bill</button>
+          <button class="mx-4 my-2" nz-button nzType="default" (click)="showAddTipModal()">Add Tip</button>
+          <button class="mx-4 my-2 bg-gray" nz-button nzType="primary">Discount</button>
+          <button class="mx-4 my-2" nz-button nzType="primary" [nzDanger]="true">Void</button>
+        </div>
+        <div>
+          <button class="mx-4 my-2" nz-button nzType="primary" [disabled]="!isTipAndSplitAdded">Finalize</button>
+        </div>
+      </div>
     </div>
 </div>
 
 
+<!-- Modal for Split Button -->
+<nz-modal [(nzVisible)]="isSplitModalVisible" nzTitle="Bill Split" (nzOnCancel)="handleSplitModalCancel()" (nzOnOk)="handleSplitModalOk()">
+  <ng-container *nzModalContent>
+    <input nz-input placeholder="Enter Number of splits" [(ngModel)]="numberOfSplits" type="number" />
+  </ng-container>
+</nz-modal>
+
+<!-- Modal for Tip Value Selection -->
+<nz-modal [(nzVisible)]="isTipModalVisible" nzTitle="Add Tip" (nzOnCancel)="handleTipModalCancel()" (nzOnOk)="handleTipModalOk()">
+  <ng-container *nzModalContent>
+    <nz-radio-group [(ngModel)]="tipValue">
+      <label nz-radio [nzValue]="0">No Tip</label>
+      <label nz-radio [nzValue]="1">$1</label>
+      <label nz-radio [nzValue]="3">$3</label>
+      <label nz-radio [nzValue]="5">$5</label>
+      <label nz-radio [nzValue]="10">$10</label>
+      <!-- <label nz-radio nzValue="M">
+        More...
+        <input type="text" nz-input *ngIf="tipValue === 1" />
+      </label> -->
+    </nz-radio-group>
+  </ng-container>
+</nz-modal>
 
 
-
-
-
-<div class="payment-details">
+<!-- <div class="payment-details">
     <div class="order-summary">
       <p>Order #{{ orderNumber }}</p>
       <p>Total: ${{ total }}</p>
@@ -52,4 +128,4 @@
     <button (click)="finalizePayment()">Finalize Payment</button>
     <button (click)="splitBill()">Split Bill</button>
     <button (click)="voidPayment()">Void Payment</button>
-  </div>
+  </div> -->

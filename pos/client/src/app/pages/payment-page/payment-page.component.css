@@ -1,16 +1,25 @@
 .page-container {
     margin-left: 10px;
     margin-right: 10px;
+    height: 85dvh;
+    display: flex;
+    flex-direction: column;
+    /* border: red solid 1px; */
 }
 
 .payment-split-block {
     margin-top: 10px;
-    height: 7rem;
+    min-height: rem;
     width: 98dvw;
     min-width: 50rem;
     box-sizing: border-box;
     border: 2px solid #0c0c0c;
     border-radius: 5px;
+}
+
+.single-split-item {
+    background-color: #eceff1;
+    height: fit-content;
 }
 
 .items-cart-block {
@@ -21,11 +30,12 @@
     box-sizing: border-box;
     border: 2px solid #0c0c0c;
     border-radius: 5px;
+    flex-grow: 1;
 }
 
-.button-components {
+.bill-display-block {
     margin-top: 10px;
-    height: 8rem;
+    height: 2.5rem;
     width: 98dvw;
     min-width: 50rem;
     box-sizing: border-box;
@@ -33,25 +43,12 @@
     border-radius: 5px;
 }
 
-
-
-.payment-details {
-    display: flex;
-}
-  
-.order-summary,
-.order-items {
-    flex: 1;
-    padding: 10px;
-}
-  
-.payment-methods,
-.payment-actions {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-}
-  
-.payment-method {
-    margin-right: 10px;
+.button-components {
+    margin-top: 10px;
+    height: 5rem;
+    width: 98dvw;
+    min-width: 50rem;
+    box-sizing: border-box;
+    border: 2px solid #0c0c0c;
+    border-radius: 5px;
 }

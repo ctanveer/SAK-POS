@@ -41,6 +41,9 @@ import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { ProcessPaymentPageComponent } from './pages/process-payment-page/process-payment-page.component';
 
 registerLocaleData(en);
 
@@ -59,7 +62,8 @@ registerLocaleData(en);
     SplashLogoComponent,
     OrderPageComponent,
     ReservationPageComponent,
-    PaymentPageComponent
+    PaymentPageComponent,
+    ProcessPaymentPageComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +87,9 @@ registerLocaleData(en);
     NzCardModule,
     NzTabsModule,
     NzDropDownModule,
-    NzTableModule
+    NzTableModule,
+    NzModalModule,
+    NzRadioModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

@@ -21,12 +21,6 @@ import { ToastMessageService } from '../../services/toast-message/toast-message.
   styleUrl: './order-page.component.css'
 })
 export class OrderPageComponent implements OnInit {
-  
-  menuItems: IMenuItem[] = [
-    { itemId: 1, name: 'Beef Burger', price: 5.00, description: "the burger here", image: '../../../assets/item-images/burger-1.jpg' },
-    { itemId: 2, name: 'Pepperoni Pizza', price: 7.50, description: "the pizza here", image: '../../../assets/item-images/pizza-1.jpg' },
-    { itemId: 3, name: 'Chicken Pasta', price: 6.20, description: "the pasta here", image: '../../../assets/item-images/pasta-1.jpg' }
-  ];
 
   constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService) {}
 
@@ -41,6 +35,7 @@ export class OrderPageComponent implements OnInit {
   orderState: string = "new";
 
   orderCart: IItem[] = [];
+  totalBill: string = '';
   selectedCartItem: IItem | null = null;
   editorVisible: boolean = false;
 
@@ -196,13 +191,14 @@ export class OrderPageComponent implements OnInit {
   }
 
   calculateTotal() {
-    return this.orderCart.reduce((total, cartItem) => {
+    this.totalBill = this.orderCart.reduce((total, cartItem) => {
       const basePrice = cartItem.item.itemPrice;
       const addOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
       const noOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
 
       return total + ((basePrice + addOptionPrice - noOptionPrice) * (cartItem.item.itemQuantity ? cartItem.item.itemQuantity : 1));
     }, 0).toFixed(2);
+    return this.totalBill;
   }
 
   getTimeOutDayIndex () {
@@ -226,7 +222,18 @@ export class OrderPageComponent implements OnInit {
     const basePrice = this.selectedCartItem.item.itemPrice;
       const addOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
       const noOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
-
-    return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1)).toFixed(2);
+      return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1)).toFixed(2);
   }
+
+  proceedToPayment() {
+    console.log('Order cart is: ', this.orderCart);
+    this.router.navigateByUrl('/payment', {
+      state: {
+        orderId: this.orderId,
+        bill: this.totalBill,
+        orderCart: this.orderCart
+      }
+  });
+  }
+
 }

@@ -53,7 +53,6 @@
         </nz-tab>
       </nz-tabset>
     </div>
-
     <div class="order-cart-container flex flex-col">
       <h3 class="px-2 pt-2 self-center text-xl font-bold">Order Summary</h3>
       <div class="grow overflow-y-auto">
@@ -100,10 +99,15 @@
         </div>
         <div class="w-full flex justify-between p-5 border-t">
           <h3 class="text-xl">Total: ${{ calculateTotal() }}</h3>
-          <button nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
+          <div>
+            <button class="mr-4" nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
+            <button nz-button nzType="default" (click)="proceedToPayment()" [disabled]="!orderCart.length">Payment</button>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
+  </div>
+
+
 
 <!--  Drawer for Order Customization -->
 <nz-drawer *ngIf="selectedCartItem"

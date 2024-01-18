@@ -49,16 +49,10 @@ export class TablesPageComponent implements OnInit{
       this.reservationChecker();
     });
 
-    //setTimeout(()=>{}, 10000);
-    //this.intervalId = setInterval(this.reservationChecker, 120000);
-    interval(120000).subscribe(() => {
+    interval(60000).subscribe(() => {
       this.reservationChecker();
     })
   }
-
-  // ngOnDestroy(): void {
-  //   clearInterval(this.intervalId);
-  // }
 
   reservationChecker() {
     const currentTime = Date.now();
@@ -83,6 +77,7 @@ export class TablesPageComponent implements OnInit{
             }
           }
           else if (this.tables[tableIndex].status === 'reserved' && reservation.status === 'reserved') {
+            //Adding 10 mins to resrvation start time
             if (currentTime.valueOf() > (reservation.reservationTime.startTime + 600000) &&
             (currentTime <= reservation.reservationTime.endTime)) {
               this.tables[tableIndex].status = 'open';
