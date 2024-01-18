@@ -10,8 +10,9 @@ import {
 import { AuthRequest } from '../interfaces/authRequest.interface';
 import { postOrderToKDS } from '../services/skeleton.service';
 import { getDataFromStatus } from '../utils/status.helper';
-import { getLatestOngoingOrderForTable, updateTableLogById } from '../models/tableLog/tableLog.query';
+import { getLatestOngoingOrderForTable, getTableLogForOrderId, updateTableLogById } from '../models/tableLog/tableLog.query';
 import mongoose from 'mongoose';
+import { getTableById } from '../models/table/table.query';
 
 export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Response) => {
     try {
@@ -50,6 +51,17 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
     else {
       const newData = getDataFromStatus(status);
       const updatedOrder = await updateOrderById(orderId, newData);
+
+      if ( updatedOrder && status === 'ready') {
+        const tableLog = await getTableLogForOrderId(updatedOrder._id);
+        if (tableLog) {
+          const table = await getTableById(tableLog.tableId);
+          if (table) {
+            const io = res.locals.io;
+            io.to(updatedOrder.restaurantId.toString()).emit('ready-order', { order: updatedOrder, table });
+          }
+        }
+      }
 
       res.status(200).json(updatedOrder);
     }
@@ -219,29 +231,3 @@ export const deleteOrderByIdController = async (req: Request, res: Response) => 
       res.json({ message: error.message });
     }
 };
-
-
-export const sendOrderToKDS = async (req: AuthRequest, res: Response) => {
-  try {
-    const user = req.user;
-    const authHeaders = req.headers["authorization"];
-    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
-    if (!authHeaders) return res.status(401).send({ message: 'Unauthorized.' });
-
-    const order = req.body.order;
-    order.restaurantId = user.employeeInformation.restaurantId;
-
-    const orderCheck = await getOrderById(order._id);
-    if (orderCheck && orderCheck.items && orderCheck.orderPosted) order.orderUpdatedAt = new Date();
-    else order.orderPosted = new Date();
-
-    console.log('Order:', order);
-    await updateOrderById(order.orderId, order);
-    await postOrderToKDS(order, authHeaders);
-    res.send({ message: "Success"});
-
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
-  }
-}
