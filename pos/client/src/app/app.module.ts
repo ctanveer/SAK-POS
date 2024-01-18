@@ -41,6 +41,11 @@ import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
 import { NzTableModule } from 'ng-zorro-antd/table';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from '../environments/environment';
+
+const config: SocketIoConfig = { url: environment.API_URL, options: {} };
+
 registerLocaleData(en);
 
 
@@ -81,7 +86,8 @@ registerLocaleData(en);
     NzCardModule,
     NzTabsModule,
     NzDropDownModule,
-    NzTableModule
+    NzTableModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

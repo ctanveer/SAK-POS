@@ -5,7 +5,6 @@ import {
     updateOrderByIdController,
     updateOrderWithCustomerIdController,
     deleteOrderByIdController,
-    sendOrderToKDS,
     getAllRestaurantOrdersController,
     updateOrderStatus,
     updateOrderItems,
@@ -25,7 +24,5 @@ router.put('/chef/:orderId', authMiddleware, updateOrderChef);
 router.post('/', authMiddleware, createOrderController);
 // router.put('/:id', updateOrderByIdController);
 router.put('/:orderId/add-customerid/:customerId', updateOrderWithCustomerIdController);
-// router.delete('/:id', deleteOrderByIdController);
-router.post('/new', authMiddleware, sendOrderToKDS)
 
 export default router;
