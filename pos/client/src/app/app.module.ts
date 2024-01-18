@@ -45,6 +45,11 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { ProcessPaymentPageComponent } from './pages/process-payment-page/process-payment-page.component';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from '../environments/environment';
+
+const config: SocketIoConfig = { url: environment.API_URL, options: {} };
+
 registerLocaleData(en);
 
 
@@ -89,7 +94,8 @@ registerLocaleData(en);
     NzDropDownModule,
     NzTableModule,
     NzModalModule,
-    NzRadioModule
+    NzRadioModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

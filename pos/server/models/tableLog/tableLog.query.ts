@@ -46,11 +46,17 @@ const deleteTableLogById = async (id: string) => {
     return tablelog;
 };
 
+const getTableLogForOrderId = async (orderId: string | Types.ObjectId) => {
+  const tableLog = await TableLog.findOne({ orderId });
+  return tableLog;
+}
+
 export {
     getAllTableLogs,
     getLatestOngoingOrderForTable,
     createTableLog,
     updateTableLogById,
     deleteTableLogById,
-    getTableLogsByTableId
+    getTableLogsByTableId,
+    getTableLogForOrderId
 }

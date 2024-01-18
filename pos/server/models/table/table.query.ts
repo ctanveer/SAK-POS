@@ -1,5 +1,6 @@
 import Table from './table.model';
 import { ITable } from '../../interfaces/table.interface';
+import { Types } from 'mongoose';
 
 const getAllTablesForRestaurant = async (restaurantId: number) => {
   try {
@@ -11,7 +12,7 @@ const getAllTablesForRestaurant = async (restaurantId: number) => {
   }
 };
 
-const getTableById = async (id:string) => {
+const getTableById = async (id:string | Types.ObjectId) => {
   const table = await Table.findById(id);
   return table
 }
