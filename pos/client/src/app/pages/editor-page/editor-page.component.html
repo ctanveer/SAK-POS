@@ -1,6 +1,7 @@
-<div class="py-4 px-4 hp-50 border border-gray rounded">
+<div class="py-4 px-4 hp-50">
     <h2>Table Selector and Editor</h2>
-    <div class="flex">
+    <!-- <div class="flex"> -->
+    <div class="table-container">
         @for (table of tables; track $index) {
             <div class="table-block my-4 mx-4 text-center rounded-md" (click)="setSelectEditTable(table)">
                 <p><strong>{{table.name}}</strong></p>
@@ -10,8 +11,15 @@
             </div>
         }
     </div>
+    <div class="py-5 px-4">
+      <h2>Create Table</h2>
+      <button nz-button nzType="primary" class="add-table-button my-4" (click)="openTableAddDrawer()">
+          Add New Table
+      </button>
+    </div>
 </div>
 
+<!-- Drawer to Edit/Delete Table -->
 @if (selectedTableToEdit) {
     <nz-drawer
       [nzBodyStyle]="{ overflow: 'auto' }"
@@ -89,7 +97,80 @@
 }
 
 
-<div class="py-5 px-4">
+<!-- Drawer to Add Table -->
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="720"
+      [nzVisible]="adderVisible"
+      nzTitle="Create Table"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="closeAdderDrawer()"
+    >
+    <form nz-form *nzDrawerContent>
+        <div nz-row [nzGutter]="8">
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label>Name</nz-form-label>
+                <nz-form-control>
+                  <input
+                      nz-input
+                      name="name"
+                      type="text"
+                      id="name"
+                      [value]="newTableName"
+                      [readonly] = "true"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+        </div>
+        <div nz-row [nzGutter]="8">
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label>Type</nz-form-label>
+                <nz-form-control>
+                  <nz-select name='table-type' nzPlaceHolder="Select Table type" [(ngModel)]="newTableType">
+                      @for (type of tableTypes; track $index) {
+                          <nz-option [nzLabel]="(type[0].toUpperCase() + type.slice(1))" [nzValue]="type"></nz-option>
+                      }
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col nzSpan="12">
+              <nz-form-item>
+                <nz-form-label>Seats</nz-form-label>
+                <nz-form-control>
+
+                  <nz-input-number
+                    name="seats"
+                    [(ngModel)]="newTableSeats"
+                    [nzMin]="getSeatInputData(newTableType).min"
+                    [nzMax]="getSeatInputData(newTableType).max"
+                    [nzStep]="getSeatInputData(newTableType).step"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          @if (newTableType && newTableSeats) {
+            <div class="flex justify-center">
+              <img [src]="getTableImage(newTableType, newTableSeats)" alt="Edit table" />
+            </div>
+          }
+    </form>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button style="margin-right: 8px;" (click)="closeAdderDrawer()">Cancel</button>
+          <button nz-button nzType="primary" (click)="addNewTable(newTableName, newTableType, newTableSeats); closeAdderDrawer()">Submit</button>
+        </div>
+      </ng-template>
+</nz-drawer>
+
+<!-- <div class="py-5 px-4">
     <h2>Create Table</h2>
     <button nz-button nzType="primary" class="add-table-button my-4" (click)="openTableAddDrawer()">
         Add New Table
@@ -165,4 +246,4 @@
         </div>
       </ng-template>
     </nz-drawer>
-</div>
+</div> -->

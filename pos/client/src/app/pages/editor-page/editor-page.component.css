@@ -1,3 +1,12 @@
+.table-container {
+    display: flex;
+    max-width: 85dvw;
+    flex-wrap: wrap;
+    min-height: 10dvh;
+    border: 2px solid #8492a6;
+    border-radius: 0.25rem;
+}
+
 .table-block {
     border: 1px solid #ccc;
     padding: 10px;

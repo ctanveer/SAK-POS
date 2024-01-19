@@ -1,6 +1,7 @@
 <div class="py-4 px-4 hp-50">
     <h2>Table Viewer</h2>
-    <div class="flex">
+    <!-- <div class="flex"> -->
+    <div class="table-container">
         @for (table of tables; track $index) {
             <div class="table-block p-4 m-4 text-center rounded-md" 
             (click)="setSelectedTable(table)"
