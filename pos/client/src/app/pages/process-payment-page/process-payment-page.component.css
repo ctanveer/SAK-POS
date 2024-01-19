@@ -1,0 +1,7 @@
+.page-container {
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 85dvh;
+    /* display: flex; */
+    /* flex-direction: column; */
+}

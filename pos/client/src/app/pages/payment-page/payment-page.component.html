@@ -19,7 +19,7 @@
         </div>
     </div>
     
-    <div class="items-cart-block border">
+    <div class="items-cart-block border overflow-y-auto">
       @for(cartItem of orderCart; track $index) {
         <div class="flex justify-between mx-3 my-2">
           <div class="grow border rounded-md pl-1 py-1">
@@ -63,7 +63,7 @@
           <button class="mx-4 my-2" nz-button nzType="primary" [nzDanger]="true">Void</button>
         </div>
         <div>
-          <button class="mx-4 my-2" nz-button nzType="primary" [disabled]="!isTipAndSplitAdded">Finalize</button>
+          <button class="mx-4 my-2" nz-button nzType="primary" (click)="finalizePayment()" [disabled]="!isTipAndSplitAdded">Finalize</button>
         </div>
       </div>
     </div>

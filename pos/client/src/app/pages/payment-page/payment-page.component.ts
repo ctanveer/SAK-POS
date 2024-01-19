@@ -54,10 +54,6 @@ export class PaymentPageComponent implements OnInit {
 
   } 
 
-  finalizePayment() {
-    alert('Payment finalized!');
-  }
-
   voidPayment() {
     alert('Payment voided!');
   }
@@ -108,5 +104,15 @@ export class PaymentPageComponent implements OnInit {
     console.log('Bill after: ', this.bill);
     this.isTipModalVisible = false;
     this.isTipAdded = true;
+  }
+
+  finalizePayment() {
+    this.router.navigateByUrl('/process-pmt', {
+      state: {
+        billArr: this.splitBillArr,
+        bill: this.bill,
+        user: this.user
+      }
+    })
   }
 }

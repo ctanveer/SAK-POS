@@ -39,11 +39,9 @@ export class TablesPageComponent implements OnInit{
     this.auth.getUser().subscribe(data => {
       this.user = data.user;
       this.userId = this.user.employeeInformation.position.employeeId;
-      //console.log('Current user is: ', this.user.employeeInformation.position.employeeId);
     });
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
-      //console.log(data);
       this.reservationList = this.reservationService.getReservations();
       console.log('Current time is', Date.now());
       this.reservationChecker();
@@ -94,7 +92,6 @@ export class TablesPageComponent implements OnInit{
             this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
               this.tables[tableIndex] = table;
               console.log(`Reservation Cancelled. ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
-
           });
           }
         }
@@ -239,7 +236,6 @@ export class TablesPageComponent implements OnInit{
       if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') && this.selectedStatus === 'occupied') { 
           
           this.tableStatusHelper(this.selectedTable.status, 'occupied');
-          //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
           this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
             this.currentTableLog = tableLog;
             console.log('Created Table Log is: ', this.currentTableLog);
@@ -249,9 +245,6 @@ export class TablesPageComponent implements OnInit{
       else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'closed' || this.selectedStatus === 'open')) {
         this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
       }
-      // else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'open' || this.selectedStatus === 'closed')) {
-
-      // }
       else {
         this.selectedTable.status = this.selectedStatus;
       }

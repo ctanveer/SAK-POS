@@ -10,6 +10,7 @@ import { AuthRedirectPageComponent } from './pages/auth-redirect-page/auth-redir
 import { OrderPageComponent } from './pages/order-page/order-page.component';
 import { ReservationPageComponent } from './pages/reservation-page/reservation-page.component';
 import { PaymentPageComponent } from './pages/payment-page/payment-page.component';
+import { ProcessPaymentPageComponent } from './pages/process-payment-page/process-payment-page.component';
 
 const routes: Routes = [
   {path: 'homepage', component: HomepageComponent, pathMatch: 'full'},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'auth-redirect', component: AuthRedirectPageComponent, pathMatch: 'full'},
   {path: 'order', component: OrderPageComponent, pathMatch: 'full'},
   {path: 'payment', component: PaymentPageComponent, pathMatch: 'full'},
+  {path: 'process-pmt', component: ProcessPaymentPageComponent, pathMatch: 'full'},
   {path: '', component: PageContainerComponent, children: [
     {path: 'tables', component: TablesPageComponent, pathMatch: 'full'},
     {path: 'table-editor', component: EditorPageComponent, pathMatch: 'full'},
