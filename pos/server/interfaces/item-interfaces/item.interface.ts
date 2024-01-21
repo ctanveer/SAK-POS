@@ -1,5 +1,6 @@
 import { OptionInterface } from "./option.interface";
 import { IngredientInterface } from "./ingredient.interface";
+import { IPacking } from "../packing.interface";
 
 // export interface ItemInterface{
 //     restaurantId: number;
@@ -20,8 +21,8 @@ export interface ItemInterface {
     itemDescription: string; //
     itemQuantity: number; //
     itemPreparationTime: number; //
-    itemPackingType: string; //
-    itemPackingDimension?: string[];  //PackingInterface
+    itemPackingType: IPacking[]; //
+    // itemPackingDimension?: string[];  //PackingInterface
     itemLastingTime?: number; //needed for marketplace
     itemPortionSize: string;
     ingredients: { rawIngredients: IngredientInterface[]; recipes: string[] }; //IRecipe[]

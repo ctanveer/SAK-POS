@@ -30,6 +30,7 @@ export class OrderService {
   }
 
   updateOrderItems (orderId: string, items: IItem[]) {
+    console.log('Cart before sending: ', items);
     return this.http.put(`${this.orderUrl}/items/${orderId}`, { items }, this.httpOptions);
   }
 

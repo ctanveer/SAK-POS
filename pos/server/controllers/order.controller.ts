@@ -1,4 +1,5 @@
 import {Request, Response} from 'express';
+import * as fs from 'fs';
 import {
     getOrderById,
     createOrder,
@@ -95,7 +96,12 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
       }
 
       const updatedOrder = await updateOrderById(orderId, newData);
-      if (updatedOrder) await postOrderToKDS(updatedOrder, token);
+  
+      if (updatedOrder) {
+        await postOrderToKDS(updatedOrder, token);
+        // fs.writeFileSync('data.ts', JSON.stringify(updatedOrder))
+      }
+        
       res.send(updatedOrder);
     }
     

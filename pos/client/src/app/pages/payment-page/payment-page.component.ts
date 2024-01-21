@@ -49,7 +49,7 @@ export class PaymentPageComponent implements OnInit {
       splitId: 1,
       total: this.bill,
       paid: false,
-      pmtMode:'Cash'
+      pmtMode: null
     })
 
   } 
@@ -73,7 +73,7 @@ export class PaymentPageComponent implements OnInit {
           splitId: i + 1,
           total: parseFloat((this.bill/this.numberOfSplits).toFixed(2)),
           paid: false,
-          pmtMode: 'cash'
+          pmtMode: null
         });
       }
     }

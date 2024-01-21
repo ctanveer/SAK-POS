@@ -1,21 +1,53 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="my-2 mx-2">Process Payment</h2>
+<h2 class="my-2 mx-2">Process Payment for Order ID # {{billArr[0].orderId}}</h2>
 
-<div class="page-container border border-2 border-green">
-    <div class="flex justify-center">
+<div class="page-container border border-2 border-green rounded-md">
+    <div class="flex justify-center mt-16">
         @if (billArr) {
             @for (billObj of billArr; track $index) {
                 <div class="single-split-item border rounded-md mx-3 my-2 p-2 text-xs">
                     <p>OrderId <strong>#{{ billObj.orderId }}</strong></p>
                     <p>ID: {{ billObj.splitId }}</p>
-                    <p>Total: {{ billObj.total }}</p>
+                    <p>Total: ${{ billObj.total }}</p>
                     <p>Paid: {{ billObj.paid }}</p>
                     <p>Mode  of Payment: {{ billObj.pmtMode }}</p>
-                    
+                    @if (billObj.paid === false) {
+                        <nz-radio-group [(ngModel)]="pmtModeArr[$index]">
+                            <label nz-radio nzValue="cash" (click)="changePmtMode($index, 'cash')">cash</label>
+                            <label nz-radio nzValue="card" (click)="changePmtMode($index, 'card')">card</label>
+                        </nz-radio-group>
+                        @if(billObj.pmtMode === 'cash' || billObj.pmtMode === 'card') {
+                            <button nz-button nzType="primary" nzSize="small" (click)="completePayment($index)">Pay by {{billObj.pmtMode}}</button>
+                        }
+                    }
                 </div>
             }
         }
     </div>
-
-
+    <div class=" w-full mt-12 flex justify-center">
+        @if (isAllPaid()) {
+            <button nz-button nzType="primary" nzSize="large">Complete Order</button>
+        }
+    </div>
+    
 </div>
+
+
+<!-- Pay by Cash -->
+<nz-modal [(nzVisible)]="isCashPayVisible" nzTitle="Cash Payment" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      @if (currentIndex >= 0) {
+          <p>Amount Due: {{billArr[currentIndex].total}}</p>
+      } 
+    </ng-container>
+</nz-modal>
+
+
+<!-- Pay by Card -->
+<nz-modal [(nzVisible)]="isCardPayVisible" nzTitle="Card Payment" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+        @if (currentIndex >= 0) {
+            <p>Amount Due: {{billArr[currentIndex].total}}</p>
+        }
+    </ng-container>
+</nz-modal>

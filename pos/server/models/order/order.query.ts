@@ -35,14 +35,19 @@ const updateOrderById = async (
     orderId: string,
     orderObject: Partial<IOrder>,
  ) => {
-    const order = await Order.findByIdAndUpdate(
-        orderId,
-        {
-            $set: {...orderObject},
-        },
-        { new: true },
-    );
-    return order
+    try {
+        const order = await Order.findByIdAndUpdate(
+            orderId,
+            {
+                $set: {...orderObject},
+            },
+            { new: true },
+        );
+        return order;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 };
 
 const deleteOrderById = async (id: string) => {

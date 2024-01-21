@@ -3,5 +3,5 @@ export interface IBill{
     splitId: number;
     total: number;
     paid: boolean;
-    pmtMode: string;
+    pmtMode: string | null;
 }

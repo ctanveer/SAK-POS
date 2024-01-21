@@ -31,6 +31,7 @@ export class OrderPageComponent implements OnInit {
   selectedTimeTab: string = '';
   selectedCategory: ICategories | null = null;
   filteredMenu: IItem[] | undefined;
+  filteredCategories: ICategories[] | undefined;
 
   orderState: string = "new";
 
@@ -64,33 +65,12 @@ export class OrderPageComponent implements OnInit {
       this.categories = data;
       console.log('Categories are: ', this.categories);
     })
-
-    // this.categories = [
-    //   {
-    //     _id: 'abc1',
-    //     restaurantId: 1,
-    //     categoryName: 'Mains',
-    //     categoryDescription: 'this is mains',
-    //     categoryImage: 'random image 1'
-    //   },
-    //   {
-    //     _id: 'abc2',
-    //     restaurantId: 1,
-    //     categoryName: 'Burgers',
-    //     categoryDescription: 'this is burgers',
-    //     categoryImage: 'random image 2'
-    //   }
-    // ]
     
     this.menuService.getMenu().subscribe(data => {
       this.menuList = data;
       this.getTimeOfDays();
       console.log('Restaurant Menu is: ', this.menuList);
     });
-    
-    // this.menuList = this.menuService.getMenu();
-    // this.getTimeOfDays();
-    // this.categories = this.menuList.categories;  
   }
 
   getTimeOfDays() {
@@ -106,12 +86,8 @@ export class OrderPageComponent implements OnInit {
     this.timeOfDays = [...new Set(tempArr)];
   }
 
-  // setFilteredMenu() {
-  //   this.filteredMenu = this.menuList?.items.filter(item => {
-  //     return (item.categoryId === this.selectedCategory?.id) && !item.item.isDisabled})
-  //     .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
-  // }
-
+  //Activate the below when item.isDisabled field is provided by Skeleton
+  /*
   setFilteredMenu() {
     if (this.menuList) {
       this.filteredMenu = this.menuList.filter(item => {
@@ -119,10 +95,37 @@ export class OrderPageComponent implements OnInit {
         .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
     }
   }
+  */
+
+  setFilteredMenu() {
+    if (this.menuList) {
+      this.filteredMenu = this.menuList.filter(item => {
+        return item.categoryId === this.selectedCategory?._id})
+        .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
+    }
+  }
+
+  filterCategoriesForTimeTab() {
+    this.filteredCategories = [];
+    let tempArr:ICategories[] = [];
+    if (this.menuList) {
+      for (const category of this.categories) {
+        for (const menuItem of this.menuList) {
+          if (menuItem.categoryId === category._id && menuItem.item.timeOfDay.includes(this.selectedTimeTab)) {
+            tempArr.push(category);
+          }
+        }
+      }
+      this.filteredCategories = [...new Set(tempArr)];
+    }
+
+  }
 
   handleTimeTabChange(index: number) {
-    this.selectedTimeTab = this.timeOfDays[index];
-    this.selectedCategory = this.categories[0];
+    this.selectedTimeTab = this.timeOfDays[index];  
+    this.filterCategoriesForTimeTab();
+    // this.selectedCategory = this.categories[0];
+    if (this.filteredCategories) this.selectedCategory = this.filteredCategories[0];
     this.setFilteredMenu();
   }
 
@@ -204,11 +207,14 @@ export class OrderPageComponent implements OnInit {
   confirmAndSendOrder() {
 
     console.log('NEW ORDER IS: ', this.orderCart);
+    console.log('Order Id is: ', this.orderId);
     this.orderService.updateOrderItems(this.orderId, this.orderCart).subscribe(data => {
       console.log('Posted Order is:', data);
       this.toast.setMessage('Order sent.', 'success');
       this.router.navigateByUrl('/tables');
     })
+
+
     // let newOrder:IOrderListInterface = {
     //   orderId: this.orderId,
     //   categories: this.categories,
