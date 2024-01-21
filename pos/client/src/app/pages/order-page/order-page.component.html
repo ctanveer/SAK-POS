@@ -17,7 +17,7 @@
 
         <div class="menu-items-container">
           @if (menuList) {
-            @for (item of menuList.items; track $index) {
+            @for (item of menuList; track $index) {
               <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
                 <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md" />
                 <p><strong>{{item.item.itemName}}</strong></p>
@@ -36,7 +36,7 @@
             [nzSelectedIndex]="getTimeOutDayIndex()"
             
           >
-            <nz-tab *ngFor="let category of categories" [nzTitle]="category.name">
+            <nz-tab *ngFor="let category of categories" [nzTitle]="category.categoryName">
               <div class="menu-items-container">
                 @if (filteredMenu) {
                   @for (item of filteredMenu; track $index) {
@@ -68,14 +68,14 @@
                   @for (option of cartItem.item.chosenOptions.add; track $index) {
                     <div class="w-full flex justify-between text-green">
                       <div class="mx-5">+ {{option.ingredientName}}</div>
-                      <div class="mx-5 text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                      <div class="mx-5 text-green">+ ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
                     </div>
                   }
 
                   @for (option of cartItem.item.chosenOptions.no; track $index) {
                     <div class="w-full flex justify-between text-red">
                       <div class="mx-5">- {{option.ingredientName}}</div>
-                      <div class="mx-5 text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                      <div class="mx-5 text-red">- ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
                     </div>
                   }
                 }
@@ -155,7 +155,7 @@
                 (click)="insertToAddOption(option)"
               >
                 <div>{{option.ingredientName}}</div>
-                <div class="text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                <div class="text-green">+ ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
               </div>
           }
           </div>
@@ -168,7 +168,7 @@
             (click)="insertToNoOption(option)"
           >
             <div>{{option.ingredientName}}</div>
-            <div class="text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+            <div class="text-red">- ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
           </div>
           }
           </div>

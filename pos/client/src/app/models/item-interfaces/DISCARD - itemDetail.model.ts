@@ -1,6 +1,5 @@
 import { IIngredient } from "./ingredient.model";
-import { IAddOption } from "./addOption.model";
-import { INoOption } from "./noOption.model";
+import { IOption } from "./option.model";
 
 export interface IItemDetailPosInput {
     itemId: number;
@@ -20,11 +19,11 @@ export interface IItemDetailPosInput {
     itemDietaryRestrictions: string[];
     ingredients: IIngredient[];
     itemPackingType: string;  
-    options: { add: IAddOption[]; no: INoOption[] };
+    options: { add: IOption[]; no: IOption[] };
 }
 
 export interface IItemDetailPosOutput extends IItemDetailPosInput{
     itemQuantity?: number;   //Field added when sending from POS to Skeleton
-    optionalNotes?: string;  ////Field added when sending from POS to Skeleton
-    chosenOptions?: { add: IAddOption[]; no: INoOption[] }; 
+    optionalNotes?: string;  //Field added when sending from POS to Skeleton
+    chosenOptions?: { add: IOption[]; no: IOption[] }; 
 }

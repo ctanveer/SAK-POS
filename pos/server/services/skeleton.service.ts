@@ -21,7 +21,6 @@ export async function getUserFromToken (token: string) {
   }
 } 
 
-
 export async function postOrderToKDS (order: IOrder, token: string) {
   try {
     const res = await axios.post<any>(config.SKELETON_URL + '/orders/incoming', { order }, { headers: { 'Authorization': token }});
@@ -30,4 +29,26 @@ export async function postOrderToKDS (order: IOrder, token: string) {
     console.log(error);
     throw new Error("Error posting order to KDS.")
   }
-} 
+}
+
+// const menuUrl = 'https://bento-menu-omi5.koyeb.app/menuItem/restaurant/1'
+
+export async function getMenuFromMenuBuilder(token: string) {
+  try {
+    const res = await axios.get<any>(config.SKELETON_URL + '/menu/one-restaurant-menu', { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting menu from Menu Builder.")
+  }
+}
+
+export async function getCategoriesFromMenuBuilder(token: string) {
+  try {
+    const res = await axios.get<any>(config.SKELETON_URL + '/menu/all-menu-categories', { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting categories from Menu Builder.")
+  }
+}

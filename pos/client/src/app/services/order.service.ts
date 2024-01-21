@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { IOrderListInterface } from '../models/item-interfaces/posOutput/orderList.model';
-import { IItem } from '../models/item-interfaces/posOutput/item.model';
+// import { IOrderListInterface } from '../models/item-interfaces/posOutput/orderList.model';
+import { IItem } from '../models/item-interfaces/item.model';
 import { IOrder } from '../models/order.model';
 
 @Injectable({
@@ -23,7 +23,6 @@ export class OrderService {
   createNewOrder(order: any):Observable<any> {
     return this.http.post(this.orderUrl, order, this.httpOptions);
   }
-
 
   createOrder(order: any):Observable<any> {
     const url = `${this.orderUrl}/new`;

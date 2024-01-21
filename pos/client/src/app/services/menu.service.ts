@@ -4,15 +4,33 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 //import { ITable } from '../models/table.model';
 import { environment } from '../../environments/environment';
 import {menu} from '../mock-menu'
+import { IMenu } from '../models/item-interfaces/menu.model';
+import { ICategories } from '../models/item-interfaces/categories.model';
+import { IItem } from '../models/item-interfaces/item.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
 
-  constructor() { }
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
-  getMenu () {
-    return menu;
+  constructor( private http: HttpClient) { }
+
+  private menuUrl = environment.API_URL + "/menu";
+
+  getCategories(): Observable<ICategories[]> {
+    const url = `${this.menuUrl}/categories`;
+    return this.http.get<ICategories[]>(url, this.httpOptions);
   }
+
+  getMenu(): Observable<IItem[]> {
+    const url = `${this.menuUrl}/menuitems`;
+    return this.http.get<IItem[]>(url, this.httpOptions);
+  }
+  // getMenu () {
+  //   return menu;
+  // }
 }

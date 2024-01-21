@@ -1,4 +1,4 @@
-import { ItemInterface } from "./item.interface";
+import { ItemInterface } from "../item.interface";
 import { CategoriesInterface } from "../categories.interface";
 
 export interface OrderListInterface {

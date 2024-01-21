@@ -1,4 +1,4 @@
-import { IItem } from "./item.model";
+import { IItem } from "../item.model";
 import { ICategories } from "../categories.model";
 
 export interface IOrderListInterface {

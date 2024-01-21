@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { ItemInterface } from './item-interfaces/posOutput/item.interface';
+import { ItemInterface } from './item-interfaces/item.interface';
 import { IUser } from './user.interface';
 
 export interface IOrder {

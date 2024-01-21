@@ -1,10 +1,10 @@
-export interface IIngredient {
+export interface IOption {
     id: number;
-    restaurantId?: number;
     ingredientName: string;
     unitOfStock: string;
     quantity: number;
     costPerUnit: number;
-    caloriesPerUnit: number;    //spelling change to calories
+    caloriesPerUnit: number;
+    price: string;
     _id: string;
 }

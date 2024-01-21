@@ -32,14 +32,14 @@
               @for (option of cartItem.item.chosenOptions.add; track $index) {
                 <div class="w-full flex justify-between text-green">
                   <div class="mx-5">+ {{option.ingredientName}}</div>
-                  <div class="mx-5 text-green">+ ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                  <div class="mx-5 text-green">+ ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
                 </div>
               }
 
               @for (option of cartItem.item.chosenOptions.no; track $index) {
                 <div class="w-full flex justify-between text-red">
                   <div class="mx-5">- {{option.ingredientName}}</div>
-                  <div class="mx-5 text-red">- ${{(option.ingredient.costPerUnit * option.quantity).toFixed(2)}}</div>
+                  <div class="mx-5 text-red">- ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
                 </div>
               }
             }

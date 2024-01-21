@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { IMenuItem } from '../../models/menuitem.model';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { MenuService } from '../../services/menu.service';
-import { IMenu } from '../../models/item-interfaces/posInput/menu.model';
+import { IMenu } from '../../models/item-interfaces/menu.model';
 import { ICategories } from '../../models/item-interfaces/categories.model';
 //IItem is output model. Has 3 extra fields -> itemQuantity, optionalNotes and chosenOptions
-import { IItem } from '../../models/item-interfaces/posOutput/item.model';
-import { IAddOption } from '../../models/item-interfaces/addOption.model';
-import { INoOption } from '../../models/item-interfaces/noOption.model';
+import { IItem } from '../../models/item-interfaces/item.model';
+import { IOption } from '../../models/item-interfaces/option.model';
+// import { INoOption } from '../../models/item-interfaces/DISCARD - noOption.model';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { IOrderListInterface } from '../../models/item-interfaces/posOutput/orderList.model';
+// import { IOrderListInterface } from '../../models/item-interfaces/posOutput/orderList.model';
 import { OrderService } from '../../services/order.service';
 import { ToastMessageService } from '../../services/toast-message/toast-message.service';
 
@@ -25,7 +24,8 @@ export class OrderPageComponent implements OnInit {
   constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService) {}
 
   user : IUser | undefined;
-  menuList : IMenu | undefined;
+  // menuList : IMenu | undefined;
+  menuList : IItem[] | undefined;
   categories: ICategories[] = [];
   timeOfDays: string[] = [];
   selectedTimeTab: string = '';
@@ -59,15 +59,44 @@ export class OrderPageComponent implements OnInit {
     }
 
     this.auth.getUser().subscribe(data => this.user = data.user);
-    this.menuList = this.menuService.getMenu();
-    this.getTimeOfDays();
-    this.categories = this.menuList.categories;  
+    
+    this.menuService.getCategories().subscribe(data => {
+      this.categories = data;
+      console.log('Categories are: ', this.categories);
+    })
+
+    // this.categories = [
+    //   {
+    //     _id: 'abc1',
+    //     restaurantId: 1,
+    //     categoryName: 'Mains',
+    //     categoryDescription: 'this is mains',
+    //     categoryImage: 'random image 1'
+    //   },
+    //   {
+    //     _id: 'abc2',
+    //     restaurantId: 1,
+    //     categoryName: 'Burgers',
+    //     categoryDescription: 'this is burgers',
+    //     categoryImage: 'random image 2'
+    //   }
+    // ]
+    
+    this.menuService.getMenu().subscribe(data => {
+      this.menuList = data;
+      this.getTimeOfDays();
+      console.log('Restaurant Menu is: ', this.menuList);
+    });
+    
+    // this.menuList = this.menuService.getMenu();
+    // this.getTimeOfDays();
+    // this.categories = this.menuList.categories;  
   }
 
   getTimeOfDays() {
     let tempArr = []
     if (this.menuList) {
-      for (const element of this.menuList.items) {
+      for (const element of this.menuList) {
         let timeList = element.item.timeOfDay;
         for (const item of timeList) {
           tempArr.push(item);
@@ -77,10 +106,18 @@ export class OrderPageComponent implements OnInit {
     this.timeOfDays = [...new Set(tempArr)];
   }
 
+  // setFilteredMenu() {
+  //   this.filteredMenu = this.menuList?.items.filter(item => {
+  //     return (item.categoryId === this.selectedCategory?.id) && !item.item.isDisabled})
+  //     .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
+  // }
+
   setFilteredMenu() {
-    this.filteredMenu = this.menuList?.items.filter(item => {
-      return (item.categoryId === this.selectedCategory?.id) && !item.item.isDisabled})
-      .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
+    if (this.menuList) {
+      this.filteredMenu = this.menuList.filter(item => {
+        return (item.categoryId === this.selectedCategory?._id) && !item.item.isDisabled})
+        .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
+    }
   }
 
   handleTimeTabChange(index: number) {
@@ -130,27 +167,27 @@ export class OrderPageComponent implements OnInit {
     else this.selectedOption = null;
   }
 
-  insertToAddOption(option: IAddOption) {
+  insertToAddOption(option: IOption) {
     if (!this.selectedCartItem) return;
 
     if (this.selectedCartItem.item.chosenOptions) {
       if (!this.isAddOptionSelected(option))
         this.selectedCartItem.item.chosenOptions.add.push(option);
       else 
-        this.selectedCartItem.item.chosenOptions.add = this.selectedCartItem.item.chosenOptions.add.filter(item => item.ingredient.id !== option.ingredient.id);
+        this.selectedCartItem.item.chosenOptions.add = this.selectedCartItem.item.chosenOptions.add.filter(item => item._id !== option._id);
     } else {
       this.selectedCartItem.item.chosenOptions = {add: [option], no: []}
     }
   }
 
-  insertToNoOption(option: INoOption) {
+  insertToNoOption(option: IOption) {
     if (!this.selectedCartItem) return;
 
     if (this.selectedCartItem.item.chosenOptions) {
       if (!this.isNoOptionSelected(option))
         this.selectedCartItem.item.chosenOptions.no.push(option);
       else 
-        this.selectedCartItem.item.chosenOptions.no = this.selectedCartItem.item.chosenOptions.no.filter(item => item.ingredient.id !== option.ingredient.id);
+        this.selectedCartItem.item.chosenOptions.no = this.selectedCartItem.item.chosenOptions.no.filter(item => item._id !== option._id);
     } else {
       this.selectedCartItem.item.chosenOptions = {add: [], no: [option]}
     }
@@ -193,8 +230,8 @@ export class OrderPageComponent implements OnInit {
   calculateTotal() {
     this.totalBill = this.orderCart.reduce((total, cartItem) => {
       const basePrice = cartItem.item.itemPrice;
-      const addOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
-      const noOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
+      const addOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.costPerUnit) + total), 0) : 0;
+      const noOptionPrice = cartItem.item.chosenOptions ? cartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.costPerUnit) + total), 0) : 0;
 
       return total + ((basePrice + addOptionPrice - noOptionPrice) * (cartItem.item.itemQuantity ? cartItem.item.itemQuantity : 1));
     }, 0).toFixed(2);
@@ -202,26 +239,26 @@ export class OrderPageComponent implements OnInit {
   }
 
   getTimeOutDayIndex () {
-    return this.categories.findIndex(item => item.id === this.selectedCategory?.id)
+    return this.categories.findIndex(item => item._id === this.selectedCategory?._id)
   }
 
-  isAddOptionSelected (option: IAddOption) {
+  isAddOptionSelected (option: IOption) {
     if (!this.selectedCartItem) return false;
     if (!this.selectedCartItem.item.chosenOptions) return false;
-    return this.selectedCartItem.item.chosenOptions.add.findIndex(item => item.ingredient.id === option.ingredient.id) !== -1;
+    return this.selectedCartItem.item.chosenOptions.add.findIndex(item => item._id === option._id) !== -1;
   }
 
-  isNoOptionSelected (option: IAddOption) {
+  isNoOptionSelected (option: IOption) {
     if (!this.selectedCartItem) return false;
     if (!this.selectedCartItem.item.chosenOptions) return false;
-    return this.selectedCartItem.item.chosenOptions.no.findIndex(item => item.ingredient.id === option.ingredient.id) !== -1;
+    return this.selectedCartItem.item.chosenOptions.no.findIndex(item => item._id === option._id) !== -1;
   }
 
   calculateSelectedItemPrice() {
     if (!this.selectedCartItem) return 0;
     const basePrice = this.selectedCartItem.item.itemPrice;
-      const addOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
-      const noOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.ingredient.costPerUnit) + total), 0) : 0;
+      const addOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.add.reduce((total, option) => ((option.quantity * option.costPerUnit) + total), 0) : 0;
+      const noOptionPrice = this.selectedCartItem.item.chosenOptions ? this.selectedCartItem.item.chosenOptions.no.reduce((total, option) => ((option.quantity * option.costPerUnit) + total), 0) : 0;
       return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1)).toFixed(2);
   }
 

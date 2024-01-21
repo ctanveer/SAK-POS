@@ -1,6 +1,6 @@
 import { IngredientInterface } from "./ingredient.interface";
-import { AddOptionInterface } from "./addOption.interface";
-import { NoOptionInterface } from "./noOption.interface";
+import { OptionInterface } from "./option.interface";
+// import { NoOptionInterface } from "./noOption.interface";
 
 export interface ItemDetailPosInputInterface {
     itemId: number;
@@ -20,7 +20,7 @@ export interface ItemDetailPosInputInterface {
     itemDietaryRestrictions: string[];
     ingredients: IngredientInterface[];
     itemPackingType: string;  
-    options: { add: AddOptionInterface[]; no: NoOptionInterface[] };
+    options: { add: OptionInterface[]; no: OptionInterface[] };
 }
 
 export interface ItemDetailPosOutputInterface extends ItemDetailPosInputInterface{

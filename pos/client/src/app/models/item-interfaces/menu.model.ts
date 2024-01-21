@@ -1,5 +1,5 @@
 import { IItem } from "./item.model";
-import { ICategories } from "../categories.model";
+import { ICategories } from "./categories.model";
 
 export interface IMenu{
     restaurantId: number;

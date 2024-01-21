@@ -1,5 +1,4 @@
-
-import { IItem } from './item-interfaces/posOutput/item.model';
+import { IItem } from "./item-interfaces/item.model";
 import { IUser } from './user.model';
 
 export interface IOrder {

@@ -8,6 +8,7 @@ import tableRouter from './routers/table.router';
 import orderRouter from './routers/order.router'
 import customerRouter from './routers/customer.router';
 import tableLogRouter from './routers/tableLog.router';
+import menuRouter from './routers/menu.router';
 import { config } from './config';
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/table', tableRouter);
 app.use('/order', orderRouter);
 app.use('/customer', customerRouter);
 app.use('/table-log', tableLogRouter);
+app.use('/menu', menuRouter);
 
 (async function bootstrap() {
     await mongoose.connect(config.MONGO_URI);

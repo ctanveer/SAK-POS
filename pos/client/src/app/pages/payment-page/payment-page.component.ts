@@ -3,7 +3,7 @@ import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { IItem } from '../../models/item-interfaces/posOutput/item.model';
+import { IItem } from '../../models/item-interfaces/item.model';
 import { IBill } from '../../models/bill.model';
 
 @Component({

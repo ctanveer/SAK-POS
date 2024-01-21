@@ -1,17 +1,17 @@
 export const menu = {
     restaurantId: 1,
     categories: [
-        { id: 1, name: 'Starters' },
-        { id: 2, name: 'Main' },
-        { id: 3, name: 'Burgers' },
-        { id: 4, name: 'Soups' },
-        { id: 5, name: 'Dessert' },
-        { id: 6, name: 'Drinks' },
+        { id: 'a1', name: 'Starters' },
+        { id: 'b2', name: 'Main' },
+        { id: 'c3', name: 'Burgers' },
+        { id: 'd4', name: 'Soups' },
+        { id: 'e5', name: 'Dessert' },
+        { id: 'f6', name: 'Drinks' },
     ],
     items: [
         {
             restaurantId: 1,
-            categoryId: 3,
+            categoryId: 'c3',
             item: {
                 itemId: 1,
                 itemName: 'Delicious Burger',
@@ -65,7 +65,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 1,
+            categoryId: 'a1',
             item: {
                 itemId: 2,
                 itemName: 'Crispy Spring Rolls',
@@ -113,7 +113,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 3,
                 itemName: 'Grilled Salmon',
@@ -156,7 +156,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 4,
+            categoryId: 'd4',
             item: {
                 itemId: 4,
                 itemName: 'Creamy Tomato Soup',
@@ -204,7 +204,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 5,
+            categoryId: 'e5',
             item: {
                 itemId: 5,
                 itemName: 'Chocolate Lava Cake',
@@ -252,7 +252,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 6,
                 itemName: 'Grilled Chicken Salad',
@@ -296,7 +296,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 3,
+            categoryId: 'c3',
             item: {
                 itemId: 7,
                 itemName: 'Margherita Pizza',
@@ -340,7 +340,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 8,
                 itemName: 'Classic Caesar Salad',
@@ -384,7 +384,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 9,
                 itemName: 'Spaghetti Bolognese',
@@ -429,7 +429,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 10,
                 itemName: 'Chicken Alfredo Pasta',
@@ -474,7 +474,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 11,
                 itemName: 'Beef Stir-Fry',
@@ -519,7 +519,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 1,
+            categoryId: 'a1',
             item: {
                 itemId: 12,
                 itemName: 'Garlic Parmesan Wings',
@@ -563,7 +563,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 1,
+            categoryId: 'a1',
             item: {
                 itemId: 13,
                 itemName: 'Spinach and Artichoke Dip',
@@ -607,7 +607,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 5,
+            categoryId: 'e5',
             item: {
                 itemId: 14,
                 itemName: 'Mango Sorbet',
@@ -650,7 +650,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 5,
+            categoryId: 'e5',
             item: {
                 itemId: 15,
                 itemName: 'Tiramisu',
@@ -694,7 +694,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 1,
+            categoryId: 'a1',
             item: {
                 itemId: 16,
                 itemName: 'Mediterranean Platter',
@@ -739,7 +739,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 2,
+            categoryId: 'b2',
             item: {
                 itemId: 17,
                 itemName: 'Teriyaki Salmon Bowl',
@@ -784,7 +784,7 @@ export const menu = {
         },
         {
             restaurantId: 1,
-            categoryId: 6,
+            categoryId: 'f6',
             item: {
                 itemId: 18,
                 itemName: 'Berry Blast Smoothie',
