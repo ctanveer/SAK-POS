@@ -9,8 +9,8 @@
           @for(splitObj of splitBillArr; track $index) {
             <div class="single-split-item border rounded-sm mx-3 my-2 p-2 text-xs">
               <p>OrderId <strong>#{{ splitObj.orderId }}</strong></p>
-              <p>ID: {{ splitObj.splitId }}</p>
-              <p>Total: {{ splitObj.total }}</p>
+              <p>ID: {{ splitObj._id }}</p>
+              <p>Total: {{ splitObj.totalBill }}</p>
               <p>Paid: {{ splitObj.paid }}</p>
               <p>Mode  of Payment: {{ splitObj.pmtMode }}</p>
             </div>

@@ -7,8 +7,8 @@
             @for (billObj of billArr; track $index) {
                 <div class="single-split-item border rounded-md mx-3 my-2 p-2 text-xs">
                     <p>OrderId <strong>#{{ billObj.orderId }}</strong></p>
-                    <p>ID: {{ billObj.splitId }}</p>
-                    <p>Total: ${{ billObj.total }}</p>
+                    <p>Payment ID: {{ billObj._id }}</p>
+                    <p>Total: ${{ billObj.totalBill }}</p>
                     <p>Paid: {{ billObj.paid }}</p>
                     <p>Mode  of Payment: {{ billObj.pmtMode }}</p>
                     @if (billObj.paid === false) {
@@ -26,7 +26,7 @@
     </div>
     <div class=" w-full mt-12 flex justify-center">
         @if (isAllPaid()) {
-            <button nz-button nzType="primary" nzSize="large">Complete Order</button>
+            <button nz-button nzType="primary" nzSize="large" (click)="paymentComplete()">Complete Order</button>
         }
     </div>
     
@@ -34,20 +34,20 @@
 
 
 <!-- Pay by Cash -->
-<nz-modal [(nzVisible)]="isCashPayVisible" nzTitle="Cash Payment" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="isCashPayVisible" nzTitle="Cash Payment" (nzOnCancel)="handleCancel()" nzOkText="Submit" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
       @if (currentIndex >= 0) {
-          <p>Amount Due: {{billArr[currentIndex].total}}</p>
+          <p>Amount Due: {{billArr[currentIndex].totalBill}}</p>
       } 
     </ng-container>
 </nz-modal>
 
 
 <!-- Pay by Card -->
-<nz-modal [(nzVisible)]="isCardPayVisible" nzTitle="Card Payment" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="isCardPayVisible" nzTitle="Card Payment" (nzOnCancel)="handleCancel()" nzOkText="Submit" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
         @if (currentIndex >= 0) {
-            <p>Amount Due: {{billArr[currentIndex].total}}</p>
+            <p>Amount Due: {{billArr[currentIndex].totalBill}}</p>
         }
     </ng-container>
 </nz-modal>

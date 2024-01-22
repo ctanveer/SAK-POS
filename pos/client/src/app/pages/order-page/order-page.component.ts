@@ -7,12 +7,12 @@ import { ICategories } from '../../models/item-interfaces/categories.model';
 //IItem is output model. Has 3 extra fields -> itemQuantity, optionalNotes and chosenOptions
 import { IItem } from '../../models/item-interfaces/item.model';
 import { IOption } from '../../models/item-interfaces/option.model';
-// import { INoOption } from '../../models/item-interfaces/DISCARD - noOption.model';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-// import { IOrderListInterface } from '../../models/item-interfaces/posOutput/orderList.model';
 import { OrderService } from '../../services/order.service';
 import { ToastMessageService } from '../../services/toast-message/toast-message.service';
+import { PaymentlogService } from '../../services/paymentlog.service';
+import { IPaymentLog } from '../../models/paymentlog.model';
 
 @Component({
   selector: 'app-order-page',
@@ -21,7 +21,7 @@ import { ToastMessageService } from '../../services/toast-message/toast-message.
 })
 export class OrderPageComponent implements OnInit {
 
-  constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService) {}
+  constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService, private paymentLogService: PaymentlogService) {}
 
   user : IUser | undefined;
   // menuList : IMenu | undefined;
@@ -135,6 +135,7 @@ export class OrderPageComponent implements OnInit {
   }
 
   addToCart(item: IItem) {
+    console.log('Item is: ', item)
     const copy : IItem = JSON.parse(JSON.stringify(item));
     copy.item.itemQuantity = 1;
     copy.item.optionalNotes = '';
@@ -268,15 +269,44 @@ export class OrderPageComponent implements OnInit {
       return ((basePrice + addOptionPrice - noOptionPrice) * (this.selectedCartItem.item.itemQuantity ? this.selectedCartItem.item.itemQuantity : 1)).toFixed(2);
   }
 
-  proceedToPayment() {
-    console.log('Order cart is: ', this.orderCart);
+  navigateToPayment(pmtLogArr: IPaymentLog[]) {
     this.router.navigateByUrl('/payment', {
       state: {
-        orderId: this.orderId,
-        bill: this.totalBill,
-        orderCart: this.orderCart
+        pmtLogArr: pmtLogArr,
+        bill: this.totalBill, 
+        orderCart: this.orderCart,
       }
-  });
+    })
+  }
+
+  proceedToPayment() {
+    console.log('Order cart is: ', this.orderCart);
+    let pmtLogArr: IPaymentLog[] = [];
+    this.paymentLogService.getPaymentLogsByOrderId(this.orderId).subscribe(data => {
+      pmtLogArr = data;
+      console.log('Pmt log is:', pmtLogArr);
+      if (pmtLogArr?.length === 0) {
+        this.paymentLogService.createPaymentLog({
+          orderId: this.orderId,
+          totalBill: this.totalBill, 
+        }).subscribe(data => {
+          pmtLogArr.push(data);
+          this.navigateToPayment(pmtLogArr);
+        })
+      } 
+      else {
+        this.navigateToPayment(pmtLogArr);
+      }
+    })
   }
 
 }
+
+
+  //   this.router.navigateByUrl('/payment', {
+  //     state: {
+  //       orderId: this.orderId,
+  //       bill: this.totalBill,
+  //       orderCart: this.orderCart
+  //     }
+  // });

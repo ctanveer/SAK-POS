@@ -16,6 +16,19 @@ const ingredientSchema = new Schema<IngredientInterface>({
     _id: {type: String}
 });
 
+const recipeItemSchema = new Schema({
+  restaurantId: { type: Number, required: true },
+  categoryId: { type: Number, required: true },
+  recipeId: { type: Number, required: true },
+  recipeName: { type: String, required: true },
+  recipeItemPortionSize: { type: Number, required: true },
+  recipeItemPreparationTime: { type: Number, required: true },
+  recipeItemCost: { type: Number, required: true },
+  recipeItemCalories: { type: Number, required: true },
+  recipeItemDescription: { type: String, required: true },
+  ingredients: [ingredientSchema]
+})
+
 /*
 const itemSchema = new Schema<ItemInterface>({
     _id: {type: String, required: true},
@@ -152,7 +165,7 @@ const OrderSchema = new Schema<IOrder>({
   waiterId: {type: Number},
   bill: {type: Number, default: 0},
   unit: {type: String, default: 'USD'},
-  status: {type: String, required: true, default: 'pending', enum: ['pending', 'preparing', 'ready', 'served', 'cancel']},
+  status: {type: String, required: true, default: 'pending', enum: ['pending', 'preparing', 'ready', 'served', 'complete', 'cancel']},
   vipCustomer: { type: Boolean, required: true, default: false },
   items: {type: [{
     _id: {type: String, required: true},
@@ -172,7 +185,11 @@ const OrderSchema = new Schema<IOrder>({
       //ItemServingTemperature: { type: String, required: true }, 
       itemLastingTime: { type: Number, required: true }, //needed for marketplace
       itemPortionSize: { type: String, required: true }, 
-      ingredients: [ingredientSchema],
+      // ingredients: [ingredientSchema],
+      ingredients: {
+          rawIngredients: [ingredientSchema],
+          recipes:[recipeItemSchema]
+      },
       options: {
         type: {
           add: [

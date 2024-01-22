@@ -2,7 +2,7 @@ import {Types} from "mongoose";
 
 export interface IPaymentLog {
     orderId: Types.ObjectId;
-    totalBill: number;
+    totalBill: string;
     paid: boolean;
-    pmtMode: 'cash' | 'card';
+    pmtMode: string;  //cash or card
 }

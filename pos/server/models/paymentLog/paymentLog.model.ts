@@ -8,7 +8,7 @@ const PaymentLogSchema = new Schema<IPaymentLog>({
       ref: 'order',
       required: true,
     },
-    totalBill: {type: Number, default: null},
+    totalBill: {type: String, default: null},
     paid: {type: Boolean, default: false},
     pmtMode: {type: String, enum: ['cash', 'card']},
   }, {

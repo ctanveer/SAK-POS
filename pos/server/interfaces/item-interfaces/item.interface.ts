@@ -1,6 +1,8 @@
 import { OptionInterface } from "./option.interface";
 import { IngredientInterface } from "./ingredient.interface";
 import { IPacking } from "../packing.interface";
+import { RecipeInterface } from "./recipe.interface";
+
 
 // export interface ItemInterface{
 //     restaurantId: number;
@@ -21,11 +23,11 @@ export interface ItemInterface {
     itemDescription: string; //
     itemQuantity: number; //
     itemPreparationTime: number; //
-    itemPackingType: IPacking[]; //
+    itemPackingType: IPacking; //
     // itemPackingDimension?: string[];  //PackingInterface
     itemLastingTime?: number; //needed for marketplace
     itemPortionSize: string;
-    ingredients: { rawIngredients: IngredientInterface[]; recipes: string[] }; //IRecipe[]
+    ingredients: { rawIngredients: IngredientInterface[]; recipes: RecipeInterface[] }; //IRecipe[]
     options: { add: OptionInterface[]; no: OptionInterface[] };
     chosenOptions?: { add: OptionInterface[]; no: OptionInterface[] };
     optionalNotes?: string;

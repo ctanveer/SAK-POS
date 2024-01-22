@@ -22,7 +22,7 @@ router.get('/log/table/:id', authMiddleware, generateOrderForTable);
 router.put('/chef/:orderId', authMiddleware, updateOrderChef);
 // router.get('/:id', getOrderByIdController);
 router.post('/', authMiddleware, createOrderController);
-// router.put('/:id', updateOrderByIdController);
+router.put('/:id', updateOrderByIdController);
 router.put('/:orderId/add-customerid/:customerId', updateOrderWithCustomerIdController);
 
 export default router;

@@ -29,7 +29,8 @@ export class TablesPageComponent implements OnInit{
   createdOrder: IOrder | null = null;
   // currentTableLog: ITableLog | null = null;
   currentTableLog: any = null;
-  reservationList: IReservation[] | null = null; 
+  reservationList: IReservation[] | null = null;
+  currentTable: ITable | null = null;
 
   constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private router: Router){};
 
@@ -190,8 +191,9 @@ export class TablesPageComponent implements OnInit{
         let index = this.tables.findIndex(table => table._id === data._id);
         if (index !== -1) {
           this.tables[index] = data;
+          this.currentTable = data;
         }
-        console.log('Current table is: ', this.tables[index]);
+        console.log('Current table is: ', this.currentTable);
       });
     }    
   }
@@ -244,6 +246,21 @@ export class TablesPageComponent implements OnInit{
       } 
       else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'closed' || this.selectedStatus === 'open')) {
         this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
+      }
+      else if (this.selectedTable.status === 'occupied' && this.selectedStatus === 'open') {
+        this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
+        console.log('Closing this table: ', this.currentTable)
+        if (this.selectedTable) {
+          this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
+            console.log('Table Log:', data);
+            this.currentTableLog = data;
+            this.currentTableLog.status = 'closed';
+            this.currentTableLog.timeElapsed = Date.now() - this.currentTableLog.createdAt;
+            this.tablelogService.updateTableLogById(this.currentTableLog).subscribe(data => {
+              console.log('Updated Table log is: ', data);
+            })
+          })
+        }
       }
       else {
         this.selectedTable.status = this.selectedStatus;

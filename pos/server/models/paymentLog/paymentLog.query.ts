@@ -1,6 +1,6 @@
 import PaymentLog from "./paymentLog.model";
 import { IPaymentLog } from "../../interfaces/paymentLog.interface";
-import {Types} from 'mongoose';
+import mongoose, {Types} from 'mongoose';
 
 const getAllPaymentLogs = async () => {
     const pmtlogs = await PaymentLog.find();
@@ -13,8 +13,14 @@ const getPaymentLogsByOrderId = async (id: string | Types.ObjectId) => {
 }
 
 const createPaymentLog = async (pmtLogObject: Partial<IPaymentLog>) => {
-    const pmtlog = await PaymentLog.create({...pmtLogObject});
-    return pmtlog;
+    try {
+        const pmtlog = await PaymentLog.create({...pmtLogObject, orderId: new mongoose.Types.ObjectId(pmtLogObject.orderId)});
+        return pmtlog;    
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+    
 }
 
 const updatePaymentLogById = async (

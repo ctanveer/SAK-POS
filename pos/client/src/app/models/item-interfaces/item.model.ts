@@ -1,5 +1,7 @@
 import { IOption } from "./option.model"
 import { IIngredient } from "./ingredient.model";
+import { IPacking } from "../packing.model";
+import { IRecipe } from "./recipe.model";
 
 // export interface IItem{
 //     restaurantId: number;
@@ -20,11 +22,11 @@ export interface IItem {
     itemDescription: string; //
     itemQuantity?: number; //
     itemPreparationTime: number; //
-    itemPackingType: string; 
-    itemPackingDimension?: string[];  //PackingInterface
+    itemPackingType: IPacking; 
+    // itemPackingDimension?: string[];  //PackingInterface
     itemLastingTime?: number; //needed for marketplace
     itemPortionSize: string; //
-    ingredients: { rawIngredients: IIngredient[]; recipes: string[] }; //IRecipe[]
+    ingredients: { rawIngredients: IIngredient[]; recipes: IRecipe[] }; //IRecipe[]
     options: { add: IOption[]; no: IOption[] }; //
     chosenOptions?: { add: IOption[]; no: IOption[] };
     optionalNotes?: string;

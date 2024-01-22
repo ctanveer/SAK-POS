@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import {Request, Response} from 'express';
 import * as fs from 'fs';
 import {
@@ -12,7 +13,6 @@ import { AuthRequest } from '../interfaces/authRequest.interface';
 import { postOrderToKDS } from '../services/skeleton.service';
 import { getDataFromStatus } from '../utils/status.helper';
 import { getLatestOngoingOrderForTable, getTableLogForOrderId, updateTableLogById } from '../models/tableLog/tableLog.query';
-import mongoose from 'mongoose';
 import { getTableById } from '../models/table/table.query';
 
 export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Response) => {
@@ -96,10 +96,10 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
       }
 
       const updatedOrder = await updateOrderById(orderId, newData);
-  
+      
       if (updatedOrder) {
+        // fs.writeFileSync('data.json', JSON.stringify(updatedOrder))
         await postOrderToKDS(updatedOrder, token);
-        // fs.writeFileSync('data.ts', JSON.stringify(updatedOrder))
       }
         
       res.send(updatedOrder);
@@ -207,7 +207,7 @@ export const createOrderController = async (req: AuthRequest, res: Response) => 
 export const updateOrderByIdController = async (req: Request, res: Response) => {
     try {
         const orderId = req.params.id;
-        const orderObject = { ...req.body };
+        const orderObject = { ...req.body, orderUpdatedAt: Date.now() };
         const order = await updateOrderById(orderId, orderObject);
         res.json(order);
     } catch (error: any) {
