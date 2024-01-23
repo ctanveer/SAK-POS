@@ -9,7 +9,10 @@ import {
     updateOrderStatus,
     updateOrderItems,
     generateOrderForTable,
-    updateOrderChef
+    updateOrderChef,
+    getHourlyCountOfOrders,
+    getWeekdayCountOfOrders,
+    getMonthlyCountOfOrders
 } from '../controllers/order.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
 
@@ -24,5 +27,8 @@ router.put('/chef/:orderId', authMiddleware, updateOrderChef);
 router.post('/', authMiddleware, createOrderController);
 router.put('/:id', updateOrderByIdController);
 router.put('/:orderId/add-customerid/:customerId', updateOrderWithCustomerIdController);
+router.get('/stats/hourly', authMiddleware, getHourlyCountOfOrders);
+router.get('/stats/weekday', authMiddleware, getWeekdayCountOfOrders);
+router.get('/stats/monthly', authMiddleware, getMonthlyCountOfOrders);
 
 export default router;

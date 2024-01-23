@@ -7,7 +7,10 @@ import {
     updateOrderById,
     deleteOrderById,
     updateOrderWithCustomerId,
-    getAllOrdersByRestaurantId
+    getAllOrdersByRestaurantId,
+    getHourlyOrderCountFor24Hours,
+    getDailyOrderCountByWeekdays,
+    getDailyOrderCountByMonth
 } from '../models/order/order.query';
 import { AuthRequest } from '../interfaces/authRequest.interface';
 import { postOrderToKDS } from '../services/skeleton.service';
@@ -249,3 +252,43 @@ export const deleteOrderByIdController = async (req: Request, res: Response) => 
       res.json({ message: error.message });
     }
 };
+
+
+export const getHourlyCountOfOrders = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const data = await getHourlyOrderCountFor24Hours(user.employeeInformation.restaurantId);
+    res.send({ data });
+  } catch (error : any) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+}
+
+export const getWeekdayCountOfOrders = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const data = await getDailyOrderCountByWeekdays(user.employeeInformation.restaurantId);
+    res.send({ data });
+  } catch (error : any) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+}
+
+export const getMonthlyCountOfOrders = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const data = await getDailyOrderCountByMonth(user.employeeInformation.restaurantId);
+    res.send({ data });
+  } catch (error : any) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+}
