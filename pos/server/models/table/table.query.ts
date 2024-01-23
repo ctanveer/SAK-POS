@@ -2,6 +2,16 @@ import Table from './table.model';
 import { ITable } from '../../interfaces/table.interface';
 import { Types } from 'mongoose';
 
+const getAllTables = async () => {
+  try {
+    const tables = await Table.find();
+    return tables;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error getting tables for restaurant'); 
+  }
+}
+
 const getAllTablesForRestaurant = async (restaurantId: number) => {
   try {
     const tables = await Table.find({ restaurantId });
@@ -95,6 +105,7 @@ const getTableByIdWithAllOrders = async (id: number) => {
 };
 
 export {
+    getAllTables,
     getAllTablesForRestaurant,
     getTableById,
     createTable,

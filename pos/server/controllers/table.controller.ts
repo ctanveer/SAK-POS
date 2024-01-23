@@ -1,5 +1,6 @@
 import {Request, Response } from 'express';
 import {
+    getAllTables,
     getTableById,
     createTable,
     updateTableById,
@@ -8,6 +9,16 @@ import {
     getAllTablesForRestaurant,
 } from '../models/table/table.query'
 import { AuthRequest } from '../interfaces/authRequest.interface';
+
+export const getTablesOfAllRestaurantsController = async (req: Request,  res: Response) => {
+  try {
+    const tables = await getAllTables();
+    res.json(tables);
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+}
 
 export const getAllTablesController = async (req: AuthRequest, res: Response) => {
     try {

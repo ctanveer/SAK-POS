@@ -6,13 +6,15 @@ import {
     updateTableByIdController,
     deleteTableByIdController,
     occcupyTableByIdController,
-    unoccupyTableByIdController
+    unoccupyTableByIdController,
+    getTablesOfAllRestaurantsController
 } from '../controllers/table.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
 router.get('/', authMiddleware, getAllTablesController);
+router.get('/all-restaurant-tables', getTablesOfAllRestaurantsController);
 router.get('/:id', getTableByIdController);
 router.post('/', authMiddleware, createTableController);
 router.put('/:id', updateTableByIdController);
