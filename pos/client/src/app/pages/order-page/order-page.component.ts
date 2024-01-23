@@ -13,6 +13,7 @@ import { OrderService } from '../../services/order.service';
 import { ToastMessageService } from '../../services/toast-message/toast-message.service';
 import { PaymentlogService } from '../../services/paymentlog.service';
 import { IPaymentLog } from '../../models/paymentlog.model';
+import { IOrder } from '../../models/order.model';
 
 @Component({
   selector: 'app-order-page',
@@ -20,9 +21,9 @@ import { IPaymentLog } from '../../models/paymentlog.model';
   styleUrl: './order-page.component.css'
 })
 export class OrderPageComponent implements OnInit {
-
+  
   constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService, private paymentLogService: PaymentlogService) {}
-
+  
   user : IUser | undefined;
   // menuList : IMenu | undefined;
   menuList : IItem[] | undefined;
@@ -32,30 +33,37 @@ export class OrderPageComponent implements OnInit {
   selectedCategory: ICategories | null = null;
   filteredMenu: IItem[] | undefined;
   filteredCategories: ICategories[] | undefined;
-
+  
   orderState: string = "new";
-
+  
   orderCart: IItem[] = [];
   totalBill: string = '';
   selectedCartItem: IItem | null = null;
   editorVisible: boolean = false;
-
+  
   selectedOption: string | null = null;
   optionalNotes: string | null = null;
-
+  
   orderId : string = '';
   tableId: string = '';
-
+  tableName: string = '';
+  orderStatus: string = '';
 
   ngOnInit(): void {
-    const state = this.location.getState() as { orderId: string, tableId: string, order: { items: IItem[] } | null, status: 'update' | 'new' } | undefined;
-    if (!state || !state.orderId || !state.tableId) this.router.navigate(['table']);
+    const state = this.location.getState() as { orderId: string, tableId: string, tableName: string, orderStatus: string, order: { items: IItem[] } | null, status: 'update' | 'new' } | undefined;
+    if (!state || !state.orderId || !state.tableId || !state.tableName || !state.orderStatus) this.router.navigate(['table']);
     else {
       console.log(state)
       this.orderId = state.orderId;
       this.tableId = state.tableId;
+      this.orderStatus = state.orderStatus;
+      this.tableName = state.tableName;
 
-      if (state.order) this.orderCart = [...state.order.items];
+
+      console.log('Full Order is: ', state.order);
+      if (state.order) {
+        this.orderCart = [...state.order.items];
+      }
       this.orderState = state.status;
     }
 
@@ -72,6 +80,7 @@ export class OrderPageComponent implements OnInit {
       console.log('Restaurant Menu is: ', this.menuList);
     });
   }
+
 
   getTimeOfDays() {
     let tempArr = []
@@ -103,6 +112,23 @@ export class OrderPageComponent implements OnInit {
         return item.categoryId === this.selectedCategory?._id})
         .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
     }
+  }
+
+  getOrderStatusColor() {
+    switch (this.orderStatus) {
+      case 'pending':
+          return '#3b5999';
+      case 'preparing':
+          return '#f50';
+      case 'ready':
+          return '#87d068';
+      case 'served':
+          return '#108ee9';
+      case 'complete':
+          return 'black';      
+      default:
+          return 'black';
+    } 
   }
 
   filterCategoriesForTimeTab() {
@@ -203,7 +229,16 @@ export class OrderPageComponent implements OnInit {
       this.selectedCartItem.item.optionalNotes = this.optionalNotes;
     }
   }
- 
+  
+
+  updateOrderStatus() {
+    this.orderService.updateOrderStatus(this.orderId, 'served').subscribe(data => {
+      console.log('Order with updated status is: ', data);
+      this.toast.setMessage('Order Served', 'info');
+      this.orderStatus = 'served';
+    })
+  }
+
   //need to add tag to identify items which are already sent
   confirmAndSendOrder() {
 

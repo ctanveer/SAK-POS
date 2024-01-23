@@ -34,6 +34,10 @@ export class OrderService {
     return this.http.put(`${this.orderUrl}/items/${orderId}`, { items }, this.httpOptions);
   }
 
+  updateOrderStatus (orderId: string, status: string) {
+    return this.http.post(`${this.orderUrl}/status/${orderId}`, {status: status}, this.httpOptions);
+  }
+
   generateOrderForTable (tableId: string) : Observable<IOrder> {
     return this.http.get<IOrder>(`${this.orderUrl}/log/table/${tableId}`, this.httpOptions);
   }

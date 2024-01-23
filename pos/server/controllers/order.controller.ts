@@ -11,6 +11,7 @@ import {
 } from '../models/order/order.query';
 import { AuthRequest } from '../interfaces/authRequest.interface';
 import { postOrderToKDS } from '../services/skeleton.service';
+import { postStatusUpdateToKDS } from '../services/skeleton.service';
 import { getDataFromStatus } from '../utils/status.helper';
 import { getLatestOngoingOrderForTable, getTableLogForOrderId, updateTableLogById } from '../models/tableLog/tableLog.query';
 import { getTableById } from '../models/table/table.query';
@@ -28,19 +29,37 @@ export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Re
     }
 };
 
+export const getOrderByIdController = async (req: AuthRequest, res: Response) => {
+  try {
+    //const user = req.user;
+    // const token = req.token;
+    // if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
+    
+    const id = req.params.id;
+    const order = await getOrderById(id);
+    res.json(order);
+  } catch (error: any) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+};
+
 export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
-    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+    const token = req.token;
+    if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
 
     const { orderId } = req.params;
     const { status } = req.body;
+    // console.log('Status is: ', {status});
 
     if (
       !orderId ||
       (status !== "pending" &&
       status !== "preparing" &&
       status !== "ready" &&
+      status !== "served" &&
       status !== "complete")
     ) return res.status(400).send({ message: "Invalid fields." });
 
@@ -62,6 +81,10 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
             io.to(updatedOrder.restaurantId.toString()).emit('ready-order', { order: updatedOrder, table });
           }
         }
+      }
+
+      if (updatedOrder && status === 'served') {
+        await postStatusUpdateToKDS(updatedOrder, token);
       }
 
       res.status(200).json(updatedOrder);
@@ -175,17 +198,6 @@ export const updateOrderChef = async (req: AuthRequest, res: Response) => {
     res.status(500);
     res.json({ message: error.message });
   }
-};
-
-export const getOrderByIdController = async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const order = await getOrderById(id);
-      res.json(order);
-    } catch (error: any) {
-      res.status(500);
-      res.json({ message: error.message });
-    }
 };
 
 export const createOrderController = async (req: AuthRequest, res: Response) => {

@@ -42,11 +42,15 @@ app.use('/menu', menuRouter);
 app.use('/payment-log', paymentLogRouter);
 
 (async function bootstrap() {
+  try {
     await mongoose.connect(config.MONGO_URI);
     console.log('Connected to DB');
     server.listen(config.PORT, () => {
       console.log("Server is listening", config.PORT);
     });
+  } catch (error) {
+    console.log(error);
+  }
 })();
 
 io.on("connection", (socket) => {

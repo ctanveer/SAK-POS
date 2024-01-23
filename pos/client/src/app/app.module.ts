@@ -47,6 +47,7 @@ import { ProcessPaymentPageComponent } from './pages/process-payment-page/proces
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 const config: SocketIoConfig = { url: environment.API_URL, options: {} };
 
@@ -96,7 +97,8 @@ registerLocaleData(en);
     NzModalModule,
     NzRadioModule,
     SocketIoModule.forRoot(config),
-    NzResultModule
+    NzResultModule,
+    NzTagModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

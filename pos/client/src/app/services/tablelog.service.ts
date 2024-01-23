@@ -30,4 +30,9 @@ export class TablelogService {
     const url = `${this.tLogUrl}/${tableLog._id}`;
     return this.http.put(url, tableLog, this.httpOptions);
   }
+
+  getOngoingTableLogs() {
+    const url = `${this.tLogUrl}/ongoing`;
+    return this.http.get(url, this.httpOptions);
+  }
 }

@@ -31,6 +31,16 @@ export async function postOrderToKDS (order: IOrder, token: string) {
   }
 }
 
+export async function postStatusUpdateToKDS (order: IOrder, token: string) {
+  try {
+    const res = await axios.post<any>(config.SKELETON_URL + `/pos/order/served/${order._id}`, { order }, { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating order status to KDS.")
+  }
+}
+
 // const menuUrl = 'https://bento-menu-omi5.koyeb.app/menuItem/restaurant/1'
 
 export async function getMenuFromMenuBuilder(token: string) {

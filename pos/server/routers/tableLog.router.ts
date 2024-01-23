@@ -3,12 +3,15 @@ import {
     getAllTableLogsController,
     getTableLogsByTableIdController,
     createTableLogController,
-    updateTableLogByIdController
+    updateTableLogByIdController,
+    getOngoingTableLogsByRestaurantIdController
 } from '../controllers/tableLog.controller';
+import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
 router.get('/', getAllTableLogsController);
+router.get('/ongoing',authMiddleware, getOngoingTableLogsByRestaurantIdController);
 router.get('/:id', getTableLogsByTableIdController);
 // router.post('/:id', createTableLogController);
 router.post('/', createTableLogController);

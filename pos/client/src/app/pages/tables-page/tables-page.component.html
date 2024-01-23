@@ -13,8 +13,62 @@
             </div>
         }
     </div>
+    <div class="notify-button">
+        <button nz-button nzType="primary" (click)="openPanel()">
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
+        </button>
+    </div>
 </div>
 
+
+<!-- Drawer for Notifications -->
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="850"
+      [nzVisible]="notificationVisible"
+      nzTitle="Notifications Panel"
+      [nzFooter]="footerTpl"
+      (nzOnClose)="closePanel()"
+    >
+    <ng-container *nzDrawerContent>
+        @if (ongoingTableLogs) {
+            <nz-table [nzShowPagination]="false" #basicTable [nzData]="ongoingTableLogs.data">
+                <thead>
+                  <tr>
+                    <th>Table Name</th>
+                    <th>Order ID</th>
+                    <th>Current Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of basicTable.data">
+                    <td>{{ data.tableInfo[0].name }}</td>
+                    <td>{{ data.orderId }}</td>
+                    <td>
+                        <nz-tag [nzColor]="getOrderStatusColor(data.orderInfo[0].status)">
+                            {{ data.orderInfo[0].status | uppercase }}
+                        </nz-tag>
+                        <!-- {{ data.orderInfo[0].status }}</td> -->
+                    <td>
+                      <a (click)="moveToOrderPage(data)">To Order Page</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        }
+    </ng-container>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button nzType="primary" nzDanger="true" (click)="closePanel()">Close</button>
+        </div>
+    </ng-template>
+</nz-drawer>
+
+
+<!-- Drawer for Table Info and Status Change -->
 <nz-drawer *ngIf="selectedTable"
       [nzBodyStyle]="{ overflow: 'auto' }"
       [nzMaskClosable]="false"

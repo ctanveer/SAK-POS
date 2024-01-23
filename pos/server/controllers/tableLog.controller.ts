@@ -5,10 +5,12 @@ import {
     getTableLogsByTableId,
     createTableLog,
     updateTableLogById,
-    deleteTableLogById
+    deleteTableLogById,
+    getOngoingTableLogsByRestaurantId
 } from '../models/tableLog/tableLog.query'
 import { updateTableById } from "../models/table/table.query";
 import { createOrder } from "../models/order/order.query";
+import { AuthRequest } from '../interfaces/authRequest.interface';
 
 export const getAllTableLogsController = async (req: Request, res: Response) => {
     try {
@@ -30,6 +32,21 @@ export const getTableLogsByTableIdController = async (req: Request, res: Respons
       res.json({ error: error.message });
     }
 };
+
+export const getOngoingTableLogsByRestaurantIdController = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const tablelogs = await getOngoingTableLogsByRestaurantId(user.employeeInformation.restaurantId);
+    res.status(200).send({data: tablelogs});
+    // res.status(200).send(tablelogs);
+  } catch (error: any) {
+    console.log(error);
+    res.status(500);
+    res.json({ error: error.message });
+  }
+}
 
 export const updateTableLogByIdController = async (req: Request, res: Response) => {
   try {

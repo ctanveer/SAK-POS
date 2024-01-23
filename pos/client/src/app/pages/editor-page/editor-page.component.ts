@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ITable } from '../../models/table.model';
 import { TableService } from '../../services/table.service';
+import { AuthApiService } from '../../services/auth-api/auth-api.service';
+import { IUser } from '../../models/user.model';
 
 @Component({
   selector: 'app-editor-page',
@@ -9,6 +11,8 @@ import { TableService } from '../../services/table.service';
 })
 export class EditorPageComponent implements OnInit{
   tables:ITable[] = [];
+  user: IUser | undefined;
+  restaurantId: number | undefined;
   selectedTable:ITable | null = null;
   tableTypes = ['square', 'rectangle', 'round', 'oval'];
   
@@ -22,12 +26,17 @@ export class EditorPageComponent implements OnInit{
   newTableType: 'square'| 'rectangle' | 'round' | 'oval' | null = null;
   newTableSeats: number | null = null; 
 
-  constructor(private tableService: TableService){}
+  constructor(private tableService: TableService, private auth: AuthApiService){}
 
   ngOnInit(): void {
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
       console.log(data);
+    })
+
+    this.auth.getUser().subscribe(data => {
+      this.user = data.user;
+      this.restaurantId = data.user.employeeInformation.restaurantId;
     })
 
   }
@@ -46,11 +55,9 @@ export class EditorPageComponent implements OnInit{
     type: 'square' | 'rectangle' | 'round' | 'oval' | null, 
     seats: number | null
     ) {
-    //const id = Date.now().toString();
-    //id,
     if (name && type && seats) {
       const status = 'open';
-      const restaurantId= 1; //needs to be changed later
+      const restaurantId= this.restaurantId;
       const data = {
         name,
         restaurantId,
@@ -66,19 +73,41 @@ export class EditorPageComponent implements OnInit{
       
       this.tableService.addTable(data as ITable).subscribe(table => {
         this.tables.push(table);
+        //sort tables in ascending order
+        this.tables = this.tables.sort((tableA, tableB) => {
+          const numA = parseInt(tableA.name.split(' ')[1]);
+          const numB = parseInt(tableB.name.split(' ')[1]);
+          return numA - numB;
+        });
       })
+    
     }
     
     //this.setSelectedTable(data);
   }
 
-  getNextTableName () {
-    const latestTable = this.tables[this.tables.length];
+  // getNextTableName () {
+  //   const latestTable = this.tables[this.tables.length];
 
-    if (latestTable && latestTable.name.includes('Table')) {
-      return `Table ${Number(latestTable.name.split(' ')[1]) + 1}`
+  //   if (latestTable && latestTable.name.includes('Table')) {
+  //     return `Table ${Number(latestTable.name.split(' ')[1]) + 1}`
+  //   }
+  //   return `Table ${this.tables.length + 1}`;
+  // }
+
+  getNextTableName() {
+    const tableNumbers = this.tables.map(tableName => parseInt(tableName.name.split(' ')[1]));
+    tableNumbers.sort((a, b) => a - b);
+    for (let i = 0; i < tableNumbers.length - 1; i++) {
+      if (tableNumbers[i + 1] - tableNumbers[i] > 1) {
+        const missingTableNumber = tableNumbers[i] + 1;
+        return `Table ${missingTableNumber}`;
+      }
     }
-    return `Table ${this.tables.length + 1}`;
+
+    const nextTableNumber = tableNumbers[tableNumbers.length - 1] + 1;
+    return `Table ${nextTableNumber}`;
+  
   }
 
   setSelectedTable (table: ITable| null) {

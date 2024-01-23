@@ -13,6 +13,46 @@ const getLatestOngoingOrderForTable = async (id: string) => {
     return tablelog;
 };
 
+const getOngoingTableLogsByRestaurantId = async (id: number) => {
+  try {
+    const tablelogs = await TableLog.aggregate([
+      {
+        $match: {
+          status: 'ongoing'
+        }
+      },
+      {
+        $lookup: {
+          from: 'tables',
+          localField: 'tableId',
+          foreignField: '_id',
+          as: 'tableInfo'
+        }
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: 'orderId',
+          foreignField: '_id',
+          as: 'orderInfo'
+        }
+      },
+      {
+        $match: {
+          'tableInfo.restaurantId': id
+        }
+      }
+    ]);
+  
+    return tablelogs;
+    
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+
+}
+
 const getTableLogsByTableId =  async (id: string | Types.ObjectId) => {
   const tablelog = await TableLog.findOne({ tableId: id }).
   sort({createdAt: -1})
@@ -58,5 +98,6 @@ export {
     updateTableLogById,
     deleteTableLogById,
     getTableLogsByTableId,
-    getTableLogForOrderId
+    getTableLogForOrderId,
+    getOngoingTableLogsByRestaurantId
 }

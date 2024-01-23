@@ -1,4 +1,7 @@
 export interface CategoriesInterface {
-    id: string;
-    name: string;
+    _id: string;
+    restaurantId: number;
+    categoryName: string;
+    // categoryDescription: string;
+    // categoryImage: string;
 }

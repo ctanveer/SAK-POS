@@ -32,6 +32,9 @@ export class TablesPageComponent implements OnInit{
   reservationList: IReservation[] | null = null;
   currentTable: ITable | null = null;
 
+  notificationVisible:boolean = false;
+  ongoingTableLogs: any | null = null;
+
   constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private router: Router){};
 
   private intervalId: any;
@@ -48,9 +51,37 @@ export class TablesPageComponent implements OnInit{
       this.reservationChecker();
     });
 
+    this.getAllOngoingTablelogs();
+
     interval(60000).subscribe(() => {
       this.reservationChecker();
+      this.getAllOngoingTablelogs();
     })
+  }
+
+  getAllOngoingTablelogs() {
+    console.log('In ongoing table logs function')
+    this.tablelogService.getOngoingTableLogs().subscribe(data => {
+      this.ongoingTableLogs = data;
+      console.log('Ongoing table logs are: ', this.ongoingTableLogs.data);
+    })
+  }
+
+  getOrderStatusColor(status: string) {
+    switch (status) {
+      case 'pending':
+          return '#3b5999';
+      case 'preparing':
+          return '#f50';
+      case 'ready':
+          return '#87d068';
+      case 'served':
+          return '#108ee9';
+      case 'complete':
+          return 'black';      
+      default:
+          return 'black';
+    } 
   }
 
   reservationChecker() {
@@ -59,7 +90,7 @@ export class TablesPageComponent implements OnInit{
     if (this.reservationList) {
       for (let i = 0; i < this.reservationList.length; i++) {
         let reservation = this.reservationList[i];
-        console.log('Current reservation object is: ', reservation);
+        // console.log('Current reservation object is: ', reservation);
         let tableIndex = this.tables.findIndex(table => {
           return table._id === reservation.tableId;
         });
@@ -102,46 +133,14 @@ export class TablesPageComponent implements OnInit{
 
   proceedToOrder() {
     if (this.selectedTable) {
-      // this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
-      //   this.currentTableLog = data;
-      //   console.log('Current Table log is: ', this.currentTableLog);
-      //   if (this.currentTableLog[0].orderId) {
-      //     console.log('Order Id ALREADY EXISTS. Order Id is: ', this.currentTableLog[0].orderId._id);
-      //     this.router.navigate(['order'], { 
-      //       state: { 
-      //         orderId: this.currentTableLog[0].orderId ? this.currentTableLog[0].orderId._id : '1', 
-      //         tableId: this.selectedTable ? this.selectedTable._id! : '1',
-      //         order: this.currentTableLog[0].orderId,
-      //         status: 'update'
-      //       }
-      //     });      
-      //   }
-      //   else{
-      //     this.orderService.createNewOrder({waiterId: this.userId}).subscribe(order => {
-      //       this.createdOrder = order;
-      //       console.log('NEWLY Created Order is: ', this.createdOrder);
-      //       if (this.createdOrder) this.currentTableLog[0].orderId = this.createdOrder._id;
-      //       console.log('UPDATING Table Log, Table Log is: ', this.currentTableLog[0]);
-      //       this.tablelogService.updateTableLogById(this.currentTableLog[0]).subscribe(data => {
-      //         this.currentTableLog = data;
-      //         this.router.navigate(['order'], { 
-      //           state: { 
-      //             orderId: this.createdOrder ? this.createdOrder._id! : '1', 
-      //             tableId: this.selectedTable ? this.selectedTable._id! : '1',
-      //             status: 'new'
-      //           }
-      //         });
-      //       })  
-      //     });
-      //   }
-      // })
-
       this.orderService.generateOrderForTable(this.selectedTable._id!).subscribe(order => {
         console.log('Order:', order);
         this.router.navigate(['order'], { 
           state: { 
             orderId: order._id, 
             tableId: this.selectedTable ? this.selectedTable._id! : '1',
+            tableName: this.selectedTable?.name,
+            orderStatus: order.status,
             order,
             status: order.orderPosted ? 'update' : 'new'
           }
@@ -150,6 +149,20 @@ export class TablesPageComponent implements OnInit{
       })
     }
     // Add order generation here.
+  }
+
+  moveToOrderPage(data: any) {
+    console.log('Data is: ', data);
+    this.router.navigate(['order'], { 
+      state: { 
+        orderId: data.orderId, 
+        tableId: data.tableId,
+        tableName: data.tableInfo[0].name,
+        orderStatus: data.orderInfo[0].status,
+        order: data.orderInfo[0],
+        status: data.orderInfo[0].orderPosted ? 'update' : 'new'
+      }
+    });
   }
 
   getTableImage (table: ITable) {
@@ -275,6 +288,14 @@ export class TablesPageComponent implements OnInit{
   close() {
     this.visible = false;
     this.selectedTable = null;
+  }
+
+  openPanel() {
+    this.notificationVisible = true;
+  }
+
+  closePanel() {
+    this.notificationVisible = false;
   }
 
 

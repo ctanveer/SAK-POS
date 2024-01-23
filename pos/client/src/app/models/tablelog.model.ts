@@ -6,6 +6,7 @@ export interface ITableLog {
     orderId?: string;
     waiterId?: number;
     customerId?: number;
+    status: string; //'ongoing', 'closed', 'void'
     createdAt: number;
     updatedAt: number;
 }
