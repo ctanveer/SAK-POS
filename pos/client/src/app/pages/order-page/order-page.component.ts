@@ -335,6 +335,10 @@ export class OrderPageComponent implements OnInit {
     })
   }
 
+  goBackToTablePage() {
+    this.location.back();
+  }
+
 }
 
 

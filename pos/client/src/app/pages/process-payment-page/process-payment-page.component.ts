@@ -106,4 +106,8 @@ export class ProcessPaymentPageComponent implements OnInit {
     })
     this.router.navigate(['table']);
   }
+
+  goBackToPaymentPage() {
+    this.location.back();
+  }
 }

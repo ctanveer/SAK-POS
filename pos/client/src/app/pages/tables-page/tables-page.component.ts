@@ -197,20 +197,6 @@ export class TablesPageComponent implements OnInit{
     this.open();
   }
 
-  tableStatusHelper(currentStatus: string, newStatus: string) {
-    if (this.selectedTable) {
-      this.selectedTable.status = this.selectedStatus;
-      this.tableService.updateTable(this.selectedTable).subscribe(data => {
-        let index = this.tables.findIndex(table => table._id === data._id);
-        if (index !== -1) {
-          this.tables[index] = data;
-          this.currentTable = data;
-        }
-        console.log('Current table is: ', this.currentTable);
-      });
-    }    
-  }
-
   /*
   changeTableStatus() {
     console.log('Selected table is: ', this.selectedTable);
@@ -243,6 +229,20 @@ export class TablesPageComponent implements OnInit{
     }
   }
   */
+
+  tableStatusHelper(currentStatus: string, newStatus: string) {
+    if (this.selectedTable) {
+      this.selectedTable.status = this.selectedStatus;
+      this.tableService.updateTable(this.selectedTable).subscribe(data => {
+        let index = this.tables.findIndex(table => table._id === data._id);
+        if (index !== -1) {
+          this.tables[index] = data;
+          this.currentTable = data;
+        }
+        console.log('Current table is: ', this.currentTable);
+      });
+    }    
+  }
 
   changeTableStatus() {
     console.log('Selected table is: ', this.selectedTable);

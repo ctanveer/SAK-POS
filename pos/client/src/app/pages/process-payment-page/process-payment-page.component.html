@@ -1,5 +1,12 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="my-2 mx-2">Process Payment for Order ID # {{billArr[0].orderId}}</h2>
+<h2 class="my-2 mx-3">
+    <span>
+        <button nz-button nzType="default" (click)="goBackToPaymentPage()">
+          <span nz-icon nzType="left" nzTheme="outline"></span>
+        </button>
+    </span> 
+    Process Payment // Order ID # {{billArr[0].orderId}}
+</h2>
 
 <div class="page-container border border-2 border-green rounded-md">
     <div class="flex justify-center mt-16">

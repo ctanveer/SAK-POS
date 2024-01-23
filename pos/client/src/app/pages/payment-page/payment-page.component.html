@@ -1,5 +1,12 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="px-3 pt-2">Payment Management</h2>
+<h2 class="mx-3 mt-2">
+  <span>
+    <button nz-button nzType="default" (click)="goBackToOrderPage()">
+      <span nz-icon nzType="left" nzTheme="outline"></span>
+    </button>
+  </span>
+  Payment Management
+</h2>
 
 <div class="page-container">
   <h3 class="ml-1">OrderID #{{orderId}}</h3>

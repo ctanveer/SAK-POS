@@ -152,4 +152,8 @@ export class PaymentPageComponent implements OnInit {
       }
     })
   }
+
+  goBackToOrderPage() {
+    this.location.back();
+  }
 }

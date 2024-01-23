@@ -1,7 +1,14 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="px-2 pt-2">Order Management</h2>
+<h2 class="mx-3 pt-2">
+  <span>
+    <button nz-button nzType="default" (click)="goBackToTablePage()">
+      <span nz-icon nzType="left" nzTheme="outline"></span>
+    </button>
+  </span>
+  Order Management
+</h2>
 <div class="flex justify-between">
-  <h3 class="px-4">@if (orderId) {
+  <h3 class="mx-3">@if (orderId) {
     Order ID #{{orderId}}
     <span class="ml-2">
       <nz-tag [nzColor]="getOrderStatusColor()">
@@ -17,7 +24,7 @@
 </div>
 
 <div class="order-page-container px-2">
-    <div class="full-menu-container">      
+    <div class="full-menu-container">
       <nz-tabset 
         nzCentered
         [nzTabBarGutter]="60"
