@@ -16,7 +16,7 @@ export class OrderService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(  private http: HttpClient) { }
+  constructor( private http: HttpClient) { }
 
   private orderUrl = environment.API_URL + "/order";
 

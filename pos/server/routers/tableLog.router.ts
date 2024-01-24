@@ -10,8 +10,8 @@ import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
-router.get('/', getAllTableLogsController);
 router.get('/ongoing',authMiddleware, getOngoingTableLogsByRestaurantIdController);
+router.get('/', getAllTableLogsController);
 router.get('/:id', getTableLogsByTableIdController);
 // router.post('/:id', createTableLogController);
 router.post('/', createTableLogController);

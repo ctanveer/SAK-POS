@@ -8,8 +8,9 @@ export const getMenuItems = async (req: AuthRequest, res: Response) => {
         const user = req.user;
         const token = req.token;
         if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
-        
-        const menu = await getMenuFromMenuBuilder(token);
+        const restaurantId = user.employeeInformation.restaurantId;
+
+        const menu = await getMenuFromMenuBuilder(token, restaurantId);
         // const menu = await getMenuFromMenuBuilder();
         res.send(menu);
     } catch (error: any) {
@@ -24,8 +25,9 @@ export const getCategories = async (req: AuthRequest, res: Response) => {
         const user = req.user;
         const token = req.token;
         if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
-        
-        const categories = await getCategoriesFromMenuBuilder(token);
+        const restaurantId = user.employeeInformation.restaurantId;
+
+        const categories = await getCategoriesFromMenuBuilder(token, restaurantId);
         res.send(categories);
     } catch (error: any) {
         res.status(500);

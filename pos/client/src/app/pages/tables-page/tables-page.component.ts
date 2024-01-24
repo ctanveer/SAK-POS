@@ -11,6 +11,9 @@ import { IUser } from '../../models/user.model';
 import { ReservationService } from '../../services/reservation.service';
 import { IReservation } from '../../models/reservation.model';
 import { interval } from 'rxjs';
+import { HrService } from '../../services/hr.service';
+import { ITLogPopulated } from '../../models/tlog.populated.model';
+import { IItem } from '../../models/item-interfaces/item.model';
 
 @Component({
   selector: 'app-tables-page',
@@ -35,7 +38,7 @@ export class TablesPageComponent implements OnInit{
   notificationVisible:boolean = false;
   ongoingTableLogs: any | null = null;
 
-  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private router: Router){};
+  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private hrService: HrService, private router: Router){};
 
   private intervalId: any;
 
@@ -260,17 +263,50 @@ export class TablesPageComponent implements OnInit{
       else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'closed' || this.selectedStatus === 'open')) {
         this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
       }
+      // occupied --> open
       else if (this.selectedTable.status === 'occupied' && this.selectedStatus === 'open') {
         this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
         console.log('Closing this table: ', this.currentTable)
         if (this.selectedTable) {
           this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
-            console.log('Table Log:', data);
+            //console.log('Table Log:', data);
             this.currentTableLog = data;
             this.currentTableLog.status = 'closed';
             this.currentTableLog.timeElapsed = Date.now() - this.currentTableLog.createdAt;
             this.tablelogService.updateTableLogById(this.currentTableLog).subscribe(data => {
               console.log('Updated Table log is: ', data);
+              
+              this.hrService.getTableLogByOrderId(data as ITableLog).subscribe(data => {
+                console.log('Populated Table Log is: ', data);
+                const items = data.orderId?.items;
+                let readyToServeTime = 1;
+                let waiterData = undefined;
+                
+                if (data.orderId?.servedTimestamp && data.orderId.readyTimestamp) {
+                  readyToServeTime = (new Date(data.orderId?.servedTimestamp).getTime() - new Date(data.orderId?.readyTimestamp).getTime()) / 60000
+                }
+                
+                if (items) {
+                  waiterData = {
+                    date: data.createdAt,
+                    orderId: data.orderId?._id,
+                    preparationTime: this.calculatePreparationTime(items),
+                    orderReadyToServeTime: readyToServeTime,
+                    bill: data.orderId?.bill,
+                    occupiedToCompleteTime: data.timeElapsed/60000,
+                    waiterId: data.waiterId,
+                    restaurantId: data.tableId.restaurantId
+                  }
+                }
+
+                console.log('Prepared Waiter Data in FE is: ', waiterData);
+
+                this.hrService.postOrderDataToHR(waiterData).subscribe(data => {
+                  console.log('Waiter Data for HR is: ', data);
+                });
+
+
+              })
             })
           })
         }
@@ -279,6 +315,20 @@ export class TablesPageComponent implements OnInit{
         this.selectedTable.status = this.selectedStatus;
       }
     }
+  }
+
+  calculatePreparationTime(items: IItem[]) {
+    const time = items.reduce((acc, item) => {
+      let totalTime
+      const quantity = item.item.itemQuantity;
+      if (quantity) {
+        totalTime = quantity * item.item.itemPreparationTime; 
+        return acc + totalTime;
+      }
+      return acc;
+    }, 0)
+
+    return time;
   }
 
   open() {

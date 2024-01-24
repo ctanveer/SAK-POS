@@ -54,9 +54,22 @@ const getOngoingTableLogsByRestaurantId = async (id: number) => {
 }
 
 const getTableLogsByTableId =  async (id: string | Types.ObjectId) => {
-  const tablelog = await TableLog.findOne({ tableId: id }).
-  sort({createdAt: -1})
+  const tablelog = await TableLog.findOne({ tableId: id })
+    .sort({createdAt: -1})
+    .populate('tableId')
+    .populate('orderId');
+  
   return tablelog;
+}
+
+//pending for HR
+const getPopulatedTableLogByOrderId = async (id: string | Types.ObjectId) => {
+  const tablelog = await TableLog.findOne({orderId: id})
+  .populate('tableId')
+  .populate('orderId')
+  .exec();
+
+  return tablelog as ITableLog;
 }
 
 const createTableLog = async (tablelogObject: Partial<ITableLog>) => {
@@ -99,5 +112,6 @@ export {
     deleteTableLogById,
     getTableLogsByTableId,
     getTableLogForOrderId,
-    getOngoingTableLogsByRestaurantId
+    getOngoingTableLogsByRestaurantId,
+    getPopulatedTableLogByOrderId
 }

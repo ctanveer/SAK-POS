@@ -25,8 +25,8 @@ export const getAllTableLogsController = async (req: Request, res: Response) => 
 export const getTableLogsByTableIdController = async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
-      const table = await getTableLogsByTableId(id);
-      res.json(table);
+      const tablelog = await getTableLogsByTableId(id);
+      res.json(tablelog);
     } catch (error: any) {
       res.status(500);
       res.json({ error: error.message });

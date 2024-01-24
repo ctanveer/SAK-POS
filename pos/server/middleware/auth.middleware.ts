@@ -8,6 +8,7 @@ export async function authMiddleware (req: AuthRequest, res: Response, next: Nex
     if (!authHeaders) return res.status(401).send({ message: "Unauthorized" });
 
     const check = await getUserFromToken(authHeaders);
+    console.log('User object is: ', check);
     if (check) {
       req.user = check.user;
       req.token = authHeaders;

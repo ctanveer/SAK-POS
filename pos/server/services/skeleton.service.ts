@@ -12,14 +12,25 @@ export async function getTokenFromCode (code: string) {
   }
 }
 
+// export async function getUserFromToken (token: string) {
+//   try {
+//     const res = await axios.get<{ user: IUser }>(config.SKELETON_URL + '/service-auth/user-from-token', { headers: { 'Authorization': token }});
+//     return res.data;
+//   } catch (error) {
+//     throw new Error("Error getting user from token.")
+//   }
+// } 
+
 export async function getUserFromToken (token: string) {
   try {
     const res = await axios.get<{ user: IUser }>(config.SKELETON_URL + '/service-auth/user-from-token', { headers: { 'Authorization': token }});
+    console.log('In getUserFromToken: ')
     return res.data;
   } catch (error) {
+    console.log(error);
     throw new Error("Error getting user from token.")
   }
-} 
+}
 
 export async function postOrderToKDS (order: IOrder, token: string) {
   try {
@@ -43,9 +54,9 @@ export async function postStatusUpdateToKDS (order: IOrder, token: string) {
 
 // const menuUrl = 'https://bento-menu-omi5.koyeb.app/menuItem/restaurant/1'
 
-export async function getMenuFromMenuBuilder(token: string) {
+export async function getMenuFromMenuBuilder(token: string, restaurantId: number) {
   try {
-    const res = await axios.get<any>(config.SKELETON_URL + '/menu/one-restaurant-menu', { headers: { 'Authorization': token }});
+    const res = await axios.get<any>(config.SKELETON_URL + `/menu/one-restaurant-menu/${restaurantId}`, { headers: { 'Authorization': token }});
     return res.data;
   } catch (error) {
     console.log(error);
@@ -53,9 +64,9 @@ export async function getMenuFromMenuBuilder(token: string) {
   }
 }
 
-export async function getCategoriesFromMenuBuilder(token: string) {
+export async function getCategoriesFromMenuBuilder(token: string, restaurantId: number) {
   try {
-    const res = await axios.get<any>(config.SKELETON_URL + '/menu/all-menu-categories', { headers: { 'Authorization': token }});
+    const res = await axios.get<any>(config.SKELETON_URL + `/menu/all-menu-categories/${restaurantId}`, { headers: { 'Authorization': token }});
     return res.data;
   } catch (error) {
     console.log(error);
