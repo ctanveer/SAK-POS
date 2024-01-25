@@ -114,23 +114,6 @@ export class OrderPageComponent implements OnInit {
     }
   }
 
-  getOrderStatusColor() {
-    switch (this.orderStatus) {
-      case 'pending':
-          return '#3b5999';
-      case 'preparing':
-          return '#f50';
-      case 'ready':
-          return '#87d068';
-      case 'served':
-          return '#108ee9';
-      case 'complete':
-          return 'black';      
-      default:
-          return 'black';
-    } 
-  }
-
   filterCategoriesForTimeTab() {
     this.filteredCategories = [];
     let tempArr:ICategories[] = [];
@@ -158,6 +141,23 @@ export class OrderPageComponent implements OnInit {
   handleCategoryTabChange(index: number) {
     this.selectedCategory = this.categories[index];
     this.setFilteredMenu();
+  }
+
+  getOrderStatusColor() {
+    switch (this.orderStatus) {
+      case 'pending':
+          return '#3b5999';
+      case 'preparing':
+          return '#f50';
+      case 'ready':
+          return '#87d068';
+      case 'served':
+          return '#108ee9';
+      case 'complete':
+          return 'black';      
+      default:
+          return 'black';
+    } 
   }
 
   addToCart(item: IItem) {
@@ -249,24 +249,6 @@ export class OrderPageComponent implements OnInit {
       this.toast.setMessage('Order sent.', 'success');
       this.router.navigateByUrl('/tables');
     })
-
-
-    // let newOrder:IOrderListInterface = {
-    //   orderId: this.orderId,
-    //   categories: this.categories,
-    //   orderTime: Date.now(),
-    //   orderType: 'in-house',
-    //   vipCustomer: false,
-    //   tableId: this.tableId,
-    //   items: this.orderCart
-    // }
-    //work pending here
-    // console.log('NEW ORDER IS: ', newOrder);
-    // this.orderService.createOrder(newOrder).subscribe(order => {
-    //   console.log('Posted Order is:', order);
-    //   this.toast.setMessage('Order sent.', 'success');
-    //   this.router.navigateByUrl('/tables');
-    // });
   }
 
   calculateTotal() {
@@ -340,12 +322,3 @@ export class OrderPageComponent implements OnInit {
   }
 
 }
-
-
-  //   this.router.navigateByUrl('/payment', {
-  //     state: {
-  //       orderId: this.orderId,
-  //       bill: this.totalBill,
-  //       orderCart: this.orderCart
-  //     }
-  // });

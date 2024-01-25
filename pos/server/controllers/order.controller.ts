@@ -124,7 +124,7 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
       const updatedOrder = await updateOrderById(orderId, newData);
       
       if (updatedOrder) {
-        fs.writeFileSync('data-1.json', JSON.stringify(updatedOrder))
+        // fs.writeFileSync('data-1.json', JSON.stringify(updatedOrder))
         await postOrderToKDS(updatedOrder, token);
       }
         

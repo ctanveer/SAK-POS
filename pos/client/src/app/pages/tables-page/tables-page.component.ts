@@ -63,7 +63,6 @@ export class TablesPageComponent implements OnInit{
   }
 
   getAllOngoingTablelogs() {
-    console.log('In ongoing table logs function')
     this.tablelogService.getOngoingTableLogs().subscribe(data => {
       this.ongoingTableLogs = data;
       console.log('Ongoing table logs are: ', this.ongoingTableLogs.data);
@@ -269,7 +268,6 @@ export class TablesPageComponent implements OnInit{
         console.log('Closing this table: ', this.currentTable)
         if (this.selectedTable) {
           this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
-            //console.log('Table Log:', data);
             this.currentTableLog = data;
             this.currentTableLog.status = 'closed';
             this.currentTableLog.timeElapsed = Date.now() - this.currentTableLog.createdAt;
@@ -291,21 +289,18 @@ export class TablesPageComponent implements OnInit{
                     date: data.createdAt,
                     orderId: data.orderId?._id,
                     preparationTime: this.calculatePreparationTime(items),
-                    orderReadyToServeTime: readyToServeTime,
+                    orderReadyToServeTime: readyToServeTime.toFixed(2),
                     bill: data.orderId?.bill,
-                    occupiedToCompleteTime: data.timeElapsed/60000,
+                    occupiedToCompleteTime: (data.timeElapsed/60000).toFixed(2),
                     waiterId: data.waiterId,
                     restaurantId: data.tableId.restaurantId
                   }
                 }
-
                 console.log('Prepared Waiter Data in FE is: ', waiterData);
 
                 this.hrService.postOrderDataToHR(waiterData).subscribe(data => {
                   console.log('Waiter Data for HR is: ', data);
                 });
-
-
               })
             })
           })

@@ -29,97 +29,6 @@ const recipeItemSchema = new Schema({
   ingredients: [ingredientSchema]
 })
 
-/*
-const itemSchema = new Schema<ItemInterface>({
-    _id: {type: String, required: true},
-    restaurantId: { type: Number, required: true },
-    categoryId: { type: String, required: true },
-    mealTimeId: {type: Number, required: true},
-    item: {
-      _id: {type: String, required: true},
-      itemId: { type: Number, required: true },
-      itemName: { type: String, required: true },
-      itemImage: { type: String, required: true },
-      itemDescription: { type: String, required: true },
-      itemQuantity: { type: Number, required: true },
-      itemPreparationTime: { type: Number, required: true },
-      itemPackingType: { type: String, required: true },
-      itemPackingDimension: [String],
-      //ItemServingTemperature: { type: String, required: true }, 
-      itemLastingTime: { type: Number, required: true }, //needed for marketplace
-      itemPortionSize: { type: String, required: true }, 
-      ingredients: [ingredientSchema],
-      options: {
-        type: {
-          add: [
-            {
-              id: { type: Number, required: true },
-              ingredientName: { type: String, required: true },
-              unitOfStock: { type: String, required: true },
-              quantity: { type: Number, required: true },
-              costPerUnit: { type: Number, required: true },
-              caloriesPerUnit: {type: Number, required: true},
-              price: { type: String, required: true },
-              _id: {type: String, required: true} 
-            },
-          ],
-          no: [
-            {
-              id: { type: Number, required: true },
-              ingredientName: { type: String, required: true },
-              unitOfStock: { type: String, required: true },
-              quantity: { type: Number, required: true },
-              costPerUnit: { type: Number, required: true },
-              caloriesPerUnit: {type: Number, required: true},
-              price: { type: String, required: true },
-              _id: {type: String, required: true} 
-            },
-          ],
-        },
-        required: true
-      },
-      chosenOptions: {
-        type: {
-          add: [
-            {
-              id: { type: Number, required: true },
-              ingredientName: { type: String, required: true },
-              unitOfStock: { type: String, required: true },
-              quantity: { type: Number, required: true },
-              costPerUnit: { type: Number, required: true },
-              caloriesPerUnit: {type: Number, required: true},
-              price: { type: String, required: true },
-              _id: {type: String, required: true}
-            },
-          ],
-          no: [
-            {
-              id: { type: Number, required: true },
-              ingredientName: { type: String, required: true },
-              unitOfStock: { type: String, required: true },
-              quantity: { type: Number, required: true },
-              costPerUnit: { type: Number, required: true },
-              caloriesPerUnit: {type: Number, required: true},
-              price: { type: String, required: true },
-              _id: {type: String, required: true}
-            },
-          ],
-        },
-      },
-      optionalNotes: { type: String }, 
-      discount: { type: Number, required: true },
-      isDisabled: { type: Boolean, required: true },
-      itemPrice: { type: Number, required: true },
-      itemCalories: { type: Number, required: true },
-      timeOfDay: { type: [String], required: true },
-      itemProfileTastyTags: { type: [String], required: true },
-      typeOfFoods: { type: [String], required: true },
-      servingTemperature: { type: Number, required: true },
-      itemDietaryRestrictions: { type: [String], required: true },
-    },
-});
-*/
-
 const packingSchema = new  Schema<IPacking>({
   id: {type: Number, required: true},
   boxName: {type: String, required: true},
@@ -182,10 +91,8 @@ const OrderSchema = new Schema<IOrder>({
       itemPreparationTime: { type: Number, required: true },
       itemPackingType: { type: [packingSchema], required: true },
       itemPackingDimension: [String],
-      //ItemServingTemperature: { type: String, required: true }, 
       itemLastingTime: { type: Number, required: true }, //needed for marketplace
       itemPortionSize: { type: String, required: true }, 
-      // ingredients: [ingredientSchema],
       ingredients: {
           rawIngredients: [ingredientSchema],
           recipes:[recipeItemSchema]

@@ -1,20 +1,25 @@
 import mongoose from 'mongoose';
 import {Request, Response} from 'express';
 import { getPopulatedTableLogByOrderId } from '../models/tableLog/tableLog.query';
+import { postWaiterdataToHR } from '../services/skeleton.service';
+import { AuthRequest } from '../interfaces/authRequest.interface';
 
 
-export const postWaiterDataToHRController = async (req: Request, res: Response) => {
+export const postWaiterDataToHRController = async (req:AuthRequest, res: Response) => {
     try {
         console.log('At BE - HR Controller');
-        const {waiterData} = req.body
+        const user = req.user;
+        const token = req.token;
+        if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
+
+        const waiterData = req.body;
 
         //const tablelog = await getPopulatedTableLogByOrderId(id);
         //if (!tablelog) return res.status(404).json({ error: "Table Log not found." });
         
-        
         console.log('Waiter Data is: ', waiterData);
-        res.send(waiterData);
-
+        const receivedData = await postWaiterdataToHR(waiterData, token);
+        res.send(receivedData);
     } catch (error: any) {
         console.log(error);
         res.status(500);
