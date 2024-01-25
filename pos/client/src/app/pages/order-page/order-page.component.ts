@@ -14,6 +14,7 @@ import { ToastMessageService } from '../../services/toast-message/toast-message.
 import { PaymentlogService } from '../../services/paymentlog.service';
 import { IPaymentLog } from '../../models/paymentlog.model';
 import { IOrder } from '../../models/order.model';
+import { SocketService } from '../../services/socket/socket.service';
 
 @Component({
   selector: 'app-order-page',
@@ -22,7 +23,16 @@ import { IOrder } from '../../models/order.model';
 })
 export class OrderPageComponent implements OnInit {
   
-  constructor ( private auth: AuthApiService, private menuService: MenuService, private router: Router, private location: Location, private orderService: OrderService, private toast: ToastMessageService, private paymentLogService: PaymentlogService) {}
+  constructor (
+    private auth: AuthApiService, 
+    private menuService: MenuService, 
+    private router: Router, 
+    private location: Location, 
+    private orderService: OrderService, 
+    private toast: ToastMessageService, 
+    private paymentLogService: PaymentlogService,
+    private socket: SocketService
+  ) {}
   
   user : IUser | undefined;
   // menuList : IMenu | undefined;
@@ -79,6 +89,10 @@ export class OrderPageComponent implements OnInit {
       this.getTimeOfDays();
       console.log('Restaurant Menu is: ', this.menuList);
     });
+
+    this.socket.getOrderStatusChange().subscribe(data => {
+      if (data.order._id === this.orderId) this.orderStatus = data.order.status
+    })
   }
 
 

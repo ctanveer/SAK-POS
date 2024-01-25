@@ -28,10 +28,9 @@ export class PageContainerComponent implements OnInit {
       this.socket.joinRestaurantRoom(this.user.employeeInformation.restaurantId);
     });
 
-    this.socket.getReadyOrderNotification().subscribe(data => {
-      console.log('Ready', data);
-      this.toast.setMessage(`Order for ${data.table.name} is ready.`, 'info');
-    })
+    this.socket.getOrderStatusChange().subscribe(data => {
+      this.toast.setMessage(`Order for ${data.table.name} is ${data.order.status}.`, 'info');
+    });
   }
 
 
