@@ -14,6 +14,7 @@ import { interval } from 'rxjs';
 import { HrService } from '../../services/hr.service';
 import { ITLogPopulated } from '../../models/tlog.populated.model';
 import { IItem } from '../../models/item-interfaces/item.model';
+import { SocketService } from '../../services/socket/socket.service';
 
 @Component({
   selector: 'app-tables-page',
@@ -38,7 +39,16 @@ export class TablesPageComponent implements OnInit{
   notificationVisible:boolean = false;
   ongoingTableLogs: any | null = null;
 
-  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private hrService: HrService, private router: Router){};
+  constructor(
+    private auth: AuthApiService, 
+    private tableService: TableService, 
+    private tablelogService : TablelogService, 
+    private orderService: OrderService, 
+    private reservationService: ReservationService, 
+    private hrService: HrService, 
+    private router: Router,
+    private socket: SocketService
+  ){};
 
   private intervalId: any;
 
@@ -59,6 +69,11 @@ export class TablesPageComponent implements OnInit{
     interval(60000).subscribe(() => {
       this.reservationChecker();
       this.getAllOngoingTablelogs();
+    })
+
+    this.socket.getOrderStatusChange().subscribe(data => {
+      const index = this.ongoingTableLogs.data.findIndex((item: any) => item.orderInfo._id === data.order._id);
+      if (index > -1) this.ongoingTableLogs.data[index].status = data.order.status;
     })
   }
 
