@@ -75,13 +75,13 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       const newData = getDataFromStatus(status);
       const updatedOrder = await updateOrderById(orderId, newData);
 
-      if ( updatedOrder && status === 'ready') {
+      if (updatedOrder) {
         const tableLog = await getTableLogForOrderId(updatedOrder._id);
         if (tableLog) {
           const table = await getTableById(tableLog.tableId);
           if (table) {
             const io = res.locals.io;
-            io.to(updatedOrder.restaurantId.toString()).emit('ready-order', { order: updatedOrder, table });
+            io.to(updatedOrder.restaurantId.toString()).emit('order-status-change', { order: updatedOrder, table });
           }
         }
       }

@@ -19,7 +19,7 @@ export class SocketService {
     return true;
   }
 
-  getReadyOrderNotification() {
-    return this.socket.fromEvent<{order: IOrder, table: ITable}>('ready-order');
+  getOrderStatusChange() {
+    return this.socket.fromEvent<{order: IOrder, table: ITable}>('order-status-change');
   }
 }
