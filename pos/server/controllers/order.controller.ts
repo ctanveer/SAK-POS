@@ -55,7 +55,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
 
     const { orderId } = req.params;
     const { status } = req.body;
-    // console.log('Status is: ', {status});
+    console.log('Status is: ', {status});
 
     if (
       !orderId ||
