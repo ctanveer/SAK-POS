@@ -12,6 +12,7 @@ import menuRouter from './routers/menu.router';
 import { config } from './config';
 import paymentLogRouter from './routers/paymentLog.router';
 import hrRouter from './routers/hr.router';
+import reservationRouter from './routers/reservation.router';
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/table-log', tableLogRouter);
 app.use('/menu', menuRouter);
 app.use('/payment-log', paymentLogRouter);
 app.use('/hr', hrRouter);
+app.use('/reservation', reservationRouter);
 
 (async function bootstrap() {
   try {

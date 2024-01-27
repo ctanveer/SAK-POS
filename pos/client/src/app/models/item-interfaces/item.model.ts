@@ -13,6 +13,7 @@ export interface IItem {
     _id: string;
   restaurantId: number;
   categoryId: string;
+  categoryName: string;
   mealTimeId: number;
   item: {
     _id: string; //

@@ -7,5 +7,22 @@ export interface IReservation {
     };
     customerId: number;
     tableId: string;
-    status: string; // reserved, arrived, 
+    status: string; // reserved, arrived, no-show, cancelled
+}
+
+
+//interface being used by reservation silo
+export interface ReservationInterface {
+    restaurantId: string;
+    tableId: string;
+    userId: string;
+    date: Date;
+    startTime: Date;
+    endTime: Date;
+    numberOfPeople: number;
+    createdAt: Date;
+    status: string;
+    userName: string;
+    userEmail: string;
+    phoneNumber: string;
 }

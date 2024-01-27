@@ -2,6 +2,7 @@ import axios from "axios";
 import { config } from "../config";
 import { IUser } from "../interfaces/user.interface";
 import { IOrder } from "../interfaces/order.interface";
+import { ReservationInterface } from "../interfaces/reservation.interface";
 
 export async function getTokenFromCode (code: string) {
   try {
@@ -72,5 +73,37 @@ export async function postWaiterdataToHR (waiterData: any, token: string) {
   } catch (error) {
     console.log(error);
     throw new Error("Error posting waiter data to HR.")
+  }
+}
+
+
+//not tested -- needed for reservations
+export async function getAllReservationsForToday(token: string, restaurantId: number, date: string) {
+  try {
+    const res = await axios.get<any>(config.SKELETON_URL + `/reservation/today/${restaurantId}/${date}`, { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting reservation data for today")
+  }
+}
+
+export async function getAllReservations(token: string, restaurantId: number) {
+  try {
+    const res = await axios.get<any>(config.SKELETON_URL + `/reservation/${restaurantId}`, { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting all reservations data")
+  }
+}
+
+export async function postStatusUpdateToReservations (token: string, restaurantId: number, reservation: ReservationInterface) {
+  try {
+    const res = await axios.post<any>(config.SKELETON_URL + `/reservation/status-update/${restaurantId}/${reservation._id}`, reservation, { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating status update to Reservations.")
   }
 }

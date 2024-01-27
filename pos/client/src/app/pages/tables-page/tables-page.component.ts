@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { ReservationService } from '../../services/reservation.service';
-import { IReservation } from '../../models/reservation.model';
+import { IReservation, ReservationInterface } from '../../models/reservation.model';
 import { interval } from 'rxjs';
 import { HrService } from '../../services/hr.service';
 import { ITLogPopulated } from '../../models/tlog.populated.model';
@@ -24,6 +24,7 @@ export class TablesPageComponent implements OnInit{
   
   user: IUser | undefined;
   userId: number | undefined;
+  restaurantId: number | null = null;
   tables: ITable[] = [];
   selectedTable:ITable | null = null;
   statusTypes = ['open', 'occupied', 'reserved', 'closed'];
@@ -33,12 +34,21 @@ export class TablesPageComponent implements OnInit{
   // currentTableLog: ITableLog | null = null;
   currentTableLog: any = null;
   reservationList: IReservation[] | null = null;
+
+  todaysReservationList: ReservationInterface[] | null = null;
   currentTable: ITable | null = null;
 
   notificationVisible:boolean = false;
   ongoingTableLogs: any | null = null;
 
-  constructor(private auth: AuthApiService, private tableService: TableService, private tablelogService : TablelogService, private orderService: OrderService, private reservationService: ReservationService, private hrService: HrService, private router: Router){};
+  constructor(private auth: AuthApiService, 
+    private tableService: TableService, 
+    private tablelogService : TablelogService, 
+    private orderService: OrderService, 
+    private reservationService: ReservationService, 
+    private hrService: HrService, 
+    private router: Router
+  ){};
 
   private intervalId: any;
 
@@ -53,6 +63,21 @@ export class TablesPageComponent implements OnInit{
       console.log('Current time is', Date.now());
       this.reservationChecker();
     });
+
+
+    //UNCOMMENT WHEN READY
+    /*
+    this.tableService.getAllTables().subscribe((data) =>{
+      this.tables = data;
+      if (this.user) {
+        this.reservationService.getAllReservationsForToday(this.user.employeeInformation.restaurantId).subscribe(data => {
+          this.todaysReservationList = data;
+          console.log('Current time is', Date.now());
+          this.reservationChecker();
+        });
+      }
+    });
+    */
 
     this.getAllOngoingTablelogs();
 
