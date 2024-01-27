@@ -75,14 +75,14 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       const newData = getDataFromStatus(status);
       const updatedOrder = await updateOrderById(orderId, newData);
 
+      console.log('Updated Order is: ', updatedOrder);
       if (updatedOrder) {
-        console.log('Updated Order is: ', updateOrderById);
         const tableLog = await getTableLogForOrderId(updatedOrder._id);
         if (tableLog) {
-          console.log('Table Log is: ', updateOrderById);
+          console.log('Table Log is: ', tableLog);
           const table = await getTableById(tableLog.tableId);
           if (table) {
-            console.log('Table is: ', updateOrderById);
+            console.log('Table is: ', table);
             const io = res.locals.io;
             io.to(updatedOrder.restaurantId.toString()).emit('order-status-change', { order: updatedOrder, table });
           }
