@@ -72,6 +72,8 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
     else if (order.restaurantId !== user.employeeInformation.restaurantId)
       return res.status(403).json({ error: "Order not from your restaurant." });
     else {
+      console.log('Successful update! 👌');
+
       const newData = getDataFromStatus(status);
       const updatedOrder = await updateOrderById(orderId, newData);
 
