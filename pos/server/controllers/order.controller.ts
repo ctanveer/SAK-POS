@@ -76,10 +76,13 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       const updatedOrder = await updateOrderById(orderId, newData);
 
       if (updatedOrder) {
+        console.log('Updated Order is: ', updateOrderById);
         const tableLog = await getTableLogForOrderId(updatedOrder._id);
         if (tableLog) {
+          console.log('Table Log is: ', updateOrderById);
           const table = await getTableById(tableLog.tableId);
           if (table) {
+            console.log('Table is: ', updateOrderById);
             const io = res.locals.io;
             io.to(updatedOrder.restaurantId.toString()).emit('order-status-change', { order: updatedOrder, table });
           }
@@ -87,6 +90,7 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       }
 
       if (updatedOrder && status === 'served') {
+        console.log('Updating status to served')
         await postStatusUpdateToKDS(updatedOrder, token);
       }
 
