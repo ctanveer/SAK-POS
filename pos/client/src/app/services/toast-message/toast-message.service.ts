@@ -9,8 +9,10 @@ export class ToastMessageService {
   constructor() { }
 
   message = new Subject<{message: string, type: 'success' | 'error' | 'info' | 'warn'}>();
+  latestMessage: string = '';
 
   setMessage (message: string, type: 'success' | 'error' | 'info' | 'warn') {
+    this.latestMessage = message;
     this.message.next({ message, type });
   }
 
