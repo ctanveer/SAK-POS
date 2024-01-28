@@ -29,7 +29,10 @@ export class PageContainerComponent implements OnInit {
     });
 
     this.socket.getOrderStatusChange().subscribe(data => {
-      this.toast.setMessage(`Order for ${data.table.name} is ${data.order.status}.`, 'info');
+      const message = `Order for ${data.table.name} is ${data.order.status}.`;
+      if (this.toast.latestMessage !== message) {
+        this.toast.setMessage(message, 'info');
+      }
     });
   }
 
