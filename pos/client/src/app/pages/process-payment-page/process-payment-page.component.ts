@@ -6,6 +6,14 @@ import { IBill } from '../../models/bill.model';
 import { IPaymentLog } from '../../models/paymentlog.model';
 import { PaymentlogService } from '../../services/paymentlog.service';
 import { OrderService } from '../../services/order.service';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import { IOrder } from '../../models/order.model';
+import { EmailService } from '../../services/email.service';
+// import image from '../../../assets/logo/logo-1.png'
+
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-process-payment-page',
@@ -22,11 +30,17 @@ export class ProcessPaymentPageComponent implements OnInit {
   isCashPayVisible: boolean = false;
   isCardPayVisible: boolean = false;
   orderId: string = '';
-  
+  fullOrder: IOrder | null = null;
+  isEmailModalVisible: boolean = false;
+  email: string | null = null;
+
   completeStatus: boolean = false;
 
-
-  constructor (private router: Router, private location: Location, private paymentLogService: PaymentlogService, private orderService: OrderService) {}
+  constructor (private router: Router, 
+    private location: Location, 
+    private paymentLogService: PaymentlogService, 
+    private orderService: OrderService,
+    private emailService: EmailService) {}
   
   ngOnInit(): void {
     const state = this.location.getState() as {billArr: IPaymentLog[], bill: number, user: IUser}
@@ -37,6 +51,7 @@ export class ProcessPaymentPageComponent implements OnInit {
       this.user = state.user;
       this.orderId = state.billArr[0].orderId;
     }
+
   }
 
   changePmtMode(index: number, value: string) {
@@ -95,6 +110,7 @@ export class ProcessPaymentPageComponent implements OnInit {
     }
   }
 
+
   isAllPaid() {
     return this.billArr.every(bill => bill.paid === true);
   }
@@ -103,8 +119,38 @@ export class ProcessPaymentPageComponent implements OnInit {
     this.completeStatus = true;
     this.orderService.updateOrderById(this.orderId, {bill: this.totalBillWithTip, status: 'complete'}).subscribe(data => {
       console.log('Updated order is: ', data);
+      this.fullOrder = data;
+
+      this.isEmailModalVisible = true;
     })
-    this.router.navigate(['table']);
+    // this.router.navigate(['table']);
+  }
+
+
+  handleEmailOk() {
+    if (this.email && this.isValidEmail(this.email)) {
+      console.log('Email is valid:', this.email);
+      this.isEmailModalVisible = false;
+      if (this.fullOrder) {
+        console.log('inside pdf generation segment');
+        // const documentDefinition = this.createDocumentDefinition(this.fullOrder.items);
+        this.emailService.sendEmail(this.email, this.fullOrder, this.totalBillWithTip).subscribe(data =>  {
+          console.log('Successdully sent mail: ', data);
+          this.router.navigate(['table']);
+        })
+      }
+    } else {
+      console.error('Invalid email address');
+    }
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  handleEmailCancel() {
+    this.isEmailModalVisible = false;
   }
 
   goBackToPaymentPage() {

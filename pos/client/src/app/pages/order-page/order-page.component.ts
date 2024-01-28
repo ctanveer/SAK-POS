@@ -59,6 +59,8 @@ export class OrderPageComponent implements OnInit {
   tableName: string = '';
   orderStatus: string = '';
 
+  // sentOrder: IOrder | undefined;
+
   ngOnInit(): void {
     const state = this.location.getState() as { orderId: string, tableId: string, tableName: string, orderStatus: string, order: { items: IItem[] } | null, status: 'update' | 'new' } | undefined;
     if (!state || !state.orderId || !state.tableId || !state.tableName || !state.orderStatus) this.router.navigate(['table']);
@@ -306,6 +308,7 @@ export class OrderPageComponent implements OnInit {
         pmtLogArr: pmtLogArr,
         bill: this.totalBill, 
         orderCart: this.orderCart,
+        // fullOrder: this.sentOrder
       }
     })
   }

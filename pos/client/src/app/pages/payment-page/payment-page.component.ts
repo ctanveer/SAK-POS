@@ -19,7 +19,7 @@ export class PaymentPageComponent implements OnInit {
   orderId: string = '';
   bill: number = 1;
   orderCart: IItem[] | undefined;
-  // billCart: number[] | undefined;
+  fullOrder: any
   isSplitModalVisible: boolean = false;
   numberOfSplits: number = 1;
   // splitBillArr: IBill[] = [];
@@ -62,7 +62,7 @@ export class PaymentPageComponent implements OnInit {
     //   paid: false,
     //   pmtMode: null
     // })
-
+    
   } 
 
   voidPayment() {

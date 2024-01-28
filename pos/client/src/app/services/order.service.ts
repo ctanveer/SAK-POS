@@ -42,8 +42,13 @@ export class OrderService {
     return this.http.get<IOrder>(`${this.orderUrl}/log/table/${tableId}`, this.httpOptions);
   }
 
-  updateOrderById (orderId: string, orderObj: any):Observable<any> {
+  updateOrderById (orderId: string, orderObj: any):Observable<IOrder> {
     const url = `${this.orderUrl}/${orderId}`;
-    return this.http.put<any>(url, orderObj, this.httpOptions);
+    return this.http.put<IOrder>(url, orderObj, this.httpOptions);
+  }
+
+  getOrderById (orderId: string):Observable<IOrder> {
+    const url = `${this.orderUrl}/${orderId}`;
+    return this.http.get<IOrder>(url, this.httpOptions);
   }
 }

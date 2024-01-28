@@ -32,7 +32,7 @@
     >
     <ng-container *nzDrawerContent>
         @if (ongoingTableLogs) {
-            <nz-table [nzShowPagination]="false" #basicTable [nzData]="ongoingTableLogs.data">
+            <nz-table #basicTable [nzData]="ongoingTableLogs.data">
                 <thead>
                   <tr>
                     <th>Table Name</th>

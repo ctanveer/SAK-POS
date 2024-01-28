@@ -58,3 +58,19 @@
         }
     </ng-container>
 </nz-modal>
+
+<!-- Modal for customer Email -->
+<nz-modal [(nzVisible)]="isEmailModalVisible" nzTitle="Email Input" (nzOnCancel)="handleEmailCancel()" nzOkText="Submit" (nzOnOk)="handleEmailOk()">
+    <ng-container *nzModalContent>
+        <div>
+            <nz-form-control nzErrorTip="Please enter a valid email address">
+              <nz-form-item>
+                <nz-form-label [nzFor]="'email'">Email:</nz-form-label>
+                <nz-form-control>
+                  <input nz-input [(ngModel)]="email" id="email" />
+                </nz-form-control>
+              </nz-form-item>
+            </nz-form-control>
+          </div>
+    </ng-container>
+</nz-modal>

@@ -13,6 +13,8 @@ import { config } from './config';
 import paymentLogRouter from './routers/paymentLog.router';
 import hrRouter from './routers/hr.router';
 import reservationRouter from './routers/reservation.router';
+import bodyParser from 'body-parser';
+import emailRouter from './routers/email.router';
 
 const app = express();
 
@@ -32,6 +34,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 
+// Use body-parser middleware
+app.use(bodyParser.json());
+
 app.use(cors({ origin: config.CORS_ORIGIN.split(","), exposedHeaders: ['Authorization']}));
 app.use(express.json());
 
@@ -44,6 +49,7 @@ app.use('/menu', menuRouter);
 app.use('/payment-log', paymentLogRouter);
 app.use('/hr', hrRouter);
 app.use('/reservation', reservationRouter);
+app.use('/mailer', emailRouter);
 
 (async function bootstrap() {
   try {

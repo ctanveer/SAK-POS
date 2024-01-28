@@ -32,7 +32,6 @@ export class TablesPageComponent implements OnInit{
   visible = false;
   selectedStatus: 'open' | 'occupied' | 'reserved' | 'closed' = 'open';
   createdOrder: IOrder | null = null;
-  // currentTableLog: ITableLog | null = null;
   currentTableLog: any = null;
   reservationList: IReservation[] | null = null;
 
@@ -42,7 +41,6 @@ export class TablesPageComponent implements OnInit{
   notificationVisible:boolean = false;
   ongoingTableLogs: any | null = null;
 
-  // constructor(private auth: AuthApiService, 
   constructor(
     private auth: AuthApiService, 
     private tableService: TableService, 
