@@ -8,7 +8,7 @@ const getAllTables = async () => {
     return tables;
   } catch (error) {
     console.log(error);
-    throw new Error('Error getting tables for restaurant'); 
+    throw new Error('Error getting all tables'); 
   }
 }
 
@@ -21,6 +21,28 @@ const getAllTablesForRestaurant = async (restaurantId: number) => {
     throw new Error('Error getting tables for restaurant');
   }
 };
+
+const getAllTablesByTableCapacity = async (tableCapacity: number) => {
+  try {
+    const tables = await Table.find({seats: {$gte: tableCapacity}})
+    return tables;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error getting all tables by table capacity'); 
+  }
+}
+
+const getAllTablesForRestaurantByTableCapacity = async (restaurantId: number, tableCapacity: number) => {
+  try {
+    const tables = await Table.find({restaurantId: restaurantId, seats: {$gte: tableCapacity}})
+    .sort({seats: 1})
+    return tables;
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error getting tables for restaurant by table capacity'); 
+  }
+}
+
 
 const getTableById = async (id:string | Types.ObjectId) => {
   const table = await Table.findById(id);
@@ -112,4 +134,6 @@ export {
     updateTableById,
     deleteTableById,
     getTableByIdWithAllOrders,
+    getAllTablesByTableCapacity,
+    getAllTablesForRestaurantByTableCapacity
 }

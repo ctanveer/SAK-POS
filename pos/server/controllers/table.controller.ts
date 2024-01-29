@@ -7,6 +7,8 @@ import {
     deleteTableById,
     getTableByIdWithAllOrders,
     getAllTablesForRestaurant,
+    getAllTablesByTableCapacity,
+    getAllTablesForRestaurantByTableCapacity
 } from '../models/table/table.query'
 import { AuthRequest } from '../interfaces/authRequest.interface';
 
@@ -31,6 +33,35 @@ export const getAllTablesController = async (req: AuthRequest, res: Response) =>
       res.status(500);
       res.json({ error: error.message });
     }
+};
+
+export const getAllTablesByTableCapacityController = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+    const tableCapacity = parseInt(req.params.tableCapacity);
+
+    const tables = await getAllTablesByTableCapacity(tableCapacity);
+    res.json(tables)
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
+};
+
+export const getAllTablesForRestaurantByTableCapacityController = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).send({ message: 'Unauthorized.' });
+    const restaurantId = parseInt(req.params.restaurantId);
+    const tableCapacity = parseInt(req.params.tableCapacity);
+
+    const tables = await getAllTablesForRestaurantByTableCapacity(restaurantId, tableCapacity);
+    res.json(tables)
+  } catch (error: any) {
+    res.status(500);
+    res.json({ error: error.message });
+  }
 };
 
 export const getTableByIdController = async (req: Request, res: Response) => {
