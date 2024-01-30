@@ -12,11 +12,13 @@ export const getAllReservationsForTodayController = async (req: AuthRequest, res
         if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
         
         // const restaurantId = user.employeeInformation.restaurantId;
-        const restaurantId = parseInt(req.params.id);
-        const date = new Date().toISOString().split('T')[0]; //"2024-01-25"
+        const restaurantId = req.params.id;
+        const date = (new Date().toISOString().split('T')[0]) + 'T00:00:00.000Z'; //"2024-01-25T00:00:00.000Z"
+        console.log('Date is: ', date);
 
         const reservationList = await getAllReservationsForToday(token, restaurantId, date);
         res.send(reservationList);
+        // res.send('success');
     } catch (error:any) {
         res.status(500);
         res.json({message: error.message})
@@ -31,7 +33,7 @@ export const getAllReservationsController = async (req: AuthRequest, res: Respon
         if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
         
         // const restaurantId = user.employeeInformation.restaurantId;
-        const restaurantId = parseInt(req.params.id);
+        const restaurantId = req.params.id;
 
         const reservationList = await getAllReservations(token, restaurantId);
         res.send(reservationList);

@@ -6,14 +6,15 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ItemInterface } from '../interfaces/item-interfaces/item.interface';
 import * as fs from 'fs';
+import { config } from "../config";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'bento.mailer.service@gmail.com',
-      pass: 'ifwd jdkb moph xnzu',
+      user: config.EMAIL_USER,
+      pass: config.EMAIL_PASS,
     },
 });
 
@@ -86,10 +87,11 @@ function sendMail(toEmail: string, order: IOrder, totalBill: number) {
 
     return new Promise((resolve, reject) => {
         const mailOptions = {
-            from: 'bento.mailer.service@gmail.com',
+            // from: 'bento.mailer.service@gmail.com',
+            from: config.EMAIL_USER,
             to: toEmail,
             subject: `Restaurant Order Bill # ${order._id}`,
-            text: "Dear Customer, Please find attached your Invoice",
+            text: "Dear Customer, Please find the attached Invoice below.",
             attachments: [
                 {
                   filename: `Order_${order._id}_invoice.pdf`,

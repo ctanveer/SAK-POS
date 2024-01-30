@@ -77,10 +77,10 @@ export async function postWaiterdataToHR (waiterData: any, token: string) {
 }
 
 
-//not tested -- needed for reservations
-export async function getAllReservationsForToday(token: string, restaurantId: number, date: string) {
+//TESTING
+export async function getAllReservationsForToday(token: string, restaurantId: string, date: string) {
   try {
-    const res = await axios.get<any>(config.SKELETON_URL + `/reservation/today/${restaurantId}/${date}`, { headers: { 'Authorization': token }});
+    const res = await axios.get<any>(config.SKELETON_URL + `/pos/reservation-by-date/restaurant/${restaurantId}/date/${date}`, { headers: { 'Authorization': token }});
     return res.data;
   } catch (error) {
     console.log(error);
@@ -88,9 +88,9 @@ export async function getAllReservationsForToday(token: string, restaurantId: nu
   }
 }
 
-export async function getAllReservations(token: string, restaurantId: number) {
+export async function getAllReservations(token: string, restaurantId: string) {
   try {
-    const res = await axios.get<any>(config.SKELETON_URL + `/reservation/${restaurantId}`, { headers: { 'Authorization': token }});
+    const res = await axios.get<any>(config.SKELETON_URL + `/pos/all-reservations/${restaurantId}`, { headers: { 'Authorization': token }});
     return res.data;
   } catch (error) {
     console.log(error);
