@@ -1,6 +1,12 @@
-<h2>Reservation List for</h2>
-@if (reservationList) {
-    <nz-table #basicTable [nzData]="reservationList">
+<h2 class="ml-4">Reservation List: 
+  <span>
+  @if (todaysReservationList) {
+    {{getDate(todaysReservationList[0].startTime)}}
+  }  
+  </span>
+</h2>
+@if (todaysReservationList) {
+    <nz-table #basicTable [nzData]="todaysReservationList">
         <thead>
           <tr>
             <th>Reservation ID</th>
@@ -14,14 +20,16 @@
         </thead>
         <tbody>
           <tr *ngFor="let data of basicTable.data">
-            <td>{{ data.reservationId }}</td>
-            <td>{{ data.customerId }}</td>
-            <td>{{ getTableName(data.tableId) }}</td>
-            <td>{{ dateFormatter(data.reservationTime.startTime) }}</td>
-            <td>{{ dateFormatter(data.reservationTime.endTime) }}</td>
+            <td>{{ data._id }}</td>
+            <td>{{ data.userId }}</td>
+            <!-- <td>{{ getTableName(data.tableId) }}</td> -->
+            <td>{{ data.tableId }}</td>
+            <td>{{ formatDateToString(data.startTime) }}</td>
+            <td>{{ formatDateToString(data.endTime) }}</td>
             <td>{{ data.status }}</td>
             <td>
               <a (click)="handleStatusChange(data)">Action 一 No-Show</a>
+
               <!-- <nz-divider nzType="vertical"></nz-divider>
               <a>Delete</a> -->
             </td>

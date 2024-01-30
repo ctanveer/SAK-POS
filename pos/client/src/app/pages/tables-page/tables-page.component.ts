@@ -33,9 +33,10 @@ export class TablesPageComponent implements OnInit{
   selectedStatus: 'open' | 'occupied' | 'reserved' | 'closed' = 'open';
   createdOrder: IOrder | null = null;
   currentTableLog: any = null;
-  reservationList: IReservation[] | null = null;
-
+  
+  reservationList: ReservationInterface[] | null = null;
   todaysReservationList: ReservationInterface[] | null = null;
+  
   currentTable: ITable | null = null;
 
   notificationVisible:boolean = false;
@@ -58,33 +59,51 @@ export class TablesPageComponent implements OnInit{
     this.auth.getUser().subscribe(data => {
       this.user = data.user;
       this.userId = this.user.employeeInformation.position.employeeId;
+      this.restaurantId = this.user.employeeInformation.restaurantId;
+      this.tableService.getAllTables().subscribe((data) =>{
+        this.tables = data;
+        this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
+          this.todaysReservationList = data;
+          console.log('Todays Reservation List: ', this.todaysReservationList);
+          console.log('Current time is', Date.now());
+        })
+        this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
+          this.reservationList = data;
+          console.log('All Reservations are: ', this.reservationList);
+        })
+      })
     });
+    
+    /*
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
       this.reservationList = this.reservationService.getReservations();
       console.log('Current time is', Date.now());
       this.reservationChecker();
     });
+    */
 
+    // this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe()
 
     //UNCOMMENT WHEN READY
-    /*
-    this.tableService.getAllTables().subscribe((data) =>{
-      this.tables = data;
-      if (this.user) {
-        this.reservationService.getAllReservationsForToday(this.user.employeeInformation.restaurantId).subscribe(data => {
-          this.todaysReservationList = data;
-          console.log('Current time is', Date.now());
-          this.reservationChecker();
-        });
-      }
-    });
-    */
+    
+    // this.tableService.getAllTables().subscribe((data) =>{
+    //   this.tables = data;
+    //   if (this.user) {
+    //     this.reservationService.getAllReservationsForToday(this.user.employeeInformation.restaurantId).subscribe(data => {
+    //       this.todaysReservationList = data;
+    //       console.log('Todays Reservation List: ', this.todaysReservationList);
+    //       console.log('Current time is', Date.now());
+    //       // this.reservationChecker();
+    //     });
+    //   }
+    // });
+    
 
     this.getAllOngoingTablelogs();
 
     interval(60000).subscribe(() => {
-      this.reservationChecker();
+      // this.reservationChecker();
       this.getAllOngoingTablelogs();
     })
 
@@ -118,6 +137,7 @@ export class TablesPageComponent implements OnInit{
     } 
   }
 
+  
   reservationChecker() {
     const currentTime = Date.now();
     console.log('NOW is: ', currentTime);
@@ -131,23 +151,23 @@ export class TablesPageComponent implements OnInit{
         if (tableIndex !== -1) {
           if (this.tables[tableIndex].status === 'open' && reservation.status === 'reserved') {
             //Adding 15 mins to currentTime
-            if ((currentTime + 900000 >= reservation.reservationTime.startTime) && 
-            (currentTime <= reservation.reservationTime.endTime)) {
+            if ((currentTime + 900000 >= this.dateToUnixNumConverter(reservation.startTime)) && 
+            (currentTime <= this.dateToUnixNumConverter(reservation.endTime))) {
               this.tables[tableIndex].status = 'reserved';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
-                console.log(`${this.tables[tableIndex].name} status changed from open to reserved. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+                console.log(`${this.tables[tableIndex].name} status changed from open to reserved. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
               });
             }
           }
           else if (this.tables[tableIndex].status === 'reserved' && reservation.status === 'reserved') {
             //Adding 10 mins to resrvation start time
-            if (currentTime.valueOf() > (reservation.reservationTime.startTime + 600000) &&
-            (currentTime <= reservation.reservationTime.endTime)) {
+            if ((currentTime.valueOf() > this.dateToUnixNumConverter(reservation.startTime) + 600000) &&
+            (currentTime <= this.dateToUnixNumConverter(reservation.endTime))) {
               this.tables[tableIndex].status = 'open';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
-                console.log(`Customer No-show ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+                console.log(`Customer No-show ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
             });
               reservation.status = 'no-show';
               this.reservationService.updateReservation(reservation);
@@ -157,12 +177,17 @@ export class TablesPageComponent implements OnInit{
             this.tables[tableIndex].status = 'open';
             this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
               this.tables[tableIndex] = table;
-              console.log(`Reservation Cancelled. ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.reservationTime.startTime}`);
+              console.log(`Reservation Cancelled. ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
           });
           }
         }
       }
     }
+  }
+
+  dateToUnixNumConverter(date: Date) {
+    console.log('Time in num is: ', Math.floor(date.getTime()));
+    return Math.floor(date.getTime());
   }
 
   proceedToOrder() {
@@ -230,39 +255,6 @@ export class TablesPageComponent implements OnInit{
     console.log(this.selectedTable);
     this.open();
   }
-
-  /*
-  changeTableStatus() {
-    console.log('Selected table is: ', this.selectedTable);
-    if (this.selectedTable) {
-      //open OR reserved --> occupied
-      if (this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') {
-        if (this.selectedStatus === 'occupied') {
-          this.selectedTable.status = this.selectedStatus;
-          this.tableService.updateTable(this.selectedTable).subscribe(data => {
-            let index = this.tables.findIndex(table => table._id === data._id);
-            if (index !== -1) {
-              this.tables[index] = data;
-            }
-            console.log('Current table is: ', this.tables[index]);
-          });
-  
-          //customerId should be optional when open -> occupied, but grab it from reservation list when reserved -> occupied
-          this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
-            this.currentTableLog = tableLog;
-            console.log('Created Table Log is: ', this.currentTableLog);
-          })
-        }
-      } 
-      // else if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'closed') && (this.selectedStatus === 'open' || this.selectedStatus === 'closed')) {
-
-      // }
-      else {
-        this.selectedTable.status = this.selectedStatus;
-      }
-    }
-  }
-  */
 
   tableStatusHelper(currentStatus: string, newStatus: string) {
     if (this.selectedTable) {

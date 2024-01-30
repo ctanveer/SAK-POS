@@ -23,7 +23,7 @@ export interface IItem {
     itemDescription: string; //
     itemQuantity?: number; //
     itemPreparationTime: number; //
-    itemPackingType: IPacking; 
+    itemPackingType?: IPacking[]; 
     // itemPackingDimension?: string[];  //PackingInterface
     itemLastingTime?: number; //needed for marketplace
     itemPortionSize: string; //

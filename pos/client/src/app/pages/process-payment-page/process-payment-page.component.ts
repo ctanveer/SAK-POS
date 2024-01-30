@@ -132,7 +132,6 @@ export class ProcessPaymentPageComponent implements OnInit {
       console.log('Email is valid:', this.email);
       this.isEmailModalVisible = false;
       if (this.fullOrder) {
-        console.log('inside pdf generation segment');
         // const documentDefinition = this.createDocumentDefinition(this.fullOrder.items);
         this.emailService.sendEmail(this.email, this.fullOrder, this.totalBillWithTip).subscribe(data =>  {
           console.log('Successdully sent mail: ', data);

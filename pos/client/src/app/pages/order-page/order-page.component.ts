@@ -85,7 +85,7 @@ export class OrderPageComponent implements OnInit {
       this.categories = data;
       console.log('Categories are: ', this.categories);
     })
-    
+
     this.menuService.getMenu().subscribe(data => {
       this.menuList = data;
       this.getTimeOfDays();

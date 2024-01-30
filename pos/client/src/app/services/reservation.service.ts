@@ -28,12 +28,12 @@ export class ReservationService {
 
 
   //*************MAINS******************/
-  getAllReservationsForToday(restaurantId: number):Observable<ReservationInterface[]> {
+  getAllReservationsForToday(restaurantId: number | null):Observable<ReservationInterface[]> {
     const url = `${this.reservationUrl}/today/${restaurantId}`;
     return this.http.get<ReservationInterface[]>(url, this.httpOptions);
   }
 
-  getAllReservations(restaurantId: number):Observable<ReservationInterface[]> {
+  getAllReservations(restaurantId: number | null):Observable<ReservationInterface[]> {
     const url = `${this.reservationUrl}/all/${restaurantId}`;
     return this.http.get<ReservationInterface[]>(url, this.httpOptions);
   }
@@ -53,12 +53,12 @@ export class ReservationService {
   }
 
   //does not work
-  updateReservation(reservation: IReservation) {
+  updateReservation(reservation: ReservationInterface) {
     console.log('Reservation is: ', reservation);
     if (this.reservationArr) {
       const foundIndex = this.reservationArr.findIndex(obj => {
         console.log('Current Object is: ', obj)
-        return obj.reservationId === reservation.reservationId
+        return obj.reservationId === reservation._id
       });
       if (foundIndex !== -1) {
         console.log('Found index is: ', foundIndex);

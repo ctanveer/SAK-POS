@@ -5,6 +5,6 @@ export interface IOption {
     quantity: number;
     costPerUnit: number;
     caloriesPerUnit: number;
-    price: string;
+    price?: string;
     _id: string;
 }

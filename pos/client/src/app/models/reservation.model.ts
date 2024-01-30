@@ -13,6 +13,7 @@ export interface IReservation {
 
 //interface being used by reservation silo
 export interface ReservationInterface {
+    _id: string;
     restaurantId: string;
     tableId: string;
     userId: string;
