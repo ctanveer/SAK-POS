@@ -106,6 +106,61 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
 };
 
 
+export const updateOrderItemStatus = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    const token = req.token;
+    if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
+
+    const { orderId } = req.params;
+    const { items, status } = req.body;
+
+    if (
+      !orderId || !items ||
+      (status !== "pending" &&
+      status !== "preparing" &&
+      status !== "ready" &&
+      status !== "served" &&
+      status !== "complete")
+    ) return res.status(400).send({ message: "Invalid fields." });
+
+    const order = await getOrderById(orderId);
+
+    if (!order) return res.status(404).json({ error: "Order not found." });
+    else if (order.restaurantId !== user.employeeInformation.restaurantId)
+      return res.status(403).json({ error: "Order not from your restaurant." });
+    else {
+      console.log('Successful update! 👌');
+      const updatedOrder = await updateOrderById(orderId, { items });
+
+      console.log('Updated Order is: ', updatedOrder);
+      // if (updatedOrder) {
+      //   const tableLog = await getTableLogForOrderId(updatedOrder._id);
+      //   if (tableLog) {
+      //     console.log('Table Log is: ', tableLog);
+      //     const table = await getTableById(tableLog.tableId);
+      //     if (table) {
+      //       console.log('Table is: ', table);
+      //       const io = res.locals.io;
+      //       io.to(updatedOrder.restaurantId.toString()).emit('order-status-change', { order: updatedOrder, table });
+      //     }
+      //   }
+      // }
+
+      // if (updatedOrder && status === 'served') {
+      //   console.log('Updating status to served')
+      //   await postStatusUpdateToKDS(updatedOrder, token);
+      // }
+
+      res.status(200).json(updatedOrder);
+    }
+
+  } catch (error: any) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+};
+
 export const updateOrderItems = async (req: AuthRequest, res: Response) => {
   try {
     const user = req.user;
