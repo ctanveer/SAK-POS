@@ -166,6 +166,13 @@ const OrderSchema = new Schema<IOrder>({
       servingTemperature: { type: Number, required: true },
       itemDietaryRestrictions: { type: [String], required: true },
     },
+    status: { type: String },
+    preparingTimestamp: { type: Date },
+    readyTimestamp: { type: Date },
+    servedTimestamp: { type: Date },
+    deliveryTimestamp: { type: Date },
+    cancelTimestamp: { type: Date },
+    chef: chefSchema
 }]},
   orderPosted: { type: Date },
   orderUpdatedAt: { type: Date },

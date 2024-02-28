@@ -2,6 +2,7 @@ import { OptionInterface } from "./option.interface";
 import { IngredientInterface } from "./ingredient.interface";
 import { IPacking } from "../packing.interface";
 import { RecipeInterface } from "./recipe.interface";
+import { IUser } from "../user.interface";
 
 
 // export interface ItemInterface{
@@ -42,4 +43,11 @@ export interface ItemInterface {
     servingTemperature: number;
     itemDietaryRestrictions: string[];
   };
+  status?: string;
+  preparingTimestamp?: Date;
+  readyTimestamp?: Date;
+  servedTimestamp?: Date;
+  chef?: IUser;
+  deliveryTimestamp?: Date;
+  cancelTimestamp?: Date;
 }

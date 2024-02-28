@@ -12,7 +12,8 @@ import {
     updateOrderChef,
     getHourlyCountOfOrders,
     getWeekdayCountOfOrders,
-    getMonthlyCountOfOrders
+    getMonthlyCountOfOrders,
+    updateOrderItemStatus
 } from '../controllers/order.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
 
@@ -22,6 +23,7 @@ router.get('/all', authMiddleware, getAllRestaurantOrdersController);
 router.get('/:id', authMiddleware, getOrderByIdController);
 router.post('/status/:orderId', authMiddleware, updateOrderStatus);
 router.put('/items/:orderId', authMiddleware, updateOrderItems);
+router.put('/item-status/:orderId', authMiddleware, updateOrderItemStatus);
 router.get('/log/table/:id', authMiddleware, generateOrderForTable);
 router.put('/chef/:orderId', authMiddleware, updateOrderChef);
 router.post('/', authMiddleware, createOrderController);
