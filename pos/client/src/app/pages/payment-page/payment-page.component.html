@@ -17,7 +17,7 @@
             <div class="single-split-item border rounded-sm mx-3 my-2 p-2 text-xs">
               <p>OrderId <strong>#{{ splitObj.orderId }}</strong></p>
               <p>ID: {{ splitObj._id }}</p>
-              <p>Total: {{ splitObj.totalBill }}</p>
+              <p>Total: {{ splitObj.totalBill | currency:'£'}}</p>
               <p>Paid: {{ splitObj.paid }}</p>
               <p>Mode  of Payment: {{ splitObj.pmtMode }}</p>
             </div>
@@ -32,21 +32,21 @@
           <div class="grow border rounded-md pl-1 py-1">
             <div class="w-full flex justify-between">
               <div><strong>{{cartItem.item.itemQuantity}} × {{cartItem.item.itemName}}</strong></div>
-              <div class="mx-5">${{cartItem.item.itemPrice}}</div>
+              <div class="mx-5">{{cartItem.item.itemPrice | currency:'£'}}</div>
             </div>
             
             @if (cartItem.item.chosenOptions) {
               @for (option of cartItem.item.chosenOptions.add; track $index) {
                 <div class="w-full flex justify-between text-green">
                   <div class="mx-5">+ {{option.ingredientName}}</div>
-                  <div class="mx-5 text-green">+ ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
+                  <div class="mx-5 text-green">+ {{(option.costPerUnit * option.quantity).toFixed(2) | currency:'£'}}</div>
                 </div>
               }
 
               @for (option of cartItem.item.chosenOptions.no; track $index) {
                 <div class="w-full flex justify-between text-red">
                   <div class="mx-5">- {{option.ingredientName}}</div>
-                  <div class="mx-5 text-red">- ${{(option.costPerUnit * option.quantity).toFixed(2)}}</div>
+                  <div class="mx-5 text-red">- {{(option.costPerUnit * option.quantity).toFixed(2) | currency:'£'}}</div>
                 </div>
               }
             }
@@ -58,7 +58,7 @@
     <div class="bill-display-block">
       <div class="w-full flex justify-between pl-4 py-1 text-lg">
         <div><strong>Total Bill</strong></div>
-        <div class="mx-5">${{bill}}</div>
+        <div class="mx-5">{{bill | currency:'£'}}</div>
       </div>
     </div>
     <div class="button-components border">
@@ -89,10 +89,10 @@
   <ng-container *nzModalContent>
     <nz-radio-group [(ngModel)]="tipValue">
       <label nz-radio [nzValue]="0">No Tip</label>
-      <label nz-radio [nzValue]="1">$1</label>
-      <label nz-radio [nzValue]="3">$3</label>
-      <label nz-radio [nzValue]="5">$5</label>
-      <label nz-radio [nzValue]="10">$10</label>
+      <label nz-radio [nzValue]="1">£1</label>
+      <label nz-radio [nzValue]="3">£3</label>
+      <label nz-radio [nzValue]="5">£5</label>
+      <label nz-radio [nzValue]="10">£10</label>
       <!-- <label nz-radio nzValue="M">
         More...
         <input type="text" nz-input *ngIf="tipValue === 1" />
@@ -100,39 +100,3 @@
     </nz-radio-group>
   </ng-container>
 </nz-modal>
-
-
-<!-- <div class="payment-details">
-    <div class="order-summary">
-      <p>Order #{{ orderNumber }}</p>
-      <p>Total: ${{ total }}</p>
-      <p>Paid: ${{ paid }}</p>
-      <p>Outstanding: ${{ outstanding }}</p>
-    </div>
-    <div class="order-items">
-      <h2>Order Items</h2>
-      <ul>
-        <li *ngFor="let item of items">
-          {{ item.name }} - {{ item.price }}
-        </li>
-      </ul>
-    </div>
-  </div>
-  
-  <div class="payment-methods">
-    <h2>Payment Methods</h2>
-    <div class="payment-method">
-      <input type="radio" id="cash" name="payment-method" value="cash">
-      <label for="cash">Cash</label>
-    </div>
-    <div class="payment-method">
-      <input type="radio" id="credit-card" name="payment-method" value="credit-card">
-      <label for="credit-card">Credit Card</label>
-    </div>
-  </div>
-  
-  <div class="payment-actions">
-    <button (click)="finalizePayment()">Finalize Payment</button>
-    <button (click)="splitBill()">Split Bill</button>
-    <button (click)="voidPayment()">Void Payment</button>
-  </div> -->

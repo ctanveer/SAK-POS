@@ -1,3 +1,4 @@
+//DISCARD
 export interface IReservation {
     restaurantId: number;
     reservationId: string;

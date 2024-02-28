@@ -29,7 +29,6 @@ const routes: Routes = [
   {path: '**', redirectTo: '/tables'}
 ];
 
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

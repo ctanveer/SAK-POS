@@ -3,7 +3,6 @@ import { ITable } from "./table.model";
 
 export interface ITableLog {
     _id?: string;
-    // tableId: string;
     tableId: string;
     timeElapsed: number;
     orderId?: string;

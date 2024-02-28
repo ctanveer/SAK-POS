@@ -60,11 +60,12 @@ export class TablesPageComponent implements OnInit{
       this.user = data.user;
       this.userId = this.user.employeeInformation.position.employeeId;
       this.restaurantId = this.user.employeeInformation.restaurantId;
+
       this.tableService.getAllTables().subscribe((data) =>{
         this.tables = data;
         this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
           this.todaysReservationList = data;
-          console.log('Todays Reservation List: ', this.todaysReservationList);
+          console.log('Today\'s Reservation List: ', this.todaysReservationList);
           console.log('Current time is', Date.now());
         })
         this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
@@ -103,7 +104,7 @@ export class TablesPageComponent implements OnInit{
     this.getAllOngoingTablelogs();
 
     interval(60000).subscribe(() => {
-      // this.reservationChecker();
+      this.reservationChecker();
       this.getAllOngoingTablelogs();
     })
 
@@ -320,10 +321,10 @@ export class TablesPageComponent implements OnInit{
                     restaurantId: data.tableId.restaurantId
                   }
                 }
-                console.log('Prepared Waiter Data in FE is: ', waiterData);
+                console.log('Waiter Data: ', waiterData);
 
                 this.hrService.postOrderDataToHR(waiterData).subscribe(data => {
-                  console.log('Waiter Data for HR is: ', data);
+                  console.log('Posted Waiter Data to HR is: ', data);
                 });
               })
             })
@@ -366,6 +367,5 @@ export class TablesPageComponent implements OnInit{
   closePanel() {
     this.notificationVisible = false;
   }
-
 
 }

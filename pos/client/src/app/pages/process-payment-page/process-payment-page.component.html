@@ -15,7 +15,7 @@
                 <div class="single-split-item border rounded-md mx-3 my-2 p-2 text-xs">
                     <p>OrderId <strong>#{{ billObj.orderId }}</strong></p>
                     <p>Payment ID: {{ billObj._id }}</p>
-                    <p>Total: ${{ billObj.totalBill }}</p>
+                    <p>Total: {{ billObj.totalBill | currency:'£'}}</p>
                     <p>Paid: {{ billObj.paid }}</p>
                     <p>Mode  of Payment: {{ billObj.pmtMode }}</p>
                     @if (billObj.paid === false) {
@@ -44,7 +44,7 @@
 <nz-modal [(nzVisible)]="isCashPayVisible" nzTitle="Cash Payment" (nzOnCancel)="handleCancel()" nzOkText="Submit" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
       @if (currentIndex >= 0) {
-          <p>Amount Due: {{billArr[currentIndex].totalBill}}</p>
+          <p>Amount Due: {{billArr[currentIndex].totalBill | currency:'£'}}</p>
       } 
     </ng-container>
 </nz-modal>
@@ -54,7 +54,7 @@
 <nz-modal [(nzVisible)]="isCardPayVisible" nzTitle="Card Payment" (nzOnCancel)="handleCancel()" nzOkText="Submit" (nzOnOk)="handleOk()">
     <ng-container *nzModalContent>
         @if (currentIndex >= 0) {
-            <p>Amount Due: {{billArr[currentIndex].totalBill}}</p>
+            <p>Amount Due: {{billArr[currentIndex].totalBill | currency:'£'}}</p>
         }
     </ng-container>
 </nz-modal>

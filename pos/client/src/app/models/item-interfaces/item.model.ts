@@ -3,12 +3,6 @@ import { IIngredient } from "./ingredient.model";
 import { IPacking } from "../packing.model";
 import { IRecipe } from "./recipe.model";
 
-// export interface IItem{
-//     restaurantId: number;
-//     categoryId: number;
-//     item: IItemDetailPosInput;
-// }
-
 export interface IItem {
     _id: string;
   restaurantId: number;
@@ -20,25 +14,25 @@ export interface IItem {
     itemId: number; //
     itemName: string; //
     itemImage: string; //
-    itemDescription: string; //
-    itemQuantity?: number; //
-    itemPreparationTime: number; //
+    itemDescription: string;
+    itemQuantity?: number;
+    itemPreparationTime: number;
     itemPackingType?: IPacking[]; 
     // itemPackingDimension?: string[];  //PackingInterface
     itemLastingTime?: number; //needed for marketplace
-    itemPortionSize: string; //
+    itemPortionSize: string;
     ingredients: { rawIngredients: IIngredient[]; recipes: IRecipe[] }; //IRecipe[]
     options: { add: IOption[]; no: IOption[] }; //
     chosenOptions?: { add: IOption[]; no: IOption[] };
     optionalNotes?: string;
     discount?: number;
     isDisabled?: boolean;
-    itemPrice: number; //
-    itemCalories: number; //
-    timeOfDay: string[]; //
-    itemProfileTastyTags: string[]; //
-    typeOfFoods: string[]; //
-    servingTemperature: number; //
-    itemDietaryRestrictions: string[]; //
+    itemPrice: number;
+    itemCalories: number;
+    timeOfDay: string[];
+    itemProfileTastyTags: string[];
+    typeOfFoods: string[];
+    servingTemperature: number;
+    itemDietaryRestrictions: string[];
   };
 }

@@ -161,7 +161,7 @@ export const generateOrderForTable = async (req: AuthRequest, res: Response) => 
         type: 'in-house',
         waiterId: user.employeeInformation.id,
         bill: 0,
-        unit: 'USD',
+        unit: 'GBP',
         status: 'pending',
         items: [],
         createdAt: new Date(),
