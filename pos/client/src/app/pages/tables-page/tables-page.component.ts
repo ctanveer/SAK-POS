@@ -278,6 +278,8 @@ export class TablesPageComponent implements OnInit{
       if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') && this.selectedStatus === 'occupied') { 
           
           this.tableStatusHelper(this.selectedTable.status, 'occupied');
+          //TODO -- Add Customer Page Option
+
           this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
             this.currentTableLog = tableLog;
             console.log('Created Table Log is: ', this.currentTableLog);
