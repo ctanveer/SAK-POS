@@ -1,1 +1,57 @@
-<p>order-history-page works!</p>
+<nz-spin [nzSpinning]="tableLoading" nzSize="large" nzTip="Loading Order Table">
+<h2 class="ml-4 my-2">All Orders Table</h2>
+  @if (allOrders) {
+      <nz-table class="ml-2" #outerTable [nzData]="allOrders">
+          <thead>
+            <tr>
+                <th></th>
+              <th>Order ID</th>
+              <th>Customer ID</th>
+              <th>Waiter ID</th>
+              <th>Order Date</th>
+              <th>Bill</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-template ngFor let-data [ngForOf]="outerTable.data">
+                <tr>
+                    <td [(nzExpand)]="data.expand"></td>
+                    <td>{{ data._id }}</td>
+                    <td>{{ data.customerId }}</td>
+                    <td>{{ data.waiterId }}</td>
+                    <td>{{ formatDateToString(data.createdAt) }}</td>
+                    <td>{{ data.bill | currency:'£ '}}</td>
+                    <td>
+                        <nz-tag [nzColor]="getOrderStatusColor(data.status)">
+                            {{ data.status | uppercase }}
+                        </nz-tag>
+                    <td>
+                </tr>
+                @if (data.expand) {
+                    <tr [nzExpand]="data.expand">
+                        @if(data.items) {
+                            <nz-table #innerTable [nzData]="data.items" [nzShowPagination]="false">
+                              <thead>
+                                <tr>
+                                    <th><strong>Item Name</strong></th>
+                                    <th><strong>Quantity</strong></th>
+                                    <th><strong>Unit Price</strong></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let data of innerTable.data">
+                                  <td>{{ data.item.itemName }}</td>
+                                  <td>{{ data.item.itemQuantity }}</td>
+                                  <td>{{ data.item.itemPrice | currency:'£ '}}</td>
+                                </tr>
+                              </tbody>
+                            </nz-table>
+                        }
+                    </tr>
+                }
+            </ng-template>
+          </tbody>
+        </nz-table>
+  }
+</nz-spin>

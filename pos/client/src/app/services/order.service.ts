@@ -51,4 +51,9 @@ export class OrderService {
     const url = `${this.orderUrl}/${orderId}`;
     return this.http.get<IOrder>(url, this.httpOptions);
   }
+
+  getAllOrders():Observable<IOrder[]> {
+    const url = `${this.orderUrl}/all`;
+    return this.http.get<IOrder[]>(url, this.httpOptions);
+  }
 }

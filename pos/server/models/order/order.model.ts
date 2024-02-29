@@ -67,7 +67,7 @@ const chefSchema = new Schema<IUser>({
   }
 })
 
-const OrderSchema = new Schema<IOrder>({
+const OrderSchema: Schema<IOrder> = new Schema<IOrder>({
   restaurantId: { type: Number, required: true },
   type: {type: String, enum: ['in-house', 'delivery'], required: true, default: 'in-house'},
   customerId: {type: Number},

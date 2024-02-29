@@ -2,7 +2,7 @@
   <nz-spin [nzSpinning]="isReservationLoaded" nzSize="large"></nz-spin>
 </div> -->
 
-<h2 class="ml-4">Reservation List: 
+<h2 class="ml-4 my-2">Reservation List: 
   <span>
   @if (todaysReservationList) {
   <!-- @if (reservationList) { -->
@@ -28,16 +28,12 @@
           <tr *ngFor="let data of basicTable.data">
             <td>{{ data._id }}</td>
             <td>{{ data.userId }}</td>
-            <!-- <td>{{ getTableName(data.tableId) }}</td> -->
             <td>{{ data.tableId }}</td>
             <td>{{ formatDateToString(data.startTime) }}</td>
             <td>{{ formatDateToString(data.endTime) }}</td>
             <td>{{ data.status }}</td>
             <td>
               <a (click)="handleStatusChange(data)">Action 一 No-Show</a>
-
-              <!-- <nz-divider nzType="vertical"></nz-divider>
-              <a>Delete</a> -->
             </td>
           </tr>
         </tbody>

@@ -25,7 +25,8 @@ export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Re
       if (!user) return res.status(401).send({ message: 'Unauthorized.' });
 
       const orders = await getAllOrdersByRestaurantId(user.employeeInformation.restaurantId);
-      res.status(200).send({ data: orders });
+      // { data: orders }
+      res.status(200).send(orders);
     } catch (error: any) {
         res.status(500);
         res.json({ message: error.message });

@@ -22,3 +22,7 @@ export interface IOrder {
     deliveryTimestamp?: Date;
     cancelTimestamp?: Date;
 }
+
+export interface IOrderHistory extends IOrder {
+    expand?: boolean;
+}

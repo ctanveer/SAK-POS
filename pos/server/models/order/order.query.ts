@@ -9,7 +9,7 @@ const getAllOrders = async () => {
 
 const getAllOrdersByRestaurantId = async (restaurantId: number) => {
     try {
-        const orders = await Order.find({ restaurantId, orderPosted: { $exists: true } });
+        const orders = await Order.find({ restaurantId, orderPosted: { $exists: true } }).sort({createdAt: -1});
         return orders;
     } catch (error) {
         console.log(error);
