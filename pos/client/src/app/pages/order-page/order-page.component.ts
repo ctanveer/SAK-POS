@@ -61,6 +61,9 @@ export class OrderPageComponent implements OnInit {
   tableName: string = '';
   orderStatus: string = '';
 
+  isMenuLoaded: boolean = true;
+  isLoaded: boolean = false;
+
   // sentOrder: IOrder | undefined;
 
   ngOnInit(): void {
@@ -92,6 +95,7 @@ export class OrderPageComponent implements OnInit {
       this.menuList = data;
       this.getTimeOfDays();
       console.log('Restaurant Menu is: ', this.menuList);
+      this.isMenuLoaded = false;
     });
 
     this.socket.getOrderStatusChange().subscribe(data => {
@@ -250,18 +254,22 @@ export class OrderPageComponent implements OnInit {
   
 
   updateOrderStatus() {
+    this.isLoaded = true;
     this.orderService.updateOrderStatus(this.orderId, 'served').subscribe(data => {
       console.log('Order with updated status is: ', data);
       this.toast.setMessage('Order Served', 'info');
       this.orderStatus = 'served';
+      this.isLoaded = false;
     })
   }
 
   cancelOrder() {
+    this.isLoaded = true;
     this.orderService.updateOrderStatus(this.orderId, 'cancel').subscribe(data => {
       console.log('Order with updated status(cancel) is: ', data);
       this.toast.setMessage('Order Canceled', 'info');
       this.orderStatus = 'cancel';
+      this.isLoaded = false;
       this.goBackToTablePage();
       // this.tableLogService.getTableLogByOrderId(this)
     })
@@ -269,13 +277,15 @@ export class OrderPageComponent implements OnInit {
 
   //need to add tag to identify items which are already sent
   confirmAndSendOrder() {
-
     console.log('NEW ORDER IS: ', this.orderCart);
     console.log('Order Id is: ', this.orderId);
+    this.isLoaded = true;
     this.orderService.updateOrderItems(this.orderId, this.orderCart).subscribe(data => {
       console.log('Posted Order is:', data);
       this.toast.setMessage('Order sent.', 'success');
-      this.router.navigateByUrl('/tables');
+      this.isLoaded = false;
+      this.goBackToTablePage();
+      // this.router.navigateByUrl('/tables');
     })
   }
 

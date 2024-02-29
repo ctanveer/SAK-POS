@@ -1,139 +1,142 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="mx-3 pt-2">
-  <span>
-    <button nz-button nzType="default" (click)="goBackToTablePage()">
-      <span nz-icon nzType="left" nzTheme="outline"></span>
-    </button>
-  </span>
-  Order Management
-</h2>
-<div class="flex justify-between">
-  <h3 class="mx-3">@if (orderId) {
-    Order ID #{{orderId}}
-    <span class="ml-2">
-      <nz-tag [nzColor]="getOrderStatusColor()">
-        {{orderStatus | uppercase }}
-      </nz-tag>
+<nz-spin [nzSpinning]="isLoaded" nzSize="large">
+  <h2 class="mx-3 pt-2">
+    <span>
+      <button nz-button nzType="default" (click)="goBackToTablePage()">
+        <span nz-icon nzType="left" nzTheme="outline"></span>
+      </button>
     </span>
-  }
-  </h3> 
-  
-  @if (orderStatus === 'ready') {
-    <button class="mr-5" nz-button nzType="primary" (click)="updateOrderStatus()" nzShape="round">Order Ready to Serve</button>
-  }
+    Order Management
+  </h2>
+  <div class="flex justify-between">
+    <h3 class="mx-3">@if (orderId) {
+      Order ID #{{orderId}}
+      <span class="ml-2">
+        <nz-tag [nzColor]="getOrderStatusColor()">
+          {{orderStatus | uppercase }}
+        </nz-tag>
+      </span>
+    }
+    </h3> 
+    
+    @if (orderStatus === 'ready') {
+      <button class="mr-5" nz-button nzType="primary" (click)="updateOrderStatus()" nzShape="round">Order Ready to Serve</button>
+    }
 
-  @if(orderStatus === 'pending') {
-    <button class="mr-5" nz-button nzType="primary" nzDanger (click)="cancelOrder()" nzShape="round">Cancel Order</button>
-  }
-</div>
-
-<div class="order-page-container px-2">
-    <div class="full-menu-container">
-      <nz-tabset 
-        nzCentered
-        [nzTabBarGutter]="60"
-        [nzAnimated]="false"
-        (nzSelectedIndexChange)="handleTimeTabChange($event)"
-      >
-
-      <nz-tab nzTitle="All Items">
-
-        <div class="menu-items-container">
-          @if (menuList) {
-            @for (item of menuList; track $index) {
-              <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-                <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md" />
-                <p><strong>{{item.item.itemName}}</strong></p>
-                <p>{{item.item.itemPrice | currency:'£'}}</p>
-              </div>
-            }
-          }
-        </div>
-
-      </nz-tab>
-        <nz-tab *ngFor="let time of timeOfDays" [nzTitle]="time">
-          <nz-tabset 
-            nzCentered 
-            [nzTabBarGutter]="60"
-            (nzSelectedIndexChange)="handleCategoryTabChange($event)"
-            [nzSelectedIndex]="getTimeOutDayIndex()"
-            
-          >
-            <nz-tab *ngFor="let category of filteredCategories" [nzTitle]="category.categoryName">
-              <div class="menu-items-container">
-                @if (filteredMenu) {
-                  @for (item of filteredMenu; track $index) {
-                    <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
-                      <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
-                      <p><strong>{{item.item.itemName}}</strong></p>
-                      <p>{{item.item.itemPrice | currency:'£'}}</p>
-                    </div>
-                  }
-                }
-              </div>
-            </nz-tab>
-          </nz-tabset>
-        </nz-tab>
-      </nz-tabset>
-    </div>
-    <div class="order-cart-container flex flex-col">
-      <h3 class="px-2 pt-2 self-center text-xl font-bold">
-        Order Summary
-        <span class="ml-3"> | </span>
-        <span class="ml-3">{{tableName}}</span>
-      </h3>
-      <div class="grow overflow-y-auto">
-        @for (cartItem of orderCart; track $index) {
-            <div class="flex justify-between mx-3 my-5">
-              <div class="grow">
-                <div class="w-full flex justify-between">
-                  <div><strong>{{cartItem.item.itemQuantity}} × {{cartItem.item.itemName}}</strong></div>
-                  <div class="mx-5">{{cartItem.item.itemPrice | currency:'£'}}</div>
-                </div>
-                
-                @if (cartItem.item.chosenOptions) {
-                  @for (option of cartItem.item.chosenOptions.add; track $index) {
-                    <div class="w-full flex justify-between text-green">
-                      <div class="mx-5">+ {{option.ingredientName}}</div>
-                      <div class="mx-5 text-green">+ {{(option.costPerUnit * option.quantity).toFixed(2) | currency:'£'}}</div>
-                    </div>
-                  }
-
-                  @for (option of cartItem.item.chosenOptions.no; track $index) {
-                    <div class="w-full flex justify-between text-red">
-                      <div class="mx-5">- {{option.ingredientName}}</div>
-                      <div class="mx-5 text-red">- {{(option.costPerUnit * option.quantity).toFixed(2) | currency:'£'}}</div>
-                    </div>
-                  }
-                }
-
-                @if (cartItem.item.optionalNotes) {
-                  <i class="mx-5">Notes: {{cartItem.item.optionalNotes}}</i>
-                }
-              </div>
-
-              <div>
-                <button class="mr-2" nz-button nzShape="circle" nzSize="small" (click)="editCartItem(cartItem)">
-                  <span nz-icon nzType="edit" nzTheme="outline"></span>
-                </button>
-                <button nz-button nzShape="circle" nzSize="small" nzDanger (click)="removeItemFromCart(cartItem)">
-                  <span nz-icon nzType="close" nzTheme="outline"></span>
-                </button>
-              </div>
-            </div>
-            
-          }
-        </div>
-        <div class="w-full flex justify-between p-5 border-t">
-          <h3 class="text-xl">Total: {{ calculateTotal() | currency:'£'}}</h3>
-          <div class>
-              <button class="mr-4" nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
-              <button nz-button nzType="default" (click)="proceedToPayment()" [disabled]="!orderCart.length">Payment</button>
-          </div>
-        </div>
-      </div>
+    @if(orderStatus === 'pending') {
+      <button class="mr-5" nz-button nzType="primary" nzDanger (click)="cancelOrder()" nzShape="round">Cancel Order</button>
+    }
   </div>
 
+  <div class="order-page-container px-2">
+      <nz-spin [nzSpinning]="isMenuLoaded" nzSize="large" nzTip="Loading Menu">
+        <div class="full-menu-container">
+          <nz-tabset 
+            nzCentered
+            [nzTabBarGutter]="60"
+            [nzAnimated]="false"
+            (nzSelectedIndexChange)="handleTimeTabChange($event)"
+          >
+
+          <nz-tab nzTitle="All Items">
+
+            <div class="menu-items-container">
+              @if (menuList) {
+                @for (item of menuList; track $index) {
+                  <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+                    <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md" />
+                    <p><strong>{{item.item.itemName}}</strong></p>
+                    <p>{{item.item.itemPrice | currency:'£'}}</p>
+                  </div>
+                }
+              }
+            </div>
+
+          </nz-tab>
+            <nz-tab *ngFor="let time of timeOfDays" [nzTitle]="time">
+              <nz-tabset 
+                nzCentered 
+                [nzTabBarGutter]="60"
+                (nzSelectedIndexChange)="handleCategoryTabChange($event)"
+                [nzSelectedIndex]="getTimeOutDayIndex()"
+                
+              >
+                <nz-tab *ngFor="let category of filteredCategories" [nzTitle]="category.categoryName">
+                  <div class="menu-items-container">
+                    @if (filteredMenu) {
+                      @for (item of filteredMenu; track $index) {
+                        <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
+                          <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
+                          <p><strong>{{item.item.itemName}}</strong></p>
+                          <p>{{item.item.itemPrice | currency:'£'}}</p>
+                        </div>
+                      }
+                    }
+                  </div>
+                </nz-tab>
+              </nz-tabset>
+            </nz-tab>
+          </nz-tabset>
+        </div>
+      </nz-spin>
+      <div class="order-cart-container flex flex-col">
+        <h3 class="px-2 pt-2 self-center text-xl font-bold">
+          Order Summary
+          <span class="ml-3"> | </span>
+          <span class="ml-3">{{tableName}}</span>
+        </h3>
+        <div class="grow overflow-y-auto">
+          @for (cartItem of orderCart; track $index) {
+              <div class="flex justify-between mx-3 my-5">
+                <div class="grow">
+                  <div class="w-full flex justify-between">
+                    <div><strong>{{cartItem.item.itemQuantity}} × {{cartItem.item.itemName}}</strong></div>
+                    <div class="mx-5">{{cartItem.item.itemPrice | currency:'£'}}</div>
+                  </div>
+                  
+                  @if (cartItem.item.chosenOptions) {
+                    @for (option of cartItem.item.chosenOptions.add; track $index) {
+                      <div class="w-full flex justify-between text-green">
+                        <div class="mx-5">+ {{option.ingredientName}}</div>
+                        <div class="mx-5 text-green">+ {{(option.costPerUnit * option.quantity).toFixed(2) | currency:'£'}}</div>
+                      </div>
+                    }
+
+                    @for (option of cartItem.item.chosenOptions.no; track $index) {
+                      <div class="w-full flex justify-between text-red">
+                        <div class="mx-5">- {{option.ingredientName}}</div>
+                        <div class="mx-5 text-red">- {{(option.costPerUnit * option.quantity).toFixed(2) | currency:'£'}}</div>
+                      </div>
+                    }
+                  }
+
+                  @if (cartItem.item.optionalNotes) {
+                    <i class="mx-5">Notes: {{cartItem.item.optionalNotes}}</i>
+                  }
+                </div>
+
+                <div>
+                  <button class="mr-2" nz-button nzShape="circle" nzSize="small" (click)="editCartItem(cartItem)">
+                    <span nz-icon nzType="edit" nzTheme="outline"></span>
+                  </button>
+                  <button nz-button nzShape="circle" nzSize="small" nzDanger (click)="removeItemFromCart(cartItem)">
+                    <span nz-icon nzType="close" nzTheme="outline"></span>
+                  </button>
+                </div>
+              </div>
+              
+            }
+          </div>
+          <div class="w-full flex justify-between p-5 border-t">
+            <h3 class="text-xl">Total: {{ calculateTotal() | currency:'£'}}</h3>
+            <div class>
+                <button class="mr-4" nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
+                <button nz-button nzType="default" (click)="proceedToPayment()" [disabled]="!orderCart.length">Payment</button>
+            </div>
+          </div>
+        </div>
+  </div>
+</nz-spin>
 
 <!--  Drawer for Order Customization -->
 <nz-drawer *ngIf="selectedCartItem"

@@ -1,22 +1,24 @@
-<div class="py-4 px-4 hp-50">
-    <h2>Table Selector and Editor</h2>
-    <!-- <div class="flex"> -->
-    <div class="table-container">
-        @for (table of tables; track $index) {
-            <div class="table-block my-4 mx-4 text-center rounded-md" (click)="setSelectEditTable(table)">
-                <p><strong>{{table.name}}</strong></p>
-                <p>Seats: {{table.seats}}</p>
+<div class="main-div py-4 px-4 hp-50">
+    <nz-spin [nzSpinning]="isEditorLoaded" nzSize="large" nzTip="Loading Table Editor">
+      <h2>Table Selector and Editor</h2>
+      <!-- <div class="flex"> -->
+      <div class="table-container">
+          @for (table of tables; track $index) {
+              <div class="table-block my-4 mx-4 text-center rounded-md" (click)="setSelectEditTable(table)">
+                  <p><strong>{{table.name}}</strong></p>
+                  <p>Seats: {{table.seats}}</p>
 
-                <img [src]="getTableImage(table.type, table.seats)" alt="table"/>
-            </div>
-        }
-    </div>
-    <div class="py-5 px-4">
-      <h2>Create Table</h2>
-      <button nz-button nzType="primary" class="add-table-button my-4" (click)="openTableAddDrawer()">
-          Add New Table
-      </button>
-    </div>
+                  <img [src]="getTableImage(table.type, table.seats)" alt="table"/>
+              </div>
+          }
+      </div>
+      <div class="py-5 px-4">
+        <h2>Create Table</h2>
+        <button nz-button nzType="primary" class="add-table-button my-4" (click)="openTableAddDrawer()">
+            Add New Table
+        </button>
+      </div>
+  </nz-spin>
 </div>
 
 <!-- Drawer to Edit/Delete Table -->

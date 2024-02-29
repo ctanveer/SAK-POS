@@ -42,6 +42,8 @@ export class TablesPageComponent implements OnInit{
   notificationVisible:boolean = false;
   ongoingTableLogs: any | null = null;
 
+  isTableLoaded: boolean = true;
+
   constructor(
     private auth: AuthApiService, 
     private tableService: TableService, 
@@ -63,6 +65,7 @@ export class TablesPageComponent implements OnInit{
 
       this.tableService.getAllTables().subscribe((data) =>{
         this.tables = data;
+        this.isTableLoaded = false;
         this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
           this.todaysReservationList = data;
           console.log('Today\'s Reservation List: ', this.todaysReservationList);

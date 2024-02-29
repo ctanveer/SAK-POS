@@ -1,44 +1,46 @@
 <app-navbar [user]="user"></app-navbar>
-<h2 class="my-2 mx-3">
-    <span>
-        <button nz-button nzType="default" (click)="goBackToPaymentPage()">
-          <span nz-icon nzType="left" nzTheme="outline"></span>
-        </button>
-    </span> 
-    Process Payment // Order ID # {{billArr[0].orderId}}
-</h2>
 
-<div class="page-container border border-2 border-green rounded-md">
-    <div class="flex justify-center mt-16">
-        @if (billArr) {
-            @for (billObj of billArr; track $index) {
-                <div class="single-split-item border rounded-md mx-3 my-2 p-2 text-xs">
-                    <p>OrderId <strong>#{{ billObj.orderId }}</strong></p>
-                    <p>Payment ID: {{ billObj._id }}</p>
-                    <p>Total: {{ billObj.totalBill | currency:'£'}}</p>
-                    <p>Paid: {{ billObj.paid }}</p>
-                    <p>Mode  of Payment: {{ billObj.pmtMode }}</p>
-                    @if (billObj.paid === false) {
-                        <nz-radio-group [(ngModel)]="pmtModeArr[$index]">
-                            <label nz-radio nzValue="cash" (click)="changePmtMode($index, 'cash')">cash</label>
-                            <label nz-radio nzValue="card" (click)="changePmtMode($index, 'card')">card</label>
-                        </nz-radio-group>
-                        @if(billObj.pmtMode === 'cash' || billObj.pmtMode === 'card') {
-                            <button nz-button nzType="primary" nzSize="small" (click)="completePayment($index)">Pay by {{billObj.pmtMode}}</button>
+<nz-spin [nzSpinning]="isBillComplete" nzSize="large" nzTip="Completing Order...">
+    <h2 class="my-2 mx-3">
+        <span>
+            <button nz-button nzType="default" (click)="goBackToPaymentPage()">
+            <span nz-icon nzType="left" nzTheme="outline"></span>
+            </button>
+        </span> 
+        Process Payment // Order ID # {{billArr[0].orderId}}
+    </h2>
+
+    <div class="page-container border border-2 border-green rounded-md">
+        <div class="flex justify-center mt-16">
+            @if (billArr) {
+                @for (billObj of billArr; track $index) {
+                    <div class="single-split-item border rounded-md mx-3 my-2 p-2 text-xs">
+                        <p>OrderId <strong>#{{ billObj.orderId }}</strong></p>
+                        <p>Payment ID: {{ billObj._id }}</p>
+                        <p>Total: {{ billObj.totalBill | currency:'£'}}</p>
+                        <p>Paid: {{ billObj.paid }}</p>
+                        <p>Mode  of Payment: {{ billObj.pmtMode }}</p>
+                        @if (billObj.paid === false) {
+                            <nz-radio-group [(ngModel)]="pmtModeArr[$index]">
+                                <label nz-radio nzValue="cash" (click)="changePmtMode($index, 'cash')">cash</label>
+                                <label nz-radio nzValue="card" (click)="changePmtMode($index, 'card')">card</label>
+                            </nz-radio-group>
+                            @if(billObj.pmtMode === 'cash' || billObj.pmtMode === 'card') {
+                                <button nz-button nzType="primary" nzSize="small" (click)="completePayment($index)">Pay by {{billObj.pmtMode}}</button>
+                            }
                         }
-                    }
-                </div>
+                    </div>
+                }
             }
-        }
+        </div>
+        <div class=" w-full mt-12 flex justify-center">
+            @if (isAllPaid()) {
+                <button nz-button nzType="primary" nzSize="large" (click)="paymentComplete()">Complete Order</button>
+            }
+        </div>
+        
     </div>
-    <div class=" w-full mt-12 flex justify-center">
-        @if (isAllPaid()) {
-            <button nz-button nzType="primary" nzSize="large" (click)="paymentComplete()">Complete Order</button>
-        }
-    </div>
-    
-</div>
-
+</nz-spin>
 
 <!-- Pay by Cash -->
 <nz-modal [(nzVisible)]="isCashPayVisible" nzTitle="Cash Payment" (nzOnCancel)="handleCancel()" nzOkText="Submit" (nzOnOk)="handleOk()">

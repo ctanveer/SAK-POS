@@ -48,6 +48,8 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 const config: SocketIoConfig = { url: environment.API_URL, options: {} };
 
@@ -98,7 +100,9 @@ registerLocaleData(en);
     NzRadioModule,
     SocketIoModule.forRoot(config),
     NzResultModule,
-    NzTagModule
+    NzTagModule,
+    NzSpinModule,
+    NzAlertModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

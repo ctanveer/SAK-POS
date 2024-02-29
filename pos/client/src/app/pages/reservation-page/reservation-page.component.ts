@@ -24,6 +24,8 @@ export class ReservationPageComponent implements OnInit {
   currentDate: number = 1;
   parsedDate: string | null = null;
 
+  isReservationLoaded: boolean = true;
+
   constructor(private reservationService: ReservationService, private tableService: TableService, private auth: AuthApiService){};
 
   ngOnInit(): void {
@@ -38,6 +40,7 @@ export class ReservationPageComponent implements OnInit {
           this.todaysReservationList = data;
           console.log('Todays Reservation List: ', this.todaysReservationList);
           console.log('Current time is', Date.now());
+          this.isReservationLoaded = false;
         })
         this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
           this.reservationList = data;

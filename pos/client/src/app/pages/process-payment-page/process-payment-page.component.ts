@@ -35,6 +35,7 @@ export class ProcessPaymentPageComponent implements OnInit {
   email: string | null = null;
 
   completeStatus: boolean = false;
+  isBillComplete: boolean = false;
 
   constructor (private router: Router, 
     private location: Location, 
@@ -133,8 +134,10 @@ export class ProcessPaymentPageComponent implements OnInit {
       this.isEmailModalVisible = false;
       if (this.fullOrder) {
         // const documentDefinition = this.createDocumentDefinition(this.fullOrder.items);
+        this.isBillComplete = true;
         this.emailService.sendEmail(this.email, this.fullOrder, this.totalBillWithTip).subscribe(data =>  {
           console.log('Successdully sent mail: ', data);
+          this.isBillComplete = false;
           this.router.navigate(['table']);
         })
       }

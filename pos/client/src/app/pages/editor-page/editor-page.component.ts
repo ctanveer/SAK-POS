@@ -24,7 +24,9 @@ export class EditorPageComponent implements OnInit{
   adderVisible = false;
   newTableName: string | null = null;
   newTableType: 'square'| 'rectangle' | 'round' | 'oval' | null = null;
-  newTableSeats: number | null = null; 
+  newTableSeats: number | null = null;
+
+  isEditorLoaded: boolean = true;
 
   constructor(private tableService: TableService, private auth: AuthApiService){}
 
@@ -32,6 +34,7 @@ export class EditorPageComponent implements OnInit{
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
       console.log(data);
+      this.isEditorLoaded = false;
     })
 
     this.auth.getUser().subscribe(data => {
