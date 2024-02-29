@@ -35,4 +35,9 @@ export class TablelogService {
     const url = `${this.tLogUrl}/ongoing`;
     return this.http.get(url, this.httpOptions);
   }
+
+  getTableLogByOrderId(id: string) {
+    const url = `${this.tLogUrl}/orderId/${id}`;
+    return this.http.get(url, this.httpOptions);
+  }
 }

@@ -6,7 +6,8 @@ import {
     createTableLog,
     updateTableLogById,
     deleteTableLogById,
-    getOngoingTableLogsByRestaurantId
+    getOngoingTableLogsByRestaurantId,
+    getTableLogForOrderId
 } from '../models/tableLog/tableLog.query'
 import { updateTableById } from "../models/table/table.query";
 import { createOrder } from "../models/order/order.query";
@@ -90,3 +91,15 @@ export const createTableLogController = async (req: Request, res: Response) => {
     }
     */
 };
+
+export const getTableLogForOrderIdController = async (req: Request, res: Response) => {
+  try {
+    const orderId: string = req.params.id;
+    const tableLog = await getTableLogForOrderId(orderId);
+    res.status(200);
+    res.json(tableLog);
+  } catch (error: any) {
+    res.status(500);
+    res.json({error: error.message})
+  }
+}

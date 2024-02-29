@@ -15,6 +15,7 @@ import { PaymentlogService } from '../../services/paymentlog.service';
 import { IPaymentLog } from '../../models/paymentlog.model';
 import { IOrder } from '../../models/order.model';
 import { SocketService } from '../../services/socket/socket.service';
+import { TablelogService } from '../../services/tablelog.service';
 
 @Component({
   selector: 'app-order-page',
@@ -31,7 +32,8 @@ export class OrderPageComponent implements OnInit {
     private orderService: OrderService, 
     private toast: ToastMessageService, 
     private paymentLogService: PaymentlogService,
-    private socket: SocketService
+    private socket: SocketService,
+    private tableLogService: TablelogService
   ) {}
   
   user : IUser | undefined;
@@ -252,6 +254,16 @@ export class OrderPageComponent implements OnInit {
       console.log('Order with updated status is: ', data);
       this.toast.setMessage('Order Served', 'info');
       this.orderStatus = 'served';
+    })
+  }
+
+  cancelOrder() {
+    this.orderService.updateOrderStatus(this.orderId, 'cancel').subscribe(data => {
+      console.log('Order with updated status(cancel) is: ', data);
+      this.toast.setMessage('Order Canceled', 'info');
+      this.orderStatus = 'cancel';
+      this.goBackToTablePage();
+      // this.tableLogService.getTableLogByOrderId(this)
     })
   }
 

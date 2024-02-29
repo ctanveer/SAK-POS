@@ -55,7 +55,7 @@ const createTable = async (tableObject: ITable) => {
 }
 
 const updateTableById = async (
-    tableId: string,
+    tableId: string | Types.ObjectId,
     tableObject: Partial<ITable>,
   ) => {
     const table = await Table.findByIdAndUpdate(

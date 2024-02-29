@@ -21,6 +21,10 @@
   @if (orderStatus === 'ready') {
     <button class="mr-5" nz-button nzType="primary" (click)="updateOrderStatus()" nzShape="round">Order Ready to Serve</button>
   }
+
+  @if(orderStatus === 'pending') {
+    <button class="mr-5" nz-button nzType="primary" nzDanger (click)="cancelOrder()" nzShape="round">Cancel Order</button>
+  }
 </div>
 
 <div class="order-page-container px-2">
@@ -122,9 +126,9 @@
         </div>
         <div class="w-full flex justify-between p-5 border-t">
           <h3 class="text-xl">Total: {{ calculateTotal() | currency:'£'}}</h3>
-          <div>
-            <button class="mr-4" nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
-            <button nz-button nzType="default" (click)="proceedToPayment()" [disabled]="!orderCart.length">Payment</button>
+          <div class>
+              <button class="mr-4" nz-button nzType="primary" (click)="confirmAndSendOrder()" [disabled]="!orderCart.length">Send Order</button>
+              <button nz-button nzType="default" (click)="proceedToPayment()" [disabled]="!orderCart.length">Payment</button>
           </div>
         </div>
       </div>

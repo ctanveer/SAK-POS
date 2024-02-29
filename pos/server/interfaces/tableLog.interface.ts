@@ -8,7 +8,7 @@ export interface ITableLog {
     orderId?: Types.ObjectId;
     waiterId?: number;
     customerId?:number;
-    status: 'ongoing' | 'closed' | 'void';
+    status: 'ongoing' | 'closed' | 'cancel';
     createdAt?: Date;
     updatedAt?: Date;
 }

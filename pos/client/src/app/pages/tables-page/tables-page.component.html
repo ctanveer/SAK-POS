@@ -128,11 +128,20 @@
             <img [src]="getSelectedTableImage()" alt="Selected table" />
         </div>
         
-        @if (selectedTable.status === 'occupied') {
-            <div class="mt-10">
-                <button nz-button nzType="primary" (click)="proceedToOrder()">ORDER</button>
-            </div>
-        }
+        <div class="mt-10 flex justify-between">
+            @if (selectedTable.status === 'occupied') {
+                <div>
+                    <button nz-button nzType="primary" (click)="proceedToOrder()">ORDER</button>
+                </div>
+
+            }
+            @if (selectedTable.status === 'occupied' || selectedTable.status === 'reserved') {
+                <div>
+                    <button nz-button nzType="primary" (click)="selectCustomerForOrder()">ADD CUSTOMER</button>
+                </div>
+            }
+        </div>
+
     </ng-container>
 
     <ng-template #footerTpl>

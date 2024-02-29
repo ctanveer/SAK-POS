@@ -339,6 +339,10 @@ export class TablesPageComponent implements OnInit{
     }
   }
 
+  selectCustomerForOrder() {
+    return 1;
+  }
+
   calculatePreparationTime(items: IItem[]) {
     const time = items.reduce((acc, item) => {
       let totalTime

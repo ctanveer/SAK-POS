@@ -1,4 +1,4 @@
-export function getDataFromStatus (status: "pending" | "preparing" | "ready" | "served" | "complete") {
+export function getDataFromStatus (status: "pending" | "preparing" | "ready" | "served" | "complete" | "cancel") {
   switch (status) {
     case "preparing":
       return { status, preparingTimestamp: new Date()}
@@ -6,6 +6,8 @@ export function getDataFromStatus (status: "pending" | "preparing" | "ready" | "
       return { status, readyTimestamp: new Date()}
     case "served":
       return { status, servedTimestamp: new Date()}
+    case "cancel":
+      return { status, cancelTimestamp: new Date()}
     default:
       return { status }
   }

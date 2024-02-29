@@ -4,7 +4,8 @@ import {
     getTableLogsByTableIdController,
     createTableLogController,
     updateTableLogByIdController,
-    getOngoingTableLogsByRestaurantIdController
+    getOngoingTableLogsByRestaurantIdController,
+    getTableLogForOrderIdController
 } from '../controllers/tableLog.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
 
@@ -15,6 +16,7 @@ router.get('/', getAllTableLogsController);
 router.get('/:id', getTableLogsByTableIdController);
 // router.post('/:id', createTableLogController);
 router.post('/', createTableLogController);
-router.put('/:id', updateTableLogByIdController)
+router.put('/:id', updateTableLogByIdController);
+router.get('/orderId/:id', getTableLogForOrderIdController); //not needed for now
 
 export default router;

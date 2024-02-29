@@ -14,7 +14,7 @@ const TableLogSchema = new Schema<ITableLog>({
   },
   waiterId: {type: Number, default: null},
   customerId: {type: Number, default: null},
-  status: {type: String, required: true, default: 'ongoing', enum: ['ongoing', 'closed', 'void']},
+  status: {type: String, required: true, default: 'ongoing', enum: ['ongoing', 'closed', 'cancel']},
 }, {
   timestamps: {
     createdAt: 'createdAt',

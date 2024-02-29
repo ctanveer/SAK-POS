@@ -17,7 +17,7 @@ import { postOrderToKDS } from '../services/skeleton.service';
 import { postStatusUpdateToKDS } from '../services/skeleton.service';
 import { getDataFromStatus } from '../utils/status.helper';
 import { getLatestOngoingOrderForTable, getTableLogForOrderId, updateTableLogById } from '../models/tableLog/tableLog.query';
-import { getTableById } from '../models/table/table.query';
+import { getTableById, updateTableById } from '../models/table/table.query';
 
 export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Response) => {
     try {
@@ -63,7 +63,8 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       status !== "preparing" &&
       status !== "ready" &&
       status !== "served" &&
-      status !== "complete")
+      status !== "complete" &&
+      status !== "cancel")
     ) return res.status(400).send({ message: "Invalid fields." });
 
     const order = await getOrderById(orderId);
@@ -80,6 +81,10 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       console.log('Updated Order is: ', updatedOrder);
       if (updatedOrder) {
         const tableLog = await getTableLogForOrderId(updatedOrder._id);
+        if (tableLog && status === 'cancel') {
+          await updateTableLogById(tableLog._id, {status: 'cancel'})
+          await updateTableById(tableLog.tableId, {status: 'open'})
+        }
         if (tableLog) {
           console.log('Table Log is: ', tableLog);
           const table = await getTableById(tableLog.tableId);
