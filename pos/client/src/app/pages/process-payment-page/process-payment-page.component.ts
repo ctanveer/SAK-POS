@@ -10,8 +10,10 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { IOrder } from '../../models/order.model';
 import { EmailService } from '../../services/email.service';
+import { environment } from '../../../environments/environment.development';
+import { PaymentService } from '../../services/payment.service';
 // import image from '../../../assets/logo/logo-1.png'
-
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -37,11 +39,18 @@ export class ProcessPaymentPageComponent implements OnInit {
   completeStatus: boolean = false;
   isBillComplete: boolean = false;
 
+  stripe: Stripe | null = null;
+  clientSecret: any;
+
+  ok: boolean = false;
+
   constructor (private router: Router, 
     private location: Location, 
     private paymentLogService: PaymentlogService, 
     private orderService: OrderService,
-    private emailService: EmailService) {}
+    private emailService: EmailService,
+    private paymentService: PaymentService
+    ) {}
   
   ngOnInit(): void {
     const state = this.location.getState() as {billArr: IPaymentLog[], bill: number, user: IUser}
@@ -53,6 +62,57 @@ export class ProcessPaymentPageComponent implements OnInit {
       this.orderId = state.billArr[0].orderId;
     }
 
+    this.invokeStripe();
+
+  }
+
+
+  paymentHandler: any = null;
+  published_key = environment.STRIPE_KEY;
+  // constructor() {}
+  // ngOnInit() {
+  //   this.invokeStripe();
+  // }
+  makePayment(index: number) {
+    this.currentIndex = index;
+    const paymentHandler = (<any>window).StripeCheckout.configure({
+      key: this.published_key,
+      locale: 'auto',
+      token: (stripeToken: any) => {
+        console.log(stripeToken);
+        // alert('Stripe token generated!');
+        this.handleOk();
+      },
+    });
+    
+    paymentHandler.open({
+      name: 'Bento-POS',
+      description: 'Order Payment',
+      amount: Number(this.billArr[this.currentIndex].totalBill) * 100,
+      currency: 'GBP'
+    });
+    
+    console.log('Payment Handler is: ', paymentHandler);
+  }
+
+  invokeStripe() {
+    if (!window.document.getElementById('stripe-script')) {
+      const script = window.document.createElement('script');
+      script.id = 'stripe-script';
+      script.type = 'text/javascript';
+      script.src = 'https://checkout.stripe.com/checkout.js';
+      script.onload = () => {
+        this.paymentHandler = (<any>window).StripeCheckout.configure({
+          key: this.published_key,
+          locale: 'auto',
+          token: function (stripeToken: any) {
+            console.log(stripeToken);
+            alert('Payment has been successfull!');
+          },
+        });
+      };
+      window.document.body.appendChild(script);
+    }
   }
 
   changePmtMode(index: number, value: string) {
@@ -159,3 +219,71 @@ export class ProcessPaymentPageComponent implements OnInit {
     this.location.back();
   }
 }
+
+  /*
+  invokeStripe() {
+    if (!window.document.getElementById('stripe-script')) {
+      const script = window.document.createElement('script');
+      script.id = 'stripe-script';
+      script.type = 'text/javascript';
+      script.src = 'https://js.stripe.com/v3/';
+      script.onload = async () => {
+        // this.stripe = (<any>window).Stripe(environment.stripe.publicKey);
+        this.stripe = await loadStripe(environment.stripe.publicKey);
+       };
+       window.document.body.appendChild(script);
+      }
+  }
+  */
+
+  /*
+  preparePayment() {
+    const data = this.billArr[this.currentIndex];
+    this.paymentService.preparePayment(data).subscribe((res) => {
+      this.clientSecret = res['client_secret'];
+      this.initialize();
+    });
+  }
+  */
+
+  // async initialize() {
+  //   let emailAddress = '';
+  //   const clientSecret = this.clientSecret;
+  //   const appearance = {
+  //     theme: 'stripe',
+  //   };
+  //   this.elements = this.stripe.elements({ appearance, clientSecret });
+  //   const linkAuthenticationElement =
+  //     this.elements.create('linkAuthentication');
+  //   linkAuthenticationElement.mount('#link-authentication-element');
+  //   linkAuthenticationElement.on('change', (event) => {
+  //     emailAddress = event.value.email;
+  //   });
+  //   const paymentElementOptions = {
+  //     layout: 'tabs',
+  //   };
+  //   const paymentElement = this.elements.create(
+  //     'payment',
+  //     paymentElementOptions
+  //   );
+  //   paymentElement.mount('#payment-element');
+  // }
+
+
+  // Fetches a payment intent and captures the client secret
+  /*
+  async initialize() {
+    const appearance = {
+      theme: "stripe",
+    };
+
+    if (this.stripe && this.clientSecret) this.elements = this.stripe.elements({this.clientSecret, appearance});
+  
+    const paymentElementOptions = {
+      layout: "tabs",
+    };
+  
+    const paymentElement = this.elements.create("payment", paymentElementOptions);
+    paymentElement.mount("#payment-element");
+  }
+  */

@@ -20,6 +20,7 @@
     "@angular/router": "^17.2.1",
     "ng-zorro-antd": "^17.1.0",
     "ngx-socket-io": "^4.6.1",
+    "ngx-stripe": "^17.1.1",
     "pdfmake": "^0.2.9",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",

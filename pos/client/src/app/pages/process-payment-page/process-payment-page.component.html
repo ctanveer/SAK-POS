@@ -25,8 +25,11 @@
                                 <label nz-radio nzValue="cash" (click)="changePmtMode($index, 'cash')">cash</label>
                                 <label nz-radio nzValue="card" (click)="changePmtMode($index, 'card')">card</label>
                             </nz-radio-group>
-                            @if(billObj.pmtMode === 'cash' || billObj.pmtMode === 'card') {
+                            @if(billObj.pmtMode === 'cash') {
                                 <button nz-button nzType="primary" nzSize="small" (click)="completePayment($index)">Pay by {{billObj.pmtMode}}</button>
+                            }
+                            @else if (billObj.pmtMode === 'card') {
+                                <button nz-button nzType="primary" nzSize="small" (click)="makePayment($index)">Pay by {{billObj.pmtMode}}</button>
                             }
                         }
                     </div>
@@ -58,6 +61,12 @@
         @if (currentIndex >= 0) {
             <p>Amount Due: {{billArr[currentIndex].totalBill | currency:'£'}}</p>
         }
+        <!-- @if (currentIndex >= 0) {
+            <div>
+                <button (click)="makePayment()">Pay</button>
+            </div>
+        } -->
+
     </ng-container>
 </nz-modal>
 

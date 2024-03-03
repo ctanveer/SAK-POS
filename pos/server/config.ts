@@ -7,5 +7,6 @@ export const config = {
   CORS_ORIGIN: process.env.CORS_ORIGIN ?? '*',
   SKELETON_URL: process.env.SKELETON_URL ?? "http://localhost:4000",
   EMAIL_USER: process.env.EMAIL_USER,
-  EMAIL_PASS: process.env.EMAIL_PASS
+  EMAIL_PASS: process.env.EMAIL_PASS,
+  STRIPE_KEY: process.env.STRIPE_KEY
 }

@@ -98,18 +98,34 @@ export class EditorPageComponent implements OnInit{
   //   return `Table ${this.tables.length + 1}`;
   // }
 
-  getNextTableName() {
-    const tableNumbers = this.tables.map(tableName => parseInt(tableName.name.split(' ')[1]));
-    tableNumbers.sort((a, b) => a - b);
-    for (let i = 0; i < tableNumbers.length - 1; i++) {
-      if (tableNumbers[i + 1] - tableNumbers[i] > 1) {
-        const missingTableNumber = tableNumbers[i] + 1;
-        return `Table ${missingTableNumber}`;
-      }
+  findMissingNumbers(sequence: number[]) {
+    const missingNumbers = [];
+    let expectedNumber = sequence[0] - 1;
+
+    for (const num of sequence) {
+        while (++expectedNumber < num) {
+            missingNumbers.push(expectedNumber);
+        }
+        expectedNumber = num;
     }
 
-    const nextTableNumber = tableNumbers[tableNumbers.length - 1] + 1;
-    return `Table ${nextTableNumber}`;
+    return missingNumbers;
+  }
+
+  getNextTableName() {
+    if (this.tables.length > 0) {
+      const tableNumbers = this.tables.map(tableName => parseInt(tableName.name.split(' ')[1]));
+      tableNumbers.sort((a, b) => a - b);
+      console.log(tableNumbers);
+      const missingNumber = this.findMissingNumbers(tableNumbers);
+      if (missingNumber.length > 0) {
+        return `Table ${missingNumber[0]}`
+      }
+
+      const nextTableNumber = tableNumbers[tableNumbers.length - 1] + 1;
+      return `Table ${nextTableNumber}`;
+    } 
+    else return 'Table 1'
   
   }
 

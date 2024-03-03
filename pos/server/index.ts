@@ -15,6 +15,7 @@ import hrRouter from './routers/hr.router';
 import reservationRouter from './routers/reservation.router';
 import bodyParser from 'body-parser';
 import emailRouter from './routers/email.router';
+import paymentRouter from './routers/payment.router';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/payment-log', paymentLogRouter);
 app.use('/hr', hrRouter);
 app.use('/reservation', reservationRouter);
 app.use('/mailer', emailRouter);
+app.use('/payment', paymentRouter);
 
 (async function bootstrap() {
   try {
