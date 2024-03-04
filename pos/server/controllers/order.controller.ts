@@ -33,7 +33,7 @@ export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Re
     }
 };
 
-export const getOrderByIdController = async (req: AuthRequest, res: Response) => {
+export const getOrderByIdController = async (req: Request, res: Response) => {
   try {
     //const user = req.user;
     // const token = req.token;
