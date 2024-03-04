@@ -69,10 +69,7 @@ export class ProcessPaymentPageComponent implements OnInit {
 
   paymentHandler: any = null;
   published_key = environment.STRIPE_KEY;
-  // constructor() {}
-  // ngOnInit() {
-  //   this.invokeStripe();
-  // }
+
   makePayment(index: number) {
     this.currentIndex = index;
     const paymentHandler = (<any>window).StripeCheckout.configure({
