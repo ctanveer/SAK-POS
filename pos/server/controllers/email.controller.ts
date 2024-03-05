@@ -91,7 +91,9 @@ function sendMail(toEmail: string, order: IOrder, totalBill: number) {
             from: config.EMAIL_USER,
             to: toEmail,
             subject: `Restaurant Order Bill # ${order._id}`,
-            text: "Dear Customer, Please find the attached Invoice below.",
+            text: `Dear Customer, Please find the attached Invoice below.\n\n
+              Please post your review at the following link:\n 
+              https://bento-reviews.vercel.app/reviews/orderId/${order._id}`,
             attachments: [
                 {
                   filename: `Order_${order._id}_invoice.pdf`,
