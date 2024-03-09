@@ -107,3 +107,13 @@ export async function postStatusUpdateToReservations (token: string, restaurantI
     throw new Error("Error updating status update to Reservations.")
   }
 }
+
+export async function getMenuDiscountFromSkeleton(token: string) {
+  try {
+    const res = await axios.get<any>(config.SKELETON_URL + '/pos/pos-discount-percentage', { headers: { 'Authorization': token }});
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting discount for menu")
+  }
+}

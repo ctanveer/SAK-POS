@@ -16,6 +16,8 @@ import { IPaymentLog } from '../../models/paymentlog.model';
 import { IOrder } from '../../models/order.model';
 import { SocketService } from '../../services/socket/socket.service';
 import { TablelogService } from '../../services/tablelog.service';
+import { DiscountService } from '../../services/discount.service';
+import { IDiscount } from '../../models/discount.interface';
 
 @Component({
   selector: 'app-order-page',
@@ -33,7 +35,8 @@ export class OrderPageComponent implements OnInit {
     private toast: ToastMessageService, 
     private paymentLogService: PaymentlogService,
     private socket: SocketService,
-    private tableLogService: TablelogService
+    private tableLogService: TablelogService,
+    private discountService: DiscountService
   ) {}
   
   user : IUser | undefined;
@@ -52,6 +55,7 @@ export class OrderPageComponent implements OnInit {
   totalBill: string = '';
   selectedCartItem: IItem | null = null;
   editorVisible: boolean = false;
+  discountObj: IDiscount = {posDiscountPercentage: 0};
   
   selectedOption: string | null = null;
   optionalNotes: string | null = null;
@@ -94,10 +98,18 @@ export class OrderPageComponent implements OnInit {
     this.menuService.getMenu().subscribe(data => {
       this.menuList = data;
       this.getTimeOfDays();
-      console.log('Restaurant Menu is: ', this.menuList);
+      
       this.isMenuLoaded = false;
-    });
 
+      //Adding Discount to menu
+      this.discountService.getDiscount().subscribe(data => {
+        this.discountObj = data;
+        this.menuList?.forEach(item => item.item.discount = item.item.itemPrice);
+        this.menuList?.forEach(item => item.item.itemPrice = item.item.itemPrice * (1 - (this.discountObj.posDiscountPercentage / 100)));
+        console.log('Restaurant Menu is: ', this.menuList);
+      })
+    });
+    
     this.socket.getOrderStatusChange().subscribe(data => {
       if (data.order._id === this.orderId) this.orderStatus = data.order.status
     })

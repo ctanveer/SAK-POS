@@ -46,7 +46,15 @@
                   <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
                     <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md" />
                     <p><strong>{{item.item.itemName}}</strong></p>
-                    <p>{{item.item.itemPrice | currency:'£'}}</p>
+                    <!-- <p>{{item.item.itemPrice | currency:'£'}}</p> -->
+                    @if (discountObj.posDiscountPercentage === 0) {
+                      <p>{{item.item.itemPrice | currency:'£'}}</p>
+                    }
+                    @else {
+                      <!-- <span style="text-decoration: line-through; color: grey;">{{item.item.itemPrice * (1 + (discountObj.posDiscountPercentage/100)) | currency:'£'}} </span> -->
+                      <span style="text-decoration: line-through; color: grey;">{{item.item.discount| currency:'£'}} </span>
+                      <span>&nbsp;{{item.item.itemPrice | currency:'£'}}</span>
+                    }
                   </div>
                 }
               }
@@ -68,7 +76,14 @@
                         <div class="item-block my-4 mx-4 text-center rounded-md" (click)="addToCart(item)">
                           <img [src]="item.item.itemImage ? item.item.itemImage : '../../../assets/svg/knife-and-fork.svg'" alt="food image" style="width: 60%; height: 60%; object-fit: cover;" class="rounded-md">
                           <p><strong>{{item.item.itemName}}</strong></p>
-                          <p>{{item.item.itemPrice | currency:'£'}}</p>
+                          @if (discountObj.posDiscountPercentage === 0) {
+                            <p>{{item.item.itemPrice | currency:'£'}}</p>
+                          }
+                          @else {
+                            <!-- <span style="text-decoration: line-through; color: grey;">{{item.item.itemPrice * (1 + (discountObj.posDiscountPercentage/100)) | currency:'£'}} </span> -->
+                            <span style="text-decoration: line-through; color: grey;">{{item.item.discount| currency:'£'}} </span>
+                            <span>&nbsp;{{item.item.itemPrice | currency:'£'}}</span>
+                          }
                         </div>
                       }
                     }
