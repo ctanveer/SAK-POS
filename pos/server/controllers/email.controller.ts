@@ -93,7 +93,7 @@ function sendMail(toEmail: string, order: IOrder, totalBill: number) {
             subject: `Restaurant Order Bill # ${order._id}`,
             text: `Dear Customer, Please find the attached Invoice below.\n\n
               Please post your review at the following link:\n 
-              https://bento-reviews-crabypatty.koyeb.app/orderDetails/pos/${order._id}`,
+              https://bento-reviews-six.vercel.app/pos?orderId=${order._id}`,
             attachments: [
                 {
                   filename: `Order_${order._id}_invoice.pdf`,

@@ -12,8 +12,7 @@ import { IOrder } from '../../models/order.model';
 import { EmailService } from '../../services/email.service';
 import { environment } from '../../../environments/environment.development';
 import { PaymentService } from '../../services/payment.service';
-// import image from '../../../assets/logo/logo-1.png'
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { Stripe } from '@stripe/stripe-js';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -65,7 +64,6 @@ export class ProcessPaymentPageComponent implements OnInit {
     this.invokeStripe();
 
   }
-
 
   paymentHandler: any = null;
   published_key = environment.STRIPE_KEY;

@@ -35,7 +35,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
 });
 
-
 // Use body-parser middleware
 app.use(bodyParser.json());
 
