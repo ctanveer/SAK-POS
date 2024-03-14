@@ -1,19 +1,19 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import http from "http";
 import { Server } from "socket.io";
+import { config } from './config';
 import authRouter from './routers/auth.router';
 import tableRouter from './routers/table.router';
 import orderRouter from './routers/order.router'
 import customerRouter from './routers/customer.router';
 import tableLogRouter from './routers/tableLog.router';
 import menuRouter from './routers/menu.router';
-import { config } from './config';
 import paymentLogRouter from './routers/paymentLog.router';
 import hrRouter from './routers/hr.router';
 import reservationRouter from './routers/reservation.router';
-import bodyParser from 'body-parser';
 import emailRouter from './routers/email.router';
 import paymentRouter from './routers/payment.router';
 import discountRouter from './routers/discount.router';
@@ -35,7 +35,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     next();
 });
 
-// Use body-parser middleware
 app.use(bodyParser.json());
 
 app.use(cors({ origin: config.CORS_ORIGIN.split(","), exposedHeaders: ['Authorization']}));
