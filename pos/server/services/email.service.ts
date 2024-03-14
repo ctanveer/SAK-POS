@@ -33,7 +33,6 @@ export function sendMailToCustomer(toEmail: string, order: IOrder, totalBill: nu
 
     return new Promise((resolve, reject) => {
         const mailOptions = {
-            // from: 'bento.mailer.service@gmail.com',
             from: config.EMAIL_USER,
             to: toEmail,
             subject: `Restaurant Order Bill # ${order._id}`,
@@ -64,7 +63,6 @@ function  createDocumentDefinition(order: IOrder, items: ItemInterface[], totalB
       content: [
         { text: 'Restaurant Bill', style: 'header' },
         { text: `Restaurant ID: ${order.restaurantId}`, style: 'subheader' },
-        // { text: `Restaurant Name: The One And Only Bento Restaurant`, style: 'subheader' },
         { text: `Order Id: ${order._id}`, style: 'subheader' },
         '\n',
         {

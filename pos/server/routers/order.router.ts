@@ -20,7 +20,6 @@ import { authMiddleware } from '../middleware/auth.middleware';
 const router = express.Router();
 
 router.get('/all', authMiddleware, getAllRestaurantOrdersController);
-// router.get('/:id', authMiddleware, getOrderByIdController);
 router.get('/:id', getOrderByIdController);
 router.post('/status/:orderId', authMiddleware, updateOrderStatus);
 router.put('/items/:orderId', authMiddleware, updateOrderItems);

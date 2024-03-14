@@ -13,13 +13,12 @@ export const getAllReservationsForTodayController = async (req: AuthRequest, res
         
         const restaurantId = req.params.id;
         const date = (new Date().toISOString().split('T')[0]) + 'T00:00:00.000Z'; //"2024-01-25T00:00:00.000Z"
-        console.log('Date is: ', date);
 
         const reservationList = await getAllReservationsForToday(token, restaurantId, date);
         res.send(reservationList);
-    } catch (error:any) {
-        res.status(500);
-        res.json({message: error.message})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: (error as Error).message});
     }
 }
 
@@ -33,9 +32,9 @@ export const getAllReservationsController = async (req: AuthRequest, res: Respon
 
         const reservationList = await getAllReservations(token, restaurantId);
         res.send(reservationList);
-    } catch (error:any) {
-        res.status(500);
-        res.json({message: error.message});
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: (error as Error).message});
     }
 }
 
@@ -47,14 +46,12 @@ export const updateReservationStatusContrller = async (req: AuthRequest, res: Re
         
         const reservation = req.body;
 
-        // const restaurantId = user.employeeInformation.restaurantId;
         const restaurantId = parseInt(req.params.id);
 
         const updatedReservation = postStatusUpdateToReservations(token, restaurantId, reservation);
         res.send(updatedReservation);
-    } catch (error: any) {
-        res.status(500);
-        res.json({message: error.message});
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: (error as Error).message});
     }
 }
-/////start from here

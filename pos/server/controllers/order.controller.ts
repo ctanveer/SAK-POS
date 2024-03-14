@@ -1,12 +1,10 @@
 import mongoose from 'mongoose';
 import {Request, Response} from 'express';
-import * as fs from 'fs';
 import {
     getOrderById,
     createOrder,
     updateOrderById,
     deleteOrderById,
-    updateOrderWithCustomerId,
     getAllOrdersByRestaurantId,
     getHourlyOrderCountFor24Hours,
     getDailyOrderCountByWeekdays,
@@ -25,26 +23,21 @@ export const getAllRestaurantOrdersController = async (req: AuthRequest, res: Re
       if (!user) return res.status(401).send({ message: 'Unauthorized.' });
 
       const orders = await getAllOrdersByRestaurantId(user.employeeInformation.restaurantId);
-      // { data: orders }
       res.status(200).send(orders);
-    } catch (error: any) {
-        res.status(500);
-        res.json({ message: error.message });
-    }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: (error as Error).message});
+  }
 };
 
 export const getOrderByIdController = async (req: Request, res: Response) => {
   try {
-    //const user = req.user;
-    // const token = req.token;
-    // if (!user || !token) return res.status(401).send({ message: 'Unauthorized.' });
-    
     const id = req.params.id;
     const order = await getOrderById(id);
     res.json(order);
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 };
 
@@ -105,9 +98,9 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
       res.status(200).json(updatedOrder);
     }
 
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 };
 
@@ -140,30 +133,13 @@ export const updateOrderItemStatus = async (req: AuthRequest, res: Response) => 
       const updatedOrder = await updateOrderById(orderId, { items });
 
       console.log('Updated Order is: ', updatedOrder);
-      // if (updatedOrder) {
-      //   const tableLog = await getTableLogForOrderId(updatedOrder._id);
-      //   if (tableLog) {
-      //     console.log('Table Log is: ', tableLog);
-      //     const table = await getTableById(tableLog.tableId);
-      //     if (table) {
-      //       console.log('Table is: ', table);
-      //       const io = res.locals.io;
-      //       io.to(updatedOrder.restaurantId.toString()).emit('order-status-change', { order: updatedOrder, table });
-      //     }
-      //   }
-      // }
-
-      // if (updatedOrder && status === 'served') {
-      //   console.log('Updating status to served')
-      //   await postStatusUpdateToKDS(updatedOrder, token);
-      // }
 
       res.status(200).json(updatedOrder);
     }
 
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 };
 
@@ -191,16 +167,15 @@ export const updateOrderItems = async (req: AuthRequest, res: Response) => {
       const updatedOrder = await updateOrderById(orderId, newData);
       
       if (updatedOrder) {
-        // fs.writeFileSync('data-1.json', JSON.stringify(updatedOrder))
         await postOrderToKDS(updatedOrder, token);
       }
         
       res.send(updatedOrder);
     }
     
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 };
 
@@ -236,9 +211,9 @@ export const generateOrderForTable = async (req: AuthRequest, res: Response) => 
       res.status(400).send({ message: 'Table is currently not occupied.' });
     }
 
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 }
 
@@ -264,9 +239,9 @@ export const updateOrderChef = async (req: AuthRequest, res: Response) => {
       res.send(updatedOrder);
     }
     
-  } catch (error: any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 };
 
@@ -280,9 +255,9 @@ export const createOrderController = async (req: AuthRequest, res: Response) => 
       const order = await createOrder(orderObject);
       res.status(201);
       res.json(order);
-    } catch (error: any) {
-      res.status(500);
-      res.json({ message: error.message });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: (error as Error).message});
     }
 };
 
@@ -292,9 +267,9 @@ export const updateOrderByIdController = async (req: Request, res: Response) => 
         const orderObject = { ...req.body, orderUpdatedAt: Date.now() };
         const order = await updateOrderById(orderId, orderObject);
         res.json(order);
-    } catch (error: any) {
-        res.status(500);
-        res.json({message: error.message});
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: (error as Error).message});
     }
 }
 
@@ -303,9 +278,9 @@ export const updateOrderWithCustomerIdController = async (req: Request, res: Res
     const {orderId, customerId} = req.params;
     const order = await updateOrderById(orderId, {customerId: parseInt(customerId)});
     res.json(order)
-  } catch (error: any) {
-    res.status(500);
-    res.json({message: error.message});
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 }
 
@@ -314,9 +289,9 @@ export const deleteOrderByIdController = async (req: Request, res: Response) => 
       const id = req.params.id;
       const response = await deleteOrderById(id);
       res.json(response);
-    } catch (error: any) {
-      res.status(500);
-      res.json({ message: error.message });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: (error as Error).message});
     }
 };
 
@@ -328,9 +303,9 @@ export const getHourlyCountOfOrders = async (req: AuthRequest, res: Response) =>
 
     const data = await getHourlyOrderCountFor24Hours(user.employeeInformation.restaurantId);
     res.send({ data });
-  } catch (error : any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 }
 
@@ -341,9 +316,9 @@ export const getWeekdayCountOfOrders = async (req: AuthRequest, res: Response) =
 
     const data = await getDailyOrderCountByWeekdays(user.employeeInformation.restaurantId);
     res.send({ data });
-  } catch (error : any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 }
 
@@ -354,8 +329,8 @@ export const getMonthlyCountOfOrders = async (req: AuthRequest, res: Response) =
 
     const data = await getDailyOrderCountByMonth(user.employeeInformation.restaurantId);
     res.send({ data });
-  } catch (error : any) {
-    res.status(500);
-    res.json({ message: error.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ message: (error as Error).message});
   }
 }

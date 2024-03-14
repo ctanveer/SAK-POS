@@ -16,7 +16,6 @@ export async function getTokenFromCode (code: string) {
 export async function getUserFromToken (token: string) {
   try {
     const res = await axios.get<{ user: IUser }>(config.SKELETON_URL + '/service-auth/user-from-token', { headers: { 'Authorization': token }});
-    // console.log('In getUserFromToken: ')
     return res.data;
   } catch (error) {
     console.log(error);
@@ -43,8 +42,6 @@ export async function postStatusUpdateToKDS (order: IOrder, token: string) {
     throw new Error("Error updating order status to KDS.")
   }
 }
-
-// const menuUrl = 'https://bento-menu-omi5.koyeb.app/menuItem/restaurant/1'
 
 export async function getMenuFromMenuBuilder(token: string, restaurantId: number) {
   try {
@@ -76,8 +73,6 @@ export async function postWaiterdataToHR (waiterData: any, token: string) {
   }
 }
 
-
-//TESTING
 export async function getAllReservationsForToday(token: string, restaurantId: string, date: string) {
   try {
     const res = await axios.get<any>(config.SKELETON_URL + `/pos/reservation-by-date/restaurant/${restaurantId}/date/${date}`, { headers: { 'Authorization': token }});
