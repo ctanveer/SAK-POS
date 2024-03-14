@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-//import { ITable } from '../models/table.model';
 import { environment } from '../../environments/environment';
-import {menu} from '../mock-menu'
-import { IMenu } from '../models/item-interfaces/menu.model';
 import { ICategories } from '../models/item-interfaces/categories.model';
 import { IItem } from '../models/item-interfaces/item.model';
 
@@ -30,7 +27,5 @@ export class MenuService {
     const url = `${this.menuUrl}/menuitems`;
     return this.http.get<IItem[]>(url, this.httpOptions);
   }
-  // getMenu () {
-  //   return menu;
-  // }
+
 }

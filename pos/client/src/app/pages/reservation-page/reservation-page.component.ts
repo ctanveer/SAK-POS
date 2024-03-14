@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IReservation, ReservationInterface } from '../../models/reservation.model';
+import { ReservationInterface } from '../../models/reservation.model';
 import { ReservationService } from '../../services/reservation.service';
 import { TableService } from '../../services/table.service';
 import { ITable } from '../../models/table.model';
@@ -95,8 +95,7 @@ export class ReservationPageComponent implements OnInit {
 
   handleStatusChange(data: ReservationInterface) {
     data.status = 'no-show';
-    console.log('Table is: ', this.reservationList);
-    this.reservationService.updateReservation(data);
+    this.reservationService.updateReservationStatus(data, parseInt(data.restaurantId));
   }
 
   

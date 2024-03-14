@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { ReservationService } from '../../services/reservation.service';
-import { IReservation, ReservationInterface } from '../../models/reservation.model';
+import { ReservationInterface } from '../../models/reservation.model';
 import { interval } from 'rxjs';
 import { HrService } from '../../services/hr.service';
 import { ITLogPopulated } from '../../models/tlog.populated.model';
@@ -174,7 +174,7 @@ export class TablesPageComponent implements OnInit{
                 console.log(`Customer No-show ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
             });
               reservation.status = 'no-show';
-              this.reservationService.updateReservation(reservation);
+              this.reservationService.updateReservationStatus(reservation, parseInt(reservation.restaurantId));
             }
           }
           else if (this.tables[tableIndex].status === 'reserved' && reservation.status === 'cancelled') {

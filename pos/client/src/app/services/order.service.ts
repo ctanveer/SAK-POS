@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-// import { IOrderListInterface } from '../models/item-interfaces/posOutput/orderList.model';
 import { IItem } from '../models/item-interfaces/item.model';
 import { IOrder } from '../models/order.model';
 
@@ -30,7 +29,6 @@ export class OrderService {
   }
 
   updateOrderItems (orderId: string, items: IItem[]) {
-    console.log('Cart before sending: ', items);
     return this.http.put(`${this.orderUrl}/items/${orderId}`, { items }, this.httpOptions);
   }
 

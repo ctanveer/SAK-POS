@@ -1,6 +1,3 @@
-import { IOrder } from "./order.model";
-import { ITable } from "./table.model";
-
 export interface ITableLog {
     _id?: string;
     tableId: string;
@@ -8,7 +5,7 @@ export interface ITableLog {
     orderId?: string;
     waiterId?: number;
     customerId?: number;
-    status: string; //'ongoing', 'closed', 'void'
+    status: string;
     createdAt: number;
     updatedAt: number;
 }
