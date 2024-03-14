@@ -10,8 +10,8 @@ export const getDiscountController = async (req: AuthRequest, res: Response) => 
 
         const discount = await getMenuDiscountFromSkeleton(token);
         res.send(discount);
-    } catch (error: any) {
-        res.status(500);
-        res.json({message: error.message})
-    }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: (error as Error).message});
+      }
 };
