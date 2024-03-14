@@ -4,6 +4,6 @@ import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
-router.post('/send', sendMailController);
+router.post('/send',authMiddleware, sendMailController);
 
 export default router;
