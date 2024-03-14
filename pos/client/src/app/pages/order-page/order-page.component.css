@@ -5,7 +5,6 @@
 }
 
 .full-menu-container {
-    /* flex: 1;  */
     padding-right: 20px; 
     margin-right: 10px;
     margin-top: 10px;
@@ -73,11 +72,6 @@
     overflow: auto;
     position: relative;
 }
-
-/* .all-order-items-container {
-    overflow:auto;
-    position: relative;
-} */
 
 .order-item-container {
     display: flex;

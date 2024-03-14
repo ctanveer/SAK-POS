@@ -17,20 +17,20 @@ export class TableService {
 
   private tableUrl = environment.API_URL + "/table";
 
-  getAllTables (): Observable<any> {
+  getAllTables (): Observable<ITable[]> {
     return this.http.get<ITable[]>(this.tableUrl);
   }
 
-  addTable(table: ITable): Observable<any> {
+  addTable(table: ITable): Observable<ITable> {
     return this.http.post<ITable>(this.tableUrl, table, this.httpOptions);
   }
 
-  updateTable(table: ITable): Observable<any> {
+  updateTable(table: ITable): Observable<ITable> {
     const url = `${this.tableUrl}/${table._id}`;
     return this.http.put<ITable>(url, table, this.httpOptions);
   }
 
-  deleteTable(table: ITable): Observable<any> {
+  deleteTable(table: ITable): Observable<ITable> {
     const url = `${this.tableUrl}/${table._id}`;
     return this.http.delete<ITable>(url, this.httpOptions)
   }

@@ -17,7 +17,6 @@ export class OrderHistoryPageComponent implements OnInit{
     this.orderService.getAllOrders().subscribe(data => {
       this.allOrders = data;
       this.allOrders.forEach(data => data.expand = false);
-      console.log('All orders are: ', this.allOrders);
       this.tableLoading = false;
     })
   }
@@ -28,17 +27,14 @@ export class OrderHistoryPageComponent implements OnInit{
       timeStyle: 'medium',
       timeZone: 'GMT'
     });
-    // console.log('formatted date is: ', formattedDate);
     return formattedDate;
   };
 
   getDate(date: Date): string {
     const formattedDate = new Date(date).toLocaleString('en-US', {
       dateStyle: 'long',
-      // timeStyle: 'medium',
       timeZone: 'GMT'
     });
-    // console.log('formatted date is: ', formattedDate);
     return formattedDate;
   };
 

@@ -12,7 +12,6 @@ import { ReservationService } from '../../services/reservation.service';
 import { ReservationInterface } from '../../models/reservation.model';
 import { interval } from 'rxjs';
 import { HrService } from '../../services/hr.service';
-import { ITLogPopulated } from '../../models/tlog.populated.model';
 import { IItem } from '../../models/item-interfaces/item.model';
 import { SocketService } from '../../services/socket/socket.service';
 
@@ -68,41 +67,12 @@ export class TablesPageComponent implements OnInit{
         this.isTableLoaded = false;
         this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
           this.todaysReservationList = data;
-          console.log('Today\'s Reservation List: ', this.todaysReservationList);
-          console.log('Current time is', Date.now());
         })
         this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
           this.reservationList = data;
-          console.log('All Reservations are: ', this.reservationList);
         })
       })
     });
-    
-    /*
-    this.tableService.getAllTables().subscribe((data) =>{
-      this.tables = data;
-      this.reservationList = this.reservationService.getReservations();
-      console.log('Current time is', Date.now());
-      this.reservationChecker();
-    });
-    */
-
-    // this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe()
-
-    //UNCOMMENT WHEN READY
-    
-    // this.tableService.getAllTables().subscribe((data) =>{
-    //   this.tables = data;
-    //   if (this.user) {
-    //     this.reservationService.getAllReservationsForToday(this.user.employeeInformation.restaurantId).subscribe(data => {
-    //       this.todaysReservationList = data;
-    //       console.log('Todays Reservation List: ', this.todaysReservationList);
-    //       console.log('Current time is', Date.now());
-    //       // this.reservationChecker();
-    //     });
-    //   }
-    // });
-    
 
     this.getAllOngoingTablelogs();
 
@@ -120,7 +90,6 @@ export class TablesPageComponent implements OnInit{
   getAllOngoingTablelogs() {
     this.tablelogService.getOngoingTableLogs().subscribe(data => {
       this.ongoingTableLogs = data;
-      console.log('Ongoing table logs are: ', this.ongoingTableLogs.data);
     })
   }
 
@@ -144,11 +113,9 @@ export class TablesPageComponent implements OnInit{
   
   reservationChecker() {
     const currentTime = Date.now();
-    console.log('NOW is: ', currentTime);
     if (this.reservationList) {
       for (let i = 0; i < this.reservationList.length; i++) {
         let reservation = this.reservationList[i];
-        // console.log('Current reservation object is: ', reservation);
         let tableIndex = this.tables.findIndex(table => {
           return table._id === reservation.tableId;
         });
@@ -160,7 +127,6 @@ export class TablesPageComponent implements OnInit{
               this.tables[tableIndex].status = 'reserved';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
-                console.log(`${this.tables[tableIndex].name} status changed from open to reserved. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
               });
             }
           }
@@ -171,7 +137,6 @@ export class TablesPageComponent implements OnInit{
               this.tables[tableIndex].status = 'open';
               this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
                 this.tables[tableIndex] = table;
-                console.log(`Customer No-show ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
             });
               reservation.status = 'no-show';
               this.reservationService.updateReservationStatus(reservation, parseInt(reservation.restaurantId));
@@ -181,7 +146,6 @@ export class TablesPageComponent implements OnInit{
             this.tables[tableIndex].status = 'open';
             this.tableService.updateTable(this.tables[tableIndex]).subscribe(table => {
               this.tables[tableIndex] = table;
-              console.log(`Reservation Cancelled. ${this.tables[tableIndex].name} status changed from reserved to open. Current time is ${currentTime} and reservation time is ${reservation.startTime}`);
           });
           }
         }
@@ -190,14 +154,12 @@ export class TablesPageComponent implements OnInit{
   }
 
   dateToUnixNumConverter(date: Date) {
-    console.log('Time in num is: ', Math.floor(date.getTime()));
     return Math.floor(date.getTime());
   }
 
   proceedToOrder() {
     if (this.selectedTable) {
       this.orderService.generateOrderForTable(this.selectedTable._id!).subscribe(order => {
-        console.log('Order:', order);
         this.router.navigate(['order'], { 
           state: { 
             orderId: order._id, 
@@ -211,11 +173,9 @@ export class TablesPageComponent implements OnInit{
 
       })
     }
-    // Add order generation here.
   }
 
   moveToOrderPage(data: any) {
-    console.log('Data is: ', data);
     this.router.navigate(['order'], { 
       state: { 
         orderId: data.orderId, 
@@ -256,7 +216,6 @@ export class TablesPageComponent implements OnInit{
   setSelectedTable (table: ITable | null) {
     this.selectedTable = table;
     if (table) this.selectedStatus = table.status;
-    console.log(this.selectedTable);
     this.open();
   }
 
@@ -269,23 +228,19 @@ export class TablesPageComponent implements OnInit{
           this.tables[index] = data;
           this.currentTable = data;
         }
-        console.log('Current table is: ', this.currentTable);
       });
     }    
   }
 
   changeTableStatus() {
-    console.log('Selected table is: ', this.selectedTable);
     if (this.selectedTable) {
       //open OR reserved --> occupied
       if ((this.selectedTable.status === 'open' || this.selectedTable.status === 'reserved') && this.selectedStatus === 'occupied') { 
           
           this.tableStatusHelper(this.selectedTable.status, 'occupied');
-          //TODO -- Add Customer Page Option
 
           this.tablelogService.createTablelog({tableId: this.selectedTable._id, waiterId: this.userId, customerId: 44}).subscribe(tableLog => {
             this.currentTableLog = tableLog;
-            console.log('Created Table Log is: ', this.currentTableLog);
           })
         
       } 
@@ -295,17 +250,14 @@ export class TablesPageComponent implements OnInit{
       // occupied --> open
       else if (this.selectedTable.status === 'occupied' && this.selectedStatus === 'open') {
         this.tableStatusHelper(this.selectedTable.status, this.selectedStatus);
-        console.log('Closing this table: ', this.currentTable)
         if (this.selectedTable) {
           this.tablelogService.getTableLogByTableId(this.selectedTable).subscribe(data => {
             this.currentTableLog = data;
             this.currentTableLog.status = 'closed';
             this.currentTableLog.timeElapsed = Date.now() - this.currentTableLog.createdAt;
             this.tablelogService.updateTableLogById(this.currentTableLog).subscribe(data => {
-              console.log('Updated Table log is: ', data);
               
               this.hrService.getTableLogByOrderId(data as ITableLog).subscribe(data => {
-                console.log('Populated Table Log is: ', data);
                 const items = data.orderId?.items;
                 let readyToServeTime = 1;
                 let waiterData = undefined;
@@ -326,7 +278,6 @@ export class TablesPageComponent implements OnInit{
                     restaurantId: data.tableId.restaurantId
                   }
                 }
-                console.log('Waiter Data: ', waiterData);
 
                 this.hrService.postOrderDataToHR(waiterData).subscribe(data => {
                   console.log('Posted Waiter Data to HR is: ', data);

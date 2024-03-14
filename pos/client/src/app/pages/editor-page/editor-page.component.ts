@@ -33,7 +33,6 @@ export class EditorPageComponent implements OnInit{
   ngOnInit(): void {
     this.tableService.getAllTables().subscribe((data) =>{
       this.tables = data;
-      console.log(data);
       this.isEditorLoaded = false;
     })
 
@@ -86,17 +85,7 @@ export class EditorPageComponent implements OnInit{
     
     }
     
-    //this.setSelectedTable(data);
   }
-
-  // getNextTableName () {
-  //   const latestTable = this.tables[this.tables.length];
-
-  //   if (latestTable && latestTable.name.includes('Table')) {
-  //     return `Table ${Number(latestTable.name.split(' ')[1]) + 1}`
-  //   }
-  //   return `Table ${this.tables.length + 1}`;
-  // }
 
   findMissingNumbers(sequence: number[]) {
     const missingNumbers = [];
@@ -116,7 +105,6 @@ export class EditorPageComponent implements OnInit{
     if (this.tables.length > 0) {
       const tableNumbers = this.tables.map(tableName => parseInt(tableName.name.split(' ')[1]));
       tableNumbers.sort((a, b) => a - b);
-      console.log(tableNumbers);
       const missingNumber = this.findMissingNumbers(tableNumbers);
       if (missingNumber.length > 0) {
         return `Table ${missingNumber[0]}`
@@ -131,8 +119,6 @@ export class EditorPageComponent implements OnInit{
 
   setSelectedTable (table: ITable| null) {
     this.selectedTable = table;
-    //console.log(this.selectedTable);
-    console.log(this.tables);
   }
 
   getSeatData () {
@@ -163,12 +149,7 @@ export class EditorPageComponent implements OnInit{
   }
 
 
-  // open(): void {
-  //   this.editVisible = true;
-  // }
-
   closeEditDrawer(): void {
-    //this.editVisible = false;
     this.setSelectEditTable(null);
   }
 
@@ -176,7 +157,6 @@ export class EditorPageComponent implements OnInit{
     this.selectedTableToEdit = table;
     if (this.selectedTableToEdit) this.editVisible = true;
     else this.editVisible = false;
-    console.log(this.selectedTableToEdit)
   }
 
   updateTable (table: ITable) {

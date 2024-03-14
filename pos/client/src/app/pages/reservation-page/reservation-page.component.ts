@@ -39,20 +39,16 @@ export class ReservationPageComponent implements OnInit {
         this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
           this.todaysReservationList = data;
           console.log('Todays Reservation List: ', this.todaysReservationList);
-          console.log('Current time is', Date.now());
           this.isReservationLoaded = false;
         })
         this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
           this.reservationList = data;
-          console.log('All Reservations are: ', this.reservationList);
         })
       })
     });
 
-    console.log('Reservations are: ', this.reservationList);
     this.tableService.getAllTables().subscribe(data => this.tableList = data);
     this.currentDate = Date.now();
-    console.log(new Date(this.currentDate).toDateString);
   }
 
   getTableName(tableId: string) {
@@ -63,29 +59,20 @@ export class ReservationPageComponent implements OnInit {
     return;
   }
 
-  // dateFormatter(unixTime: number) {
-  //   const date = new Date(unixTime);
-  //   const formattedDate = `${this.padZero(date.getDate())}-${this.padZero(date.getMonth() + 1)}-${date.getFullYear()} ${this.padZero(date.getHours())}:${this.padZero(date.getMinutes())}:${this.padZero(date.getSeconds())}`;
-  //   return formattedDate;
-  // }
-
   formatDateToString(date: Date): string {
     const formattedDate = new Date(date).toLocaleString('en-US', {
       dateStyle: 'medium',
       timeStyle: 'medium',
       timeZone: 'GMT'
     });
-    console.log('formatted date is: ', formattedDate);
     return formattedDate;
   };
 
   getDate(date: Date): string {
     const formattedDate = new Date(date).toLocaleString('en-US', {
       dateStyle: 'long',
-      // timeStyle: 'medium',
       timeZone: 'GMT'
     });
-    console.log('formatted date is: ', formattedDate);
     return formattedDate;
   };
 

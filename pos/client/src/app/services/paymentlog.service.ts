@@ -18,16 +18,16 @@ export class PaymentlogService {
   private pLogUrl = environment.API_URL + "/payment-log";
 
 
-  createPaymentLog(paymentLog: any):Observable<any> {
-    return this.http.post(this.pLogUrl, paymentLog, this.httpOptions);
+  createPaymentLog(paymentLog: any) {
+    return this.http.post<IPaymentLog>(this.pLogUrl, paymentLog, this.httpOptions);
   }
 
-  getPaymentLogsByOrderId(orderId: string):Observable<any> {
+  getPaymentLogsByOrderId(orderId: string):Observable<IPaymentLog[]> {
     const url = `${this.pLogUrl}/${orderId}`;
-    return this.http.get(url, this.httpOptions);
+    return this.http.get<IPaymentLog[]>(url, this.httpOptions);
   }
 
-  getAllPaymentLogs():Observable<any> {
+  getAllPaymentLogs() {
     return this.http.get(this.pLogUrl, this.httpOptions);
   }
 

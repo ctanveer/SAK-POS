@@ -19,10 +19,6 @@ export class OrderService {
 
   private orderUrl = environment.API_URL + "/order";
 
-  createNewOrder(order: any):Observable<any> {
-    return this.http.post(this.orderUrl, order, this.httpOptions);
-  }
-
   createOrder(order: any):Observable<any> {
     const url = `${this.orderUrl}/new`;
     return this.http.post(url, { order }, this.httpOptions);

@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
 import { IUser } from '../../models/user.model';
 import { MenuService } from '../../services/menu.service';
-import { IMenu } from '../../models/item-interfaces/menu.model';
 import { ICategories } from '../../models/item-interfaces/categories.model';
-//IItem is output model. Has 3 extra fields -> itemQuantity, optionalNotes and chosenOptions
 import { IItem } from '../../models/item-interfaces/item.model';
 import { IOption } from '../../models/item-interfaces/option.model';
 import { Router } from '@angular/router';
@@ -13,9 +11,7 @@ import { OrderService } from '../../services/order.service';
 import { ToastMessageService } from '../../services/toast-message/toast-message.service';
 import { PaymentlogService } from '../../services/paymentlog.service';
 import { IPaymentLog } from '../../models/paymentlog.model';
-import { IOrder } from '../../models/order.model';
 import { SocketService } from '../../services/socket/socket.service';
-import { TablelogService } from '../../services/tablelog.service';
 import { DiscountService } from '../../services/discount.service';
 import { IDiscount } from '../../models/discount.interface';
 
@@ -35,12 +31,10 @@ export class OrderPageComponent implements OnInit {
     private toast: ToastMessageService, 
     private paymentLogService: PaymentlogService,
     private socket: SocketService,
-    private tableLogService: TablelogService,
     private discountService: DiscountService
   ) {}
   
   user : IUser | undefined;
-  // menuList : IMenu | undefined;
   menuList : IItem[] | undefined;
   categories: ICategories[] = [];
   timeOfDays: string[] = [];
@@ -68,20 +62,16 @@ export class OrderPageComponent implements OnInit {
   isMenuLoaded: boolean = true;
   isLoaded: boolean = false;
 
-  // sentOrder: IOrder | undefined;
 
   ngOnInit(): void {
     const state = this.location.getState() as { orderId: string, tableId: string, tableName: string, orderStatus: string, order: { items: IItem[] } | null, status: 'update' | 'new' } | undefined;
     if (!state || !state.orderId || !state.tableId || !state.tableName || !state.orderStatus) this.router.navigate(['table']);
     else {
-      console.log(state)
       this.orderId = state.orderId;
       this.tableId = state.tableId;
       this.orderStatus = state.orderStatus;
       this.tableName = state.tableName;
 
-
-      console.log('Full Order is: ', state.order);
       if (state.order) {
         this.orderCart = [...state.order.items];
       }
@@ -92,7 +82,6 @@ export class OrderPageComponent implements OnInit {
     
     this.menuService.getCategories().subscribe(data => {
       this.categories = data;
-      console.log('Categories are: ', this.categories);
     })
 
     this.menuService.getMenu().subscribe(data => {
@@ -106,7 +95,6 @@ export class OrderPageComponent implements OnInit {
         this.discountObj = data;
         this.menuList?.forEach(item => item.item.discount = item.item.itemPrice);
         this.menuList?.forEach(item => item.item.itemPrice = item.item.itemPrice * (1 - (this.discountObj.posDiscountPercentage / 100)));
-        console.log('Restaurant Menu is: ', this.menuList);
       })
     });
     
@@ -128,17 +116,6 @@ export class OrderPageComponent implements OnInit {
     }
     this.timeOfDays = [...new Set(tempArr)];
   }
-
-  //Activate the below when item.isDisabled field is provided by Skeleton
-  /*
-  setFilteredMenu() {
-    if (this.menuList) {
-      this.filteredMenu = this.menuList.filter(item => {
-        return (item.categoryId === this.selectedCategory?._id) && !item.item.isDisabled})
-        .filter(item => item.item.timeOfDay.includes(this.selectedTimeTab));
-    }
-  }
-  */
 
   setFilteredMenu() {
     if (this.menuList) {
@@ -167,7 +144,6 @@ export class OrderPageComponent implements OnInit {
   handleTimeTabChange(index: number) {
     this.selectedTimeTab = this.timeOfDays[index];  
     this.filterCategoriesForTimeTab();
-    // this.selectedCategory = this.categories[0];
     if (this.filteredCategories) this.selectedCategory = this.filteredCategories[0];
     this.setFilteredMenu();
   }
@@ -195,7 +171,6 @@ export class OrderPageComponent implements OnInit {
   }
 
   addToCart(item: IItem) {
-    console.log('Item is: ', item)
     const copy : IItem = JSON.parse(JSON.stringify(item));
     copy.item.itemQuantity = 1;
     copy.item.optionalNotes = '';
@@ -219,10 +194,6 @@ export class OrderPageComponent implements OnInit {
     this.selectedCartItem = null;
     this.selectedOption = null;
     this.optionalNotes = null;
-  }
-  
-  cancelEdit() {
-    //NEEDS TO BE WORKED ON
   }
 
   selectAddNoOtion(option: string) {
@@ -268,7 +239,6 @@ export class OrderPageComponent implements OnInit {
   updateOrderStatus() {
     this.isLoaded = true;
     this.orderService.updateOrderStatus(this.orderId, 'served').subscribe(data => {
-      console.log('Order with updated status is: ', data);
       this.toast.setMessage('Order Served', 'info');
       this.orderStatus = 'served';
       this.isLoaded = false;
@@ -278,26 +248,19 @@ export class OrderPageComponent implements OnInit {
   cancelOrder() {
     this.isLoaded = true;
     this.orderService.updateOrderStatus(this.orderId, 'cancel').subscribe(data => {
-      console.log('Order with updated status(cancel) is: ', data);
       this.toast.setMessage('Order Canceled', 'info');
       this.orderStatus = 'cancel';
       this.isLoaded = false;
       this.goBackToTablePage();
-      // this.tableLogService.getTableLogByOrderId(this)
     })
   }
 
-  //need to add tag to identify items which are already sent
   confirmAndSendOrder() {
-    console.log('NEW ORDER IS: ', this.orderCart);
-    console.log('Order Id is: ', this.orderId);
     this.isLoaded = true;
     this.orderService.updateOrderItems(this.orderId, this.orderCart).subscribe(data => {
-      console.log('Posted Order is:', data);
       this.toast.setMessage('Order sent.', 'success');
       this.isLoaded = false;
       this.goBackToTablePage();
-      // this.router.navigateByUrl('/tables');
     })
   }
 
@@ -342,17 +305,14 @@ export class OrderPageComponent implements OnInit {
         pmtLogArr: pmtLogArr,
         bill: this.totalBill, 
         orderCart: this.orderCart,
-        // fullOrder: this.sentOrder
       }
     })
   }
 
   proceedToPayment() {
-    console.log('Order cart is: ', this.orderCart);
     let pmtLogArr: IPaymentLog[] = [];
     this.paymentLogService.getPaymentLogsByOrderId(this.orderId).subscribe(data => {
       pmtLogArr = data;
-      console.log('Pmt log is:', pmtLogArr);
       if (pmtLogArr?.length === 0) {
         this.paymentLogService.createPaymentLog({
           orderId: this.orderId,

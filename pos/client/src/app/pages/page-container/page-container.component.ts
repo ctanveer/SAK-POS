@@ -36,7 +36,6 @@ export class PageContainerComponent implements OnInit {
     });
   }
 
-
   parseName (path: string) {
     return path.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
   }

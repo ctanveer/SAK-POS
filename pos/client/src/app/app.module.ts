@@ -16,7 +16,6 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { HomepageComponent } from './pages/homepage/homepage.component';
-import { TableEditorComponent } from './pages/table-editor/table-editor.component';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
@@ -62,7 +61,6 @@ registerLocaleData(en);
     AppComponent,
     NavbarComponent,
     HomepageComponent,
-    TableEditorComponent,
     PageContainerComponent,
     TablesPageComponent,
     EditorPageComponent,

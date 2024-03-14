@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './pages/homepage/homepage.component';
-import { TableEditorComponent } from './pages/table-editor/table-editor.component';
 import { PageContainerComponent } from './pages/page-container/page-container.component';
 import { TablesPageComponent } from './pages/tables-page/tables-page.component';
 import { EditorPageComponent } from './pages/editor-page/editor-page.component';
@@ -14,7 +13,6 @@ import { ProcessPaymentPageComponent } from './pages/process-payment-page/proces
 
 const routes: Routes = [
   {path: 'homepage', component: HomepageComponent, pathMatch: 'full'},
-  {path: 'editor', component: TableEditorComponent, pathMatch: 'full'},
   {path: 'auth-redirect', component: AuthRedirectPageComponent, pathMatch: 'full'},
   {path: 'order', component: OrderPageComponent, pathMatch: 'full'},
   {path: 'payment', component: PaymentPageComponent, pathMatch: 'full'},

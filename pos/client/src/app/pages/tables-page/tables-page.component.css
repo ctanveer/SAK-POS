@@ -31,10 +31,6 @@
     right: 0%;
     transform: translateY(-50%);
     z-index: 900;
-    /* display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 30vh; Adjust this if needed to make it the full height of the viewport */
 }
 
 .spin-div {
