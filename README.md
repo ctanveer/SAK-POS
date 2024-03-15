@@ -125,11 +125,13 @@ To run the app on your local machine, follow these steps:
 1. Clone the repository: `git clone https://github.com/ctanveer/SAK-POS.git`
 2. Navigate to the server directory: `cd pos/server`
 3. Install dependencies: `npm install`
-4. Start the development server: `npm run dev`
-5. Open another terminal
-6. Navigate to client directory: `cd pos/client`
-7. Install dependencies: `npm install`
-8. Start the client: `ng serve --configuration=development --o`
+4. Create a `.env` based on the given `.env.example`
+5. Start the development server: `npm run dev`
+6. Open another terminal
+7. Navigate to client directory: `cd pos/client`
+8. Install dependencies: `npm install`
+9. Create a `.env` based on the given `.env.example`
+10. Start the client: `ng serve --configuration=development --o`
 
 ### Live Link
 
