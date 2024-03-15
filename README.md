@@ -10,7 +10,6 @@ Bento - POS system is designed to seamlessly connect the front and back of house
 4. **Payment Management:** Adding waiter tip, bill-splitting, option to pay by cash or card and e-bill generated and sent to customer email
 5. **Waiter Data:** Data for waiter is sent to HR, to monitor waiter efficiency and server performance.
 
-
 ## Folder Structure
 
 **_Client_**
@@ -64,6 +63,8 @@ Bento - POS system is designed to seamlessly connect the front and back of house
             └── index.html
             └── main.ts
             └── styles.css
+        └── package.json
+        └── tsconfig.json
 ```
 
 **_Server_**
@@ -110,7 +111,9 @@ Bento - POS system is designed to seamlessly connect the front and back of house
             └── skeleton.service.ts
         └── 📁utils
         └── index.ts
+        └── .env.example
         └── package.json
+        └── tsconfig.json
 ```
 
 ## Getting Started
