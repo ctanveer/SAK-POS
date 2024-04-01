@@ -5,7 +5,6 @@ import { TableService } from '../../services/table.service';
 import { ITable } from '../../models/table.model';
 import { IUser } from '../../models/user.model';
 import { AuthApiService } from '../../services/auth-api/auth-api.service';
-import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-reservation-page',
@@ -27,55 +26,7 @@ export class ReservationPageComponent implements OnInit {
 
   isReservationLoaded: boolean = true;
 
-  showList: boolean = false;
-
-  resListOne: any = [
-    {
-        _id: "62415f4d5e00d64c4c3d96e2",
-        customerName: "John Darkin",
-        customerEmail: "johnd12@gmail.com",
-        tableNumber: 3,
-        startTime: new Date("2024-03-11T18:00:00"),
-        endTime: new Date("2024-03-11T19:00:00"),
-        currentStatus: "Reserved"
-    },
-    {
-        _id: "62415f4d5e00d71dec3d04e7",
-        customerName: "Jane Smith",
-        customerEmail: "janesmith@gmail.com",
-        tableNumber: 5,
-        startTime: new Date("2024-03-11T19:00:00"),
-        endTime: new Date("2024-03-11T20:15:00"),
-        currentStatus: "Reserved"
-    },
-    {
-        _id: "63221f4a7e67d71dec3d28be",
-        customerName: "Alice Johnson",
-        customerEmail: "alicej@gmail.com",
-        tableNumber: 1,
-        startTime: new Date("2024-03-11T17:30:00"),
-        endTime: new Date("2024-03-11T19:30:00"),
-        currentStatus: "Reserved"
-    },
-    {
-        _id: "63156f4a7e67d713aa3d28bf",
-        customerName: "Bob Williams",
-        customerEmail: "bobwilliams@gmail.com",
-        tableNumber: 2,
-        startTime: new Date("2024-03-11T20:00:00"),
-        endTime: new Date("2024-03-11T21:30:00"),
-        currentStatus: "Reserved"
-    },
-    {
-        _id: "63156f4a7e67d713aa3e177c",
-        customerName: "Emily Brown",
-        customerEmail: "emilyb@gmail.com",
-        tableNumber: 4,
-        startTime: new Date("2024-03-11T18:30:00"),
-        endTime: new Date("2024-03-11T19:30:00"),
-        currentStatus: "Reserved"
-    }
-];
+  // showList: boolean = false;
 
   constructor(private reservationService: ReservationService, private tableService: TableService, private auth: AuthApiService){};
 
@@ -85,20 +36,20 @@ export class ReservationPageComponent implements OnInit {
       this.user = data.user;
       this.userId = this.user.employeeInformation.position.employeeId;
       this.restaurantId = this.user.employeeInformation.restaurantId;
-      // this.tableService.getAllTables().subscribe((data) =>{
-      //   this.tables = data;
-      //   this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
-      //     this.todaysReservationList = data;
-      //     console.log('Todays Reservation List: ', this.todaysReservationList);
-      //     this.isReservationLoaded = false;
-      //   })
-      //   this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
-      //     this.reservationList = data;
-      //   })
-      // })
-      interval(3000).subscribe(() => {
-        this.showList = true;
+      this.tableService.getAllTables().subscribe((data) =>{
+        this.tables = data;
+        this.reservationService.getAllReservationsForToday(this.restaurantId).subscribe(data => {
+          this.todaysReservationList = data;
+          console.log('Todays Reservation List: ', this.todaysReservationList);
+          this.isReservationLoaded = false;
+        })
+        this.reservationService.getAllReservations(this.restaurantId).subscribe(data => {
+          this.reservationList = data;
+        })
       })
+      // interval(3000).subscribe(() => {
+      //   this.showList = true;
+      // })
     });
 
     this.tableService.getAllTables().subscribe(data => this.tableList = data);
